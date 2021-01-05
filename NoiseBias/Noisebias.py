@@ -13,3 +13,5 @@ from numba import njit
 @njit
 
 #print('NoiseBias')
+
+#20 datasets underestimated noise
