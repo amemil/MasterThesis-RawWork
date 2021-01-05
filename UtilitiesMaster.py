@@ -1,6 +1,6 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
+#from tqdm import tqdm
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -68,7 +68,7 @@ class SimulatedData():
         t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
         W[0] = self.w0
         s1[0] = np.random.binomial(1,inverse_logit(self.b1))
-        for i in tqdm(range(1,iterations)):
+        for i in range(1,iterations):
             lr = learning_rule(s1,s2,self.Ap,self.Am,self.tau,self.tau,t,i,self.binsize)
             W[i] = W[i-1] + lr + np.random.normal(0,self.std) 
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
@@ -223,7 +223,7 @@ class ParameterInference():
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         _,_,old_log_post = self.particle_filter(theta_prior)
-        for i in tqdm(range(1,self.it)):
+        for i in range(1,self.it):
             if (i % self.Usim == 0):
                 shapes, theta_next = self.adjust_variance(theta,shapes)
             else:    
@@ -282,7 +282,7 @@ class ParameterInference():
         shapes = np.copy(self.shapes_prior)
         par_ind = np.linspace(0,self.N-1,self.N).astype(int)
         _,_,old_log_post = self.particle_filter(theta_prior)
-        for i in tqdm(range(1,self.it)):
+        for i in range(1,self.it):
             ex = [1,0][i % 2 == 0]
             par_ind_temp = np.delete(par_ind,ex)
             if (i % self.Ualt == 0):
