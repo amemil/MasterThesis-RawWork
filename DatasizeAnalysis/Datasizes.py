@@ -12,7 +12,7 @@ from scipy.stats import gamma
 from numba import njit
 @njit
 
-#print('Datasize')
+print(1)
 
 #Affect of the datasize (longer time scale), 2 noise levels -> check for bigger time domains
 #Decorrelation of A and Tau with bigger datasets (not learning rule shape if more data)

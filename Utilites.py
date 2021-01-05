@@ -277,7 +277,7 @@ class ParameterInference():
         '''
         Alternating MH sampling
         '''
-        theta_prior = self.parameter_priors()
+        theta_prior = np.array([0.001,0.005])#self.parameter_priors()
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         par_ind = np.linspace(0,self.N-1,self.N).astype(int)
