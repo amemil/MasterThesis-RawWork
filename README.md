@@ -16,7 +16,7 @@ The directory where you're allowed to do computations:
 
 Here, clone into this github repo, by using 
 
-`git clone https://github.com/maudrod/prosjektoppgave.git`
+`git clone https://github.com/amemil/MasterThesis-RawWork.git`
 
 Connecting to IDUN when you are at home and not at NTNU:
 
