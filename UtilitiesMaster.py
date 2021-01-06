@@ -26,9 +26,7 @@ class SimulatedData():
     b1,b2 : background noise constants for neuron 1 and neuron 2, determnining their baseline firing rate
     w0 : start value for synapse strength between neuron 1 and 2. 
     '''
-    sec = 120
-    binsize = 1/200.0
-    def __init__(self,Ap=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0):
+    def __init__(self,Ap=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0,sec = 120, binsize = 1/200.0):
         self.Ap = Ap
         self.tau = tau
         self.std = std
@@ -36,6 +34,8 @@ class SimulatedData():
         self.b1 = b1
         self.b2 = b2
         self.w0 = w0
+        self.sec = sec
+        self.binsize = binsize
     
     def set_Ap(self,Ap):
         self.Ap = Ap
@@ -49,6 +49,10 @@ class SimulatedData():
         self.b2 = b2
     def set_w0(self,w0):
         self.w0 = w0
+    def set_sec(self,sec):
+        self.sec = sec
+    def set_binsize(self,binsize):
+        self.binsize = binsize
     
     def get_Ap(self):
         return self.Ap
@@ -62,6 +66,10 @@ class SimulatedData():
         return self.b2
     def get_w0(self):
         return self.w0
+    def get_sec(self):
+        return self.sec
+    def get_binsize(self):
+        return self.binsize
         
     def create_data(self):
         iterations = np.int(self.sec/self.binsize)
@@ -94,10 +102,9 @@ class ParameterInference():
     '''
     Class for estimating b1,b2,w0,Ap,Am,tau from SimulatedData, given data s1,s2.
     '''
-    sec = 120
-    binsize = 1/200.0
     def __init__(self,s1,s2,P = 100, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 2\
-                 , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100])):
+                 , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
+                     ,binsize = 1/200.0,taufix = 0.02,Afix = 0.005):
         self.s1 = s1
         self.s2 = s2
         self.std = std
@@ -108,6 +115,13 @@ class ParameterInference():
         self.N = N
         self.shapes_prior = shapes_prior
         self.rates_prior = rates_prior
+        self.sec = sec
+        self.binsize = binsize
+        self.Afix = Afix
+        self.taufix = taufix
+    
+    def set_std(self,std):
+        self.std = std
     
     def b1_estimation(self):
         self.b1est = logit(np.sum(self.s1)/len(self.s1))
@@ -169,7 +183,9 @@ class ParameterInference():
         Fisher scoring algorithm 
         Two in parallell, since w0 is estimated with a subset of the data
         '''
-        s1short,s2short = self.s1[:2000],self.s2[:2000]
+        print(self.binsize)
+        print(int(10/(self.binsize)))
+        s1short,s2short = self.s1[:int(10/(self.binsize))],self.s2[:int(10/(self.binsize))]
         beta,beta2 = np.array([0,0]),np.array([0,0])
         x,x2 = np.array([np.ones(len(self.s1)-1),self.s1[:-1]]),np.array([np.ones(len(s1short)-1),s1short[:-1]])
         i = 0
@@ -188,7 +204,7 @@ class ParameterInference():
         return self.b2est,self.w0est
 
 
-    def particle_filter(self,theta):
+    def particle_filter(self,A,tau):
         '''
         Particle filtering, (doesnt quite work yet, smth with weights vp)
         Possible to speed it up? 
@@ -206,7 +222,7 @@ class ParameterInference():
                 wp = self.resampling(v_normalized,wp)
                 vp = np.full(self.P,1/self.P)
                 v_normalized = self.normalize(vp)
-            lr = learning_rule(self.s1,self.s2,theta[0],theta[0]*1.05,theta[1],theta[1],t,i,self.binsize) 
+            lr = learning_rule(self.s1,self.s2,A,A*1.05,tau,tau,t,i,self.binsize) 
             ls = self.likelihood_step(self.s1[i-1],self.s2[i],wp[:,i-1])  
             vp = ls*v_normalized
             wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,self.std,size = self.P)
@@ -222,20 +238,46 @@ class ParameterInference():
         theta_prior = np.array([0.001,0.005])#self.parameter_priors()
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
-        _,_,old_log_post = self.particle_filter(theta_prior)
+        _,_,old_log_post = self.particle_filter(theta_prior[0],theta_prior[1])
         for i in range(1,self.it):
             if (i % self.Usim == 0):
                 shapes, theta_next = self.adjust_variance(theta,shapes)
             else:    
                 theta_next = self.proposal_step(shapes,theta_prior)
-            _,_,new_log_post = self.particle_filter(theta_next)
+            _,_,new_log_post = self.particle_filter(theta_next[0],theta_next[1])
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
             r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
-            print('prior:',theta_prior)
-            print('next:',theta_next)
-            print('choice:',theta_choice)
+            #print('prior:',theta_prior)
+            #print('next:',theta_next)
+            #print('choice:',theta_choice)
+            theta = np.vstack((theta, theta_choice))
+            theta_prior = np.copy(theta_choice)
+            old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
+        return theta
+    
+    def standardMH_taufix(self):
+        '''
+        Monte Carlo sampling with particle filtering, Metropolis Hastings algorithm
+        '''
+        theta_prior = np.array([0.001])#self.parameter_priors()
+        theta = np.array([theta_prior])
+        shapes = np.copy(self.shapes_prior)
+        _,_,old_log_post = self.particle_filter(theta_prior[0],self.taufix)
+        for i in range(1,self.it):
+            if (i % self.Usim == 0):
+                shapes, theta_next = self.adjust_variance(theta,shapes)
+            else:    
+                theta_next = self.proposal_step(shapes,theta_prior)
+            _,_,new_log_post = self.particle_filter(theta_next[0],self.taufix)
+            prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
+            r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
+            choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+            theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('prior:',theta_prior)
+            #print('next:',theta_next)
+            #print('choice:',theta_choice)
             theta = np.vstack((theta, theta_choice))
             theta_prior = np.copy(theta_choice)
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]

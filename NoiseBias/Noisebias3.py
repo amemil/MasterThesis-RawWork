@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan  5 21:16:25 2021
+Created on Wed Jan  6 12:17:02 2021
 
 @author: emilam
 """
@@ -60,8 +60,8 @@ for i in range(4):
 #np.save('S2Datasets1to4Opposite',s2s)
 #np.save('b1sDatasets1to4Opposite',b1ests)
 #np.save('b2sDatasets1to4Opposite',b2ests)
-np.save('ApInferenceData1to4Opposite',Aps)
+np.save('ApInferenceData9to12Opposite',Aps)
 #np.save('w0ests1to4Opposite',w0ests)
-np.save('NoisesOpposite',stds)
+#np.save('NoisesOpposite',stds)
 
 #20 datasets underestimated noise
