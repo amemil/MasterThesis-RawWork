@@ -183,8 +183,6 @@ class ParameterInference():
         Fisher scoring algorithm 
         Two in parallell, since w0 is estimated with a subset of the data
         '''
-        print(self.binsize)
-        print(int(10/(self.binsize)))
         s1short,s2short = self.s1[:int(10/(self.binsize))],self.s2[:int(10/(self.binsize))]
         beta,beta2 = np.array([0,0]),np.array([0,0])
         x,x2 = np.array([np.ones(len(self.s1)-1),self.s1[:-1]]),np.array([np.ones(len(s1short)-1),s1short[:-1]])
@@ -283,6 +281,32 @@ class ParameterInference():
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
         return theta
     
+    def standardMH_afix(self):
+        '''
+        Monte Carlo sampling with particle filtering, Metropolis Hastings algorithm
+        '''
+        theta_prior = np.array([0.005])#self.parameter_priors()
+        theta = np.array([theta_prior])
+        shapes = np.copy(self.shapes_prior)
+        _,_,old_log_post = self.particle_filter(self.Afix,theta_prior[0])
+        for i in range(1,self.it):
+            if (i % self.Usim == 0):
+                shapes, theta_next = self.adjust_variance(theta,shapes)
+            else:    
+                theta_next = self.proposal_step(shapes,theta_prior)
+            _,_,new_log_post = self.particle_filter(self.Afix,theta_next[0])
+            prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
+            r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
+            choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+            theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('prior:',theta_prior)
+            #print('next:',theta_next)
+            #print('choice:',theta_choice)
+            theta = np.vstack((theta, theta_choice))
+            theta_prior = np.copy(theta_choice)
+            old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
+        return theta
+    
     
     def adjust_variance_alternating(self,theta,par_ind,shapes):
         mean = np.zeros(self.N)
@@ -323,7 +347,7 @@ class ParameterInference():
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         par_ind = np.linspace(0,self.N-1,self.N).astype(int)
-        _,_,old_log_post = self.particle_filter(theta_prior)
+        _,_,old_log_post = self.particle_filter(theta_prior[0],theta_prior[1])
         for i in range(1,self.it):
             ex = [1,0][i % 2 == 0]
             par_ind_temp = np.delete(par_ind,ex)
@@ -331,11 +355,14 @@ class ParameterInference():
                 shapes, theta_next = self.adjust_variance_alternating(theta,par_ind_temp,shapes)
             else:    
                 theta_next = self.proposal_step_alternating(shapes,theta_prior,par_ind_temp)
-            _,_,new_log_post = self.particle_filter(theta_next)
+            _,_,new_log_post = self.particle_filter(theta_next[0],theta_next[1])
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
             r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('prior:',theta_prior)
+            #print('next:',theta_next)
+            #print('choice:',theta_choice)
             theta = np.vstack((theta, theta_choice))
             theta_prior = np.copy(theta_choice)
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
