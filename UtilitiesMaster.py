@@ -1,6 +1,6 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
+#from tqdm import tqdm
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -266,7 +266,7 @@ class ParameterInference():
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         _,_,old_log_post = self.particle_filter(theta_prior[0],self.taufix)
-        for i in tqdm(range(1,self.it)):
+        for i in range(1,self.it):
             if (i % self.Usim == 0):
                 shapes, theta_next = self.adjust_variance(theta,shapes)
             else:    
@@ -292,7 +292,7 @@ class ParameterInference():
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         _,_,old_log_post = self.particle_filter(self.Afix,theta_prior[0])
-        for i in tqdm(range(1,self.it)):
+        for i in range(1,self.it):
             if (i % self.Usim == 0):
                 shapes, theta_next = self.adjust_variance(theta,shapes)
             else:    
