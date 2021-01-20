@@ -39,7 +39,7 @@ for i in range(2):
         data.create_data()
         s1,s2,t,W = data.get_data()
         inference = ut.ParameterInference(s1,s2,P = 1000, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
-                 , shapes_prior = np.array([4]), rates_prior = np.array([50]),sec=120,binsize=1/200,taufix = 0.02)
+                 , shapes_prior = np.array([4]), rates_prior = np.array([50]),sec=120,binsize=1/200.0,taufix = 0.02)
         b1est1 = inference.b1_estimation()
         b2est1,w0est1 = inference.b2_w0_estimation()
     w0est2 = -np.inf
@@ -48,7 +48,7 @@ for i in range(2):
         data2.create_data()
         s12,s22,t2,W2 = data2.get_data()
         inference2 = ut.ParameterInference(s12,s22,P = 1000, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
-                 , shapes_prior = np.array([5]), rates_prior = np.array([100]),sec=120,binsize=1/500,Afix = 0.02)
+                 , shapes_prior = np.array([5]), rates_prior = np.array([100]),sec=120,binsize=1/500.0,Afix = 0.005)
         b1est2 = inference2.b1_estimation()
         b2est2,w0est2 = inference2.b2_w0_estimation()
     for j in range(len(particles)):
