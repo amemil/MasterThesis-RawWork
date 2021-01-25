@@ -156,7 +156,7 @@ class ParameterInference():
     
     def adjust_variance(self,theta,shapes):
         means = theta[-self.Usim:].mean(0)
-        var_new = np.zeros(self.N)
+        var_new = np.array([0,0])
         u_temp = self.Usim
         while (any(i == 0 for i in var_new)):
             var_new = theta[-u_temp:].var(0)*(2.4**2)
@@ -342,14 +342,12 @@ class ParameterInference():
     
     def MH_noise(self):
         theta_prior = self.parameter_priors()
-        theta = np.zeros(self.it)
-        theta[0] = np.copy(theta_prior)
+        theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
         _,_,old_log_post = self.particle_filter_noise(self.Afix,self.taufix,theta_prior[0])
         for i in range(1,self.it):
             if (i % self.Usim == 0):
-                theta_change = np.copy(theta[:i])
-                shapes, theta_next = self.adjust_variance(theta_change,shapes)
+                shapes, theta_next = self.adjust_variance(theta,shapes)
             else:    
                 theta_next = self.proposal_step(shapes,theta_prior)
             _,_,new_log_post = self.particle_filter_noise(self.Afix,self.taufix,theta_next[0])
@@ -361,7 +359,7 @@ class ParameterInference():
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
             #print('choice:',theta_choice)
-            theta[i] = theta_choice
+            theta = np.vstack((theta, theta_choice))
             theta_prior = np.copy(theta_choice)
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
         return theta
