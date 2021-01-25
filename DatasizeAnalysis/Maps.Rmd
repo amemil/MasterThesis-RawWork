@@ -1,0 +1,17 @@
+---
+title: "Maps"
+author: "Emil Myhre"
+date: "21 1 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r maps}
+library(RcppCNPy)
+library(EnvStats)
+A = npyLoad("ASamples.npy")
+```
+

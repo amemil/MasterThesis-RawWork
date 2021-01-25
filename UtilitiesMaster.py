@@ -156,13 +156,16 @@ class ParameterInference():
     
     def adjust_variance(self,theta,shapes):
         means = theta[-self.Usim:].mean(0)
-        var_new = np.array([0,0])
+        var_new = np.zeros(self.N)
         u_temp = self.Usim
         while (any(i == 0 for i in var_new)):
             var_new = theta[-u_temp:].var(0)*(2.4**2)
+            #print(var_new)
             u_temp += 50
             if u_temp > self.it:
                 return shapes, np.array([(np.random.gamma(shapes[i],theta[-1][i]/shapes[i])) for i in range(self.N)])
+        #print(var_new)
+        #print('made it!')
         new_shapes = np.array([((means[i]**2) / var_new[i]) for i in range(self.N)])
         proposal = np.array([(np.random.gamma(new_shapes[i],theta[-1][i]/new_shapes[i])) for i in range(self.N)])
         return new_shapes,proposal
@@ -230,6 +233,33 @@ class ParameterInference():
             t[i] = i*self.binsize
             log_posterior += np.log(np.sum(vp)/self.P)
         return wp,t,log_posterior
+    
+    def particle_filter_noise(self,A,tau,std):
+        '''
+        Particle filtering, (doesnt quite work yet, smth with weights vp)
+        Possible to speed it up? 
+        How to initiate w0 and vp?
+        '''
+        timesteps = np.int(self.sec/self.binsize)
+        t = np.zeros(timesteps)
+        wp = np.full((self.P,timesteps),np.float(self.w0est))
+        vp = np.ones(self.P)
+        log_posterior = 0
+        for i in range(1,timesteps):
+            v_normalized = self.normalize(vp)
+            perplexity = self.perplexity_func(v_normalized)
+            if perplexity < 0.66:
+                wp = self.resampling(v_normalized,wp)
+                vp = np.full(self.P,1/self.P)
+                v_normalized = self.normalize(vp)
+            lr = learning_rule(self.s1,self.s2,A,A*1.05,tau,tau,t,i,self.binsize) 
+            ls = self.likelihood_step(self.s1[i-1],self.s2[i],wp[:,i-1])  
+            vp = ls*v_normalized
+            wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,std,size = self.P)
+            t[i] = i*self.binsize
+            log_posterior += np.log(np.sum(vp)/self.P)
+        return wp,t,log_posterior
+    
     
 
     def standardMH(self):
@@ -310,6 +340,32 @@ class ParameterInference():
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
         return theta
     
+    def MH_noise(self):
+        theta_prior = self.parameter_priors()
+        theta = np.zeros(self.it)
+        theta[0] = np.copy(theta_prior)
+        shapes = np.copy(self.shapes_prior)
+        _,_,old_log_post = self.particle_filter_noise(self.Afix,self.taufix,theta_prior[0])
+        for i in range(1,self.it):
+            if (i % self.Usim == 0):
+                theta_change = np.copy(theta[:i])
+                shapes, theta_next = self.adjust_variance(theta_change,shapes)
+            else:    
+                theta_next = self.proposal_step(shapes,theta_prior)
+            _,_,new_log_post = self.particle_filter_noise(self.Afix,self.taufix,theta_next[0])
+            #print('old:', theta_prior)
+            #print('new:', theta_next)
+            prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
+            r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
+            #print('r:',r)
+            choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+            theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('choice:',theta_choice)
+            theta[i] = theta_choice
+            theta_prior = np.copy(theta_choice)
+            old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
+        return theta
+    
     
     def adjust_variance_alternating(self,theta,par_ind,shapes):
         mean = np.zeros(self.N)
@@ -377,11 +433,11 @@ if __name__ == "__main__":
     s1,s2,t,W = data.get_data()
 
 
-    inference = ParameterInference(s1,s2,P = 5000, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
-             , shapes_prior = np.array([4]), rates_prior = np.array([50]),sec=120\
-                 ,binsize = 1/200.0,Afix = 0.005)
+    inference = ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
+             , shapes_prior = np.array([5]), rates_prior = np.array([800]),sec=120\
+                 ,binsize = 1/200.0,taufix = 0.02,Afix = 0.005)
     b1est = inference.b1_estimation()
     b2est,w0est = inference.b2_w0_estimation()
 
-    theta_sim = inference.standardMH_taufix()
+    noise = inference.MH_noise()
     theta_alt = inference.alternatingMH()

@@ -14,6 +14,7 @@ import UtilitiesMaster as ut
 data = ut.SimulatedData(Ap=0.005, tau=0.02, std=0.0005,b1=-2, b2=-2, w0=1.0,sec = 600, binsize = 1/200.0)
 
 Aps = [0.001,0.002,0.0025,0.003,0.0035,0.004,0.0045,0.0048,0.0049,0.005,0.0051,0.0052,0.0055,0.006,0.0065,0.007,0.0075,0.008]
+
 wests = []
 loglikesAp = []
 for i in range(200):
@@ -33,6 +34,7 @@ for i in range(200):
 
 np.save('ApLoglikes10sec',loglikesAp)
 np.save('w0estslong',wests)
+np.save('Aps',Aps)
 
 #datasizes = [60,120,180,240,300]
 #data = ut.SimulatedData(Ap=0.005, tau=0.02, std=0.001,b1=-2, b2=-2, w0=1.0,sec = 600, binsize = 1/200.0)
