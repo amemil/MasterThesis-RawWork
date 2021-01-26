@@ -1,1 +1,2 @@
-slurmstepd: error: *** JOB 3218138 ON compute-2-0-21 CANCELLED AT 2021-01-20T12:45:47 ***
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
