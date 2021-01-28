@@ -2,6 +2,8 @@
 
 All of my data and work for the Masters Thesis in Applied Mathematics, in the field of Statistics and Neuroscience (Spring 2021).
 
+Preliminary work and preperation was conducted as a course "Specialization project" (15 ETCS), see "Preliminary-work.pdf". The work was graded with an A (Top grade).
+
 # Connecting to IDUN
 (Must be on NTNU network or use VPN!)
 https://www.hpc.ntnu.no/idun
