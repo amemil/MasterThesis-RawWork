@@ -71,7 +71,7 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of means',ecolor=[0.4,0.3,0.9])
+        plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])
         #plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o',label='Std of samples',barsabove=(True))
     else:
         plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])#,label='Std of means')
@@ -89,7 +89,7 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of MAPs',ecolor=[0.4,0.3,0.9])
+        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])
     else:
         plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
@@ -105,7 +105,7 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], medians[i], yerr = mediansvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of medians',ecolor=[0.4,0.3,0.9])
+        plt.errorbar(x[i], medians[i], yerr = mediansvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])
     else:
         plt.errorbar(x[i], medians[i],c=[0.4,0.3,0.9], yerr = mediansvar[i],marker = 'o',ecolor=[0.4,0.3,0.9])
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
