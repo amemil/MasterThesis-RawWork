@@ -3,8 +3,8 @@
 #SBATCH --account=share-ie-imf
 #SBATCH --time=12-00:10:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --mem=12000
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=10
 #SBATCH --job-name="tau4"
 #SBATCH --output=tau4.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
