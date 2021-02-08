@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=10
-#SBATCH --job-name="tast1"
-#SBATCH --output=tast1.out
+#SBATCH --job-name="tast2"
+#SBATCH --output=tast2.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
