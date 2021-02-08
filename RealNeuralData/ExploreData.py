@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 plt.style.use('seaborn-darkgrid')
 
-
+'''
 data18105 = loadmat('camkii10_180105.spikes.cellinfo.mat')
 sessioninfo105 = loadmat('camkii10_180105.sessionInfo.mat')
 stiminfo = loadmat('stim_info180105.mat')
@@ -21,6 +21,34 @@ pulse = loadmat('TTL_pulse180105.mat')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
+
+'''
+for j in range(51):
+    st1 = np.concatenate(data18105['spikes']['times'][j])
+    st1 = st1.astype(int)+1
+    start = int(st1[0])+1
+    end = int(st1[-1])+1
+    binsize = 1
+    bins = int((end-start)/binsize)
+    timesteps = np.linspace(start,end-binsize,bins)
+
+    s1 = np.zeros(bins)
+    for i in range(bins):
+        s1[i] = np.count_nonzero(st1 == i+1)
+
+
+    plt.figure()
+    plt.title('Neuron firing rate')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('#Spikes last second')
+    plt.plot(np.linspace(1,end,bins),s1)
+    for i in range(len(stim[0])):
+        if i == 0:
+            plt.plot(stim[0][i][0],1,'ro',label='stimuli')
+        else:
+            plt.plot(stim[0][i][0],1,'ro')
+    plt.legend()
+    plt.show()
 
 '''
 data18102 = loadmat('camkii10_180102.spikes.cellinfo.mat')

@@ -9,10 +9,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+from scipy.stats import gamma
+
+
+sns.set_style("darkgrid")
 
 
 ## w0 sensitivity ##
-
+'''
 
 Aps = np.load('Aps.npy',allow_pickle = True)
 loglikes = np.load('ApLoglikes10sec.npy')
@@ -48,7 +52,7 @@ plt.legend()
 plt.show()
 '''
 ## A inference different time domains! ##
-'''
+
 A = np.load('ASamples.npy')
 
 secs = np.load('seconds.npy')
@@ -65,7 +69,7 @@ for i in range(5):
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
-plt.title('Inference of $A_+$ - Means')
+plt.title('$A_+$ sample means - low input')
 plt.xlabel('Domain size (seconds)')
 plt.ylabel('$A_+$ estimation')
 plt.ylim([0,0.025])
@@ -105,7 +109,7 @@ plt.show()
 
 
 ## Tau inference different time domains! ##
-
+'''
 Tau = np.load('TauSamples.npy')
 
 secs = np.load('seconds.npy')
@@ -122,7 +126,7 @@ for i in range(5):
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
-plt.title('Inference of $Tau$ - Means')
+plt.title('$Tau$ sample means - low input')
 plt.xlabel('Domain size (seconds)')
 plt.ylabel('$Tau$ estimation')
 #plt.ylim([0,0.025])
@@ -159,9 +163,9 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 ## Simultaneous inference different time domains ## 
-
+'''
 Sim = np.load('SimSamples.npy')
 
 secs = np.load('seconds.npy')
@@ -371,10 +375,10 @@ for i in range(5):
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 
 #noise inference
-
+'''
 noise1 = np.load('SigmaSamples0.0001True.npy')
 noise2 = np.load('SigmaSamples0.001True.npy')
 noise3 = np.load('SigmaSamples0.003True.npy')
@@ -446,4 +450,27 @@ for i in range(5):
 plt.axhline(0.003,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+'''
+'''
+x = np.linspace(0,0.008,100000)
+prior2 = gamma.pdf(x,a=5,scale=1/800)
 
+#plt.figure()
+#plt.plot(x,prior2)
+#plt.show()
+
+plt.figure()
+sns.distplot(noise3[4,300:,0], kde=True,bins=50)
+#plt.xlim([0.004,0.007])
+plt.axvline(0.0001,color='r',linestyle='--',label='True Value: 0.0001')
+plt.plot(x,prior2,label='prior')
+#plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('Posterior distribution $\sigma$')
+#plt.axvline(medcl3,linestyle = '-', color = 'm',label = 'Median')
+#plt.axvline(cicl3[0],color='g',linestyle='--')
+#plt.axvline(cicl3[1],color='g',linestyle='--',label='95% CI')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
+'''
