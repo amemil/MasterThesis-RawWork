@@ -1,0 +1,24 @@
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:187: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:236: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/self.P)
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:136: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:139: RuntimeWarning: divide by zero encountered in log
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:139: RuntimeWarning: invalid value encountered in multiply
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:20: RuntimeWarning: overflow encountered in exp
+  return np.exp(x)/(1+np.exp(x))
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:20: RuntimeWarning: invalid value encountered in true_divide
+  return np.exp(x)/(1+np.exp(x))
+/lustre1/work/emilamy/datasci/lib/python3.8/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: divide by zero encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:179: RuntimeWarning: invalid value encountered in double_scalars
+  prior_ratio *= gamma.pdf(theta_next[i],a=self.shapes_prior[i],scale=1/self.rates_prior[i])/\
+/lustre1/work/emilamy/datasci/lib/python3.8/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: invalid value encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:172: RuntimeWarning: invalid value encountered in double_scalars
+  proposal = np.array([(np.random.gamma(new_shapes[i],theta[-1][i]/new_shapes[i])) for i in range(self.N)])
+/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])

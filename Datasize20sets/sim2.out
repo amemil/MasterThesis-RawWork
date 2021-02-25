@@ -1,1 +1,3 @@
-slurmstepd: error: *** JOB 3279472 ON idun-03-21 CANCELLED AT 2021-02-04T09:10:25 ***
+slurmstepd: error: Job 3345749 exceeded memory limit (135552 > 10240), being killed
+slurmstepd: error: Exceeded job memory limit
+slurmstepd: error: *** JOB 3345749 ON compute-2-0-26 CANCELLED AT 2021-02-08T14:11:32 ***
