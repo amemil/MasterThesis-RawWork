@@ -4,7 +4,7 @@
 #SBATCH --time=12-00:10:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=10
+#SBATCH --mem=2500
 #SBATCH --job-name="alt3"
 #SBATCH --output=alt3.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
