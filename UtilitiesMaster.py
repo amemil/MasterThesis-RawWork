@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 #from tqdm import tqdm
 from scipy.stats import gamma
+from scipy.stats import multivariate_normal
 from numba import njit
 @njit
 
@@ -26,7 +27,7 @@ class SimulatedData():
     b1,b2 : background noise constants for neuron 1 and neuron 2, determnining their baseline firing rate
     w0 : start value for synapse strength between neuron 1 and 2. 
     '''
-    def __init__(self,Ap=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0,sec = 120, binsize = 1/200.0):
+    def __init__(self,Ap=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0,sec = 120, binsize = 1/200.0,freq = 50):
         self.Ap = Ap
         self.tau = tau
         self.std = std
@@ -36,6 +37,7 @@ class SimulatedData():
         self.w0 = w0
         self.sec = sec
         self.binsize = binsize
+        self.freq = freq
     
     def set_Ap(self,Ap):
         self.Ap = Ap
@@ -86,6 +88,22 @@ class SimulatedData():
         self.s2 = s2
         self.t = t
         self.W = W
+        
+    def create_freq_data(self):
+        iterations = np.int(self.sec/self.binsize)
+        t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
+        W[0] = self.w0
+        s1[0] = 1
+        for i in range(1,iterations):
+            lr = learning_rule(s1,s2,self.Ap,self.Am,self.tau,self.tau,t,i,self.binsize)
+            W[i] = W[i-1] + lr + np.random.normal(0,self.std) 
+            s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
+            s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % int((1/self.binsize)/self.freq) == 0]
+            t[i] = self.binsize*i
+        self.s1 = s1
+        self.s2 = s2
+        self.t = t
+        self.W = W
     
     def get_data(self):
         return self.s1,self.s2,self.t,self.W
@@ -102,12 +120,12 @@ class ParameterInference():
     '''
     Class for estimating b1,b2,w0,Ap,Am,tau from SimulatedData, given data s1,s2.
     '''
-    def __init__(self,s1,s2,P = 100, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 2\
+    def __init__(self,s1,s2,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                  , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
                      ,binsize = 1/200.0,taufix = 0.02,Afix = 0.005):
         self.s1 = s1
         self.s2 = s2
-        self.std = std
+        self.infstd = infstd
         self.P = P
         self.Usim = Usim
         self.Ualt = Ualt
@@ -231,7 +249,7 @@ class ParameterInference():
             lr = learning_rule(self.s1,self.s2,A,A*1.05,tau,tau,t,i,self.binsize) 
             ls = self.likelihood_step(self.s1[i-1],self.s2[i],wp[:,i-1])  
             vp = ls*v_normalized
-            wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,self.std,size = self.P)
+            wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,self.infstd,size = self.P)
             t[i] = i*self.binsize
             log_posterior += np.log(np.sum(vp)/self.P)
         return wp,t,log_posterior
@@ -289,6 +307,10 @@ class ParameterInference():
             theta_prior = np.copy(theta_choice)
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
         return theta
+        #self.smh_sample = theta
+    
+    #def get_standardMHsample(self):
+    #    return self.smh_sample
     
     def standardMH_taufix(self):
         '''
@@ -427,10 +449,110 @@ class ParameterInference():
             old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
         return theta
 
+### functions for optimal experimental design
+
+
+class ExperimentDesign(ParameterInference):
+    def __init__(self, s1 = 1,s2 = 1,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                 , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                     ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,freqs_init=np.array([20,50,100,200,500]),maxtime=120\
+                         ,Ap=0.005, tau=0.02, genstd=0.001,b1=-2.0, b2=-2.0, w0=1.0):
+        super().__init__(s1 = 1,s2 = 1,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        self.maxtime = maxtime
+        self.freqs_init = freqs_init
+        self.Ap = Ap
+        self.tau = tau
+        self.genstd = genstd
+        self.Am = 1.05*self.Ap
+        self.b1 = b1
+        self.b2 = b2
+        self.w0 = w0
+        self.b2est = b2
+        self.b1est = b1
+        self.w0est = w0
+    
+    
+    def NormEntropy(self,sigma):
+        return 0.5 * np.log(np.linalg.det(2*np.pi*np.exp(1)*sigma))
+    
+    def parameter_priors(self,mean,cov):
+        return multivariate_normal.rvs(mean,cov,1)
+    
+    def ratio(self,prob_old,prob_next,shapes,theta_next,theta_prior,mean,cov):
+        spike_prob_ratio = prob_next / prob_old
+        proposal_ratio = 1
+        prior_ratio = multivariate_normal.pdf(theta_next,mean,cov) / multivariate_normal.pdf(theta_prior,mean,cov)
+        for i in range(self.N):
+            proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
+            gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+        return spike_prob_ratio * prior_ratio * proposal_ratio
+    
+    
+    def datasim(self,freq,a,tau):
+        iterations = np.int(self.sec/self.binsize)
+        print(iterations)
+        t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
+        W[0] = self.w0
+        s1[0] = 1
+        #print(s1)
+        for i in range(1,iterations):
+            lr = learning_rule(s1,s2,a,1.05*a,tau,tau,t,i,self.binsize)
+            #print(lr)
+            W[i] = W[i-1] + lr + np.random.normal(0,self.genstd) 
+            s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
+            s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % freq == 0]
+            t[i] = self.binsize*i
+        self.s1 = s1
+        self.s2 = s2
+        self.W = W
+    
+    def onlineDesign(self):
+        freq = self.freqs_init[-2]
+        trials = np.int(self.maxtime / self.sec)
+        self.datasim(freq,self.Am,self.tau)
+        optimal_freqs = []
+        self.standardMH()
+        sample = self.get_standardMHsample()
+        a_temp = np.mean(sample[300:,0])
+        tau_temp = np.mean(sample[300:,1])
+        for i in range(2):
+            self.w0 = self.W[-1]
+            entropies = []
+            for j in range(len(self.freqs_init)):
+                entropies_temp = []
+                for k in range(3):
+                    self.datasim(self.freqs_init[-1],a_temp,tau_temp)
+                    self.standardMH()
+                    sample_temp = self.get_standardMHsample()
+                    cov = np.cov(np.transpose(sample_temp[300:,:]))
+                    entropies_temp.append(self.NormEntropy(cov))
+                    print(entropies_temp)
+                entropies.append(np.mean(entropies_temp))
+            print('Entropies: ',entropies)
+            optimal_freqs.append(self.freqs_init[np.where(entropies == np.amax(entropies))[0][0]])
+            print('Optimal_frequency:', optimal_freqs)
+            self.datasim(optimal_freqs[-1],self.Am,self.tau)
+            
+                    
+        
+
 if __name__ == "__main__":  
-    data = SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-2, b2=-2, w0=1.0,sec = 60, binsize = 1/200.0)
-    data.create_data()
-    s1,s2,t,W = data.get_data()
+    
+    data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
+    data.create_freq_data()
+    s1,s2,_,W=data.get_data()
+    data.plot_weight_trajectory()
+    
+    #data.create_data()
+
+    
+    
+    #design = ExperimentDesign(s1 = 1,s2 = 1,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+    #             , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
+    #                 ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,freqs_init=np.array([20,50,100,200,500]),maxtime=120\
+    #                     ,Ap=0.005, tau=0.02, genstd=0.001,b1=-2.0, b2=-2.0, w0=1.0)
 
 
     #inference = ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\

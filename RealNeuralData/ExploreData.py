@@ -25,6 +25,44 @@ pulse = loadmat('TTL_pulse180105.mat')
 '''
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
+    stim = stiminfo["stim"]["ts"][1]
+    rates_stim = []
+    rates_nonstim = []
+
+    for i in range(len(stim[0])):
+        rates_stim.append(np.count_nonzero(((st1 > stim[0][i][0]) & (st1 < stim[0][i][1]+1))==True)/(stim[0][0][1]+1-stim[0][0][0]))
+        a = np.random.randint(2500,6500)
+        b = np.random.randint(11500,16500)
+        c = np.random.choice([a,b])
+        #print(c)
+        rates_nonstim.append(np.count_nonzero(((st1 > c) & (st1 < c+1))==True))
+
+
+    rates_stim_mean = np.mean(rates_stim)
+    rates_nonstim_mean = np.mean(rates_nonstim)
+    rates_stim_var = np.sqrt(np.var(rates_stim))
+    rates_nonstim_var = np.sqrt(np.var(rates_nonstim))
+    
+    means = [rates_stim_mean,rates_nonstim_mean]
+    stds = [rates_stim_var,rates_nonstim_var]
+    x = [1,2]
+    ticksss = ['Stimulated','Non-stimulated']
+    plt.figure()
+    plt.title('Spikerates')
+    plt.ylabel('Rate')
+    #plt.ylim([0,0.025])
+    plt.xlim([0,3])
+    plt.xticks(x,labels = ticksss)
+    for i in range(2):
+        plt.errorbar(x[i], means[i], yerr = stds[i],marker = 'o')
+        #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+    plt.legend()
+    plt.show()
+
+
+'''
+for j in range(51):
+    st1 = np.concatenate(data18105['spikes']['times'][j])
     st1 = st1.astype(int)+1
     start = int(st1[0])+1
     end = int(st1[-1])+1
@@ -49,7 +87,7 @@ for j in range(51):
             plt.plot(stim[0][i][0],1,'ro')
     plt.legend()
     plt.show()
-
+'''
 '''
 data18102 = loadmat('camkii10_180102.spikes.cellinfo.mat')
 data18104 = loadmat('camkii10_180104.spikes.cellinfo.mat')

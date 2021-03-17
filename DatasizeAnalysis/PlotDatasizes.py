@@ -52,7 +52,7 @@ plt.legend()
 plt.show()
 '''
 ## A inference different time domains! ##
-
+'''
 A = np.load('ASamples.npy')
 
 secs = np.load('seconds.npy')
@@ -107,9 +107,9 @@ plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 
-
-## Tau inference different time domains! ##
 '''
+## Tau inference different time domains! ##
+
 Tau = np.load('TauSamples.npy')
 
 secs = np.load('seconds.npy')
@@ -163,11 +163,11 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
-## Simultaneous inference different time domains ## 
-'''
-Sim = np.load('SimSamples.npy')
 
+## Simultaneous inference different time domains ## 
+
+Sim = np.load('SimSamples.npy')
+'''
 secs = np.load('seconds.npy')
 meansAsim = []
 mediansAsim = []
