@@ -10,8 +10,8 @@
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
-module --ignore-cache load GCCcore/.9.3.0
-module --ignore-cache load Python/3.8.2
+module spider load GCCcore/.9.3.0
+module spider load Python/3.8.2
 
 source ../../datasci/bin/activate
 
