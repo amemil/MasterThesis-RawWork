@@ -10,9 +10,9 @@
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
-module load GCCcore/.9.3.0
-module load Python/3.8.2
+module spider load GCCcore/.9.3.0
+module spider load Python/3.8.2
 
-source ../../datasci/bin/activate
+source ../../dataci/bin/activate
 
 python3 13to16medfreq.py
