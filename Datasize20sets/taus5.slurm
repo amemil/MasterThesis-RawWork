@@ -13,6 +13,6 @@
 module load GCCcore/.9.3.0
 module load Python/3.8.2
 
-source ../../datasci/bin/activate
+source ../../dataci/bin/activate
 
 python3 Tau17to20.py
