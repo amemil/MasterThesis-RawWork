@@ -13,6 +13,6 @@
 module spider load GCCcore/.9.3.0
 module spider load Python/3.8.2
 
-source ../../datasci/bin/activate
+source ../../dataci/bin/activate
 
 python3 Tau9to12.py
