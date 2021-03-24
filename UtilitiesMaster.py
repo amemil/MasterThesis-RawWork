@@ -110,7 +110,7 @@ class SimulatedData():
         
     def plot_weight_trajectory(self):
         plt.figure()
-        plt.title('Weight trajectory')
+        plt.title('Weight trajectory - 250 freq')
         plt.plot(self.t,self.W)
         plt.xlabel('Time')
         plt.ylabel('Weight')
@@ -252,6 +252,7 @@ class ParameterInference():
             wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,self.infstd,size = self.P)
             t[i] = i*self.binsize
             log_posterior += np.log(np.sum(vp)/self.P)
+        #print(log_posterior)
         return wp,t,log_posterior
     
     def particle_filter_noise(self,A,tau,std):
@@ -282,10 +283,13 @@ class ParameterInference():
     
     
 
-    def standardMH(self):
+    def standardMH(self,w0est,b1,b2):
         '''
         Monte Carlo sampling with particle filtering, Metropolis Hastings algorithm
         '''
+        self.w0est = w0est
+        self.b1est = b1
+        self.b2est = b2
         theta_prior = np.array([0.001,0.005])#self.parameter_priors()
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
@@ -300,6 +304,7 @@ class ParameterInference():
             r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('it:',i)
             #print('prior:',theta_prior)
             #print('next:',theta_next)
             #print('choice:',theta_choice)
@@ -480,10 +485,13 @@ class ExperimentDesign(ParameterInference):
     def parameter_priors(self,mean,cov):
         return multivariate_normal.rvs(mean,cov,1)
     
-    def ratio(self,prob_old,prob_next,shapes,theta_next,theta_prior,mean,cov):
+    def ratio_g(self,prob_old,prob_next,shapes,theta_next,theta_prior,mean,cov):
         spike_prob_ratio = prob_next / prob_old
+        print('spike_prob_ratio:',spike_prob_ratio)
+        #print(spike_prob_ratio)
         proposal_ratio = 1
         prior_ratio = multivariate_normal.pdf(theta_next,mean,cov) / multivariate_normal.pdf(theta_prior,mean,cov)
+        #print('prior ratio:', prior_ratio)
         for i in range(self.N):
             proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
             gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
@@ -508,32 +516,84 @@ class ExperimentDesign(ParameterInference):
         self.s2 = s2
         self.W = W
     
+    
+    def standardMH_mv(self,mean,cov,ir):
+        '''
+        Monte Carlo sampling with particle filtering, Metropolis Hastings algorithm
+        '''
+        theta_prior = np.array([0.001,0.005])#self.parameter_priors()
+        theta = np.array([theta_prior])
+        shapes = np.copy(self.shapes_prior)
+        _,_,old_log_post = self.particle_filter(theta_prior[0],theta_prior[1])
+        for i in range(1,self.it):
+            if (i % self.Usim == 0):
+                shapes, theta_next = self.adjust_variance(theta,shapes)
+            else:    
+                theta_next = self.proposal_step(shapes,theta_prior)             
+            _,_,new_log_post = self.particle_filter(theta_next[0],theta_next[1])
+            if ir == 6:
+                print('it:', i)
+                print('old:',old_log_post)
+                print('new:',new_log_post)
+            prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
+            r = self.ratio_g(prob_old,prob_next,shapes,theta_next,theta_prior,mean,cov)
+            choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+            theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+            #print('prior:',theta_prior)
+            #print('next:',theta_next)
+            #print('choice:',theta_choice)
+            theta = np.vstack((theta, theta_choice))
+            theta_prior = np.copy(theta_choice)
+            old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
+            if ir == 5:
+                print(theta_choice)
+            #return theta
+            self.smh_sample = theta
+    
+    def get_standardMHsample(self):
+        return self.smh_sample
+    
     def onlineDesign(self):
-        freq = self.freqs_init[-2]
+        freq = self.freqs_init[0]
         trials = np.int(self.maxtime / self.sec)
-        self.datasim(freq,self.Am,self.tau)
+        self.datasim(freq,self.Ap,self.tau)
         optimal_freqs = []
-        self.standardMH()
-        sample = self.get_standardMHsample()
-        a_temp = np.mean(sample[300:,0])
-        tau_temp = np.mean(sample[300:,1])
-        for i in range(2):
+        sample = self.standardMH()
+        means = [np.mean(sample[300:,0]),np.mean(sample[300:,1])]
+        cov = np.cov(np.transpose(sample[300:,:]))
+        ests = np.array([means])
+        entrs = np.array([self.NormEntropy(cov)])
+        for i in range(120):
             self.w0 = self.W[-1]
-            entropies = []
-            for j in range(len(self.freqs_init)):
-                entropies_temp = []
-                for k in range(3):
-                    self.datasim(self.freqs_init[-1],a_temp,tau_temp)
-                    self.standardMH()
-                    sample_temp = self.get_standardMHsample()
-                    cov = np.cov(np.transpose(sample_temp[300:,:]))
-                    entropies_temp.append(self.NormEntropy(cov))
-                    print(entropies_temp)
-                entropies.append(np.mean(entropies_temp))
-            print('Entropies: ',entropies)
-            optimal_freqs.append(self.freqs_init[np.where(entropies == np.amax(entropies))[0][0]])
-            print('Optimal_frequency:', optimal_freqs)
-            self.datasim(optimal_freqs[-1],self.Am,self.tau)
+            #entropies = []
+            #for j in range(len(self.freqs_init)):
+            #    entropies_temp = []
+            #    for k in range(3):
+            #        self.datasim(self.freqs_init[-1],means[0],means[1])
+            #        self.standardMH_mv(means,cov)
+            #        sample_temp = self.get_standardMHsample()
+            #        cov_temp = np.cov(np.transpose(sample_temp[300:,:]))
+            #        entropies_temp.append(self.NormEntropy(cov_temp))
+            #        print(entropies_temp)
+            #    entropies.append(np.mean(entropies_temp))
+            #print('Entropies: ',entropies)
+            #optimal_freqs.append(self.freqs_init[np.where(entropies == np.amax(entropies))[0][0]])
+            #print('Optimal_frequency:', optimal_freqs)
+            self.datasim(self.freqs_init[0],self.Ap,self.tau)
+            self.standardMH_mv(means,cov,i)
+            sample = self.get_standardMHsample()
+            means = [np.mean(sample[300:,0]),np.mean(sample[300:,1])]
+            cov = np.cov(np.transpose(sample[300:,:]))
+            print(cov)
+            print(np.linalg.det(cov))
+            ests = np.vstack((ests, means))
+            entrs = np.vstack((entrs,self.NormEntropy(cov)))
+            print(ests[-1])
+            print(entrs[-1])
+            
+            
+            
+            
             
                     
         
@@ -541,25 +601,68 @@ class ExperimentDesign(ParameterInference):
 if __name__ == "__main__":  
     
     data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
-    data.create_freq_data()
+    data.create_data()
     s1,s2,_,W=data.get_data()
-    data.plot_weight_trajectory()
+    #data.plot_weight_trajectory()
+    data2 = SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
+    data2.create_freq_data()
+    s12,s22,_,W2 = data2.get_data()
     
     #data.create_data()
 
-    
+    #np.random.seed(5) 
     
     #design = ExperimentDesign(s1 = 1,s2 = 1,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-    #             , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
-    #                 ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,freqs_init=np.array([20,50,100,200,500]),maxtime=120\
-    #                     ,Ap=0.005, tau=0.02, genstd=0.001,b1=-2.0, b2=-2.0, w0=1.0)
-
-
-    #inference = ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
-     #        , shapes_prior = np.array([5]), rates_prior = np.array([800]),sec=120\
-     #            ,binsize = 1/200.0,taufix = 0.02,Afix = 0.005)
+    #                          ,shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
+    #                              ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,freqs_init=np.array([20,50,100,200,500]),maxtime=120\
+    #                                  ,Ap=0.005, tau=0.02, genstd=0.001,b1=-3.1, b2=-3.1, w0=1.0)
+    #design.onlineDesign()
+    theta_1ms_baseline = [] 
+    theta_1ms_freq = []
+    theta_4ms_baseline = []
+    theta_4ms_freq = []
+    #for i in range(120):
+    #    b_1ms_A.append(np.mean(theta_1ms_baseline[i][300:][0]))
+    for i in range(120):    
+        inference1 = ParameterInference(s1[i*500:(i+1)*500],s2[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_1ms_baseline.append(inference1.standardMH(W[i*500],-3.1,-3.1))
+        inference2 = ParameterInference(s12[i*500:(i+1)*500],s22[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_1ms_freq.append(inference2.standardMH(W2[i*500],-3.1,-3.1))
+    for j in range(30):    
+        inference3 = ParameterInference(s1[j*2000:(j+1)*2000],s2[j*2000:(j+1)*2000],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=4\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_4ms_baseline.append(inference3.standardMH(W[j*2000],-3.1,-3.1))
+        inference4 = ParameterInference(s12[j*2000:(j+1)*2000],s22[j*2000:(j+1)*2000],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=4\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_4ms_freq.append(inference4.standardMH(W2[j*2000],-3.1,-3.1))
+        
+    np.save('1msbase',theta_1ms_baseline)
+    np.save('1msfreq',theta_1ms_freq)
+    np.save('4msbase',theta_4ms_baseline)
+    np.save('4msfreq',theta_4ms_freq)
     #b1est = inference.b1_estimation()
     #b2est,w0est = inference.b2_w0_estimation()
 
     #noise = inference.MH_noise()
-    #theta_alt = inference.alternatingMH()
+    #theta_sim2 = inference.standardMH(W[32000],-3.1,-3.1)
+    
+    #x = np.linspace(1,120,120)
+    #ticksss = ['60','120','180','240','300']
+    #plt.figure()
+    #plt.title('Single trial A inference - 1ms trials - Baseline firing')
+    #plt.xlabel('Trial')
+    #plt.ylabel('A estimation')
+    #plt.ylim([0,0.2])
+    #plt.xlim([0,121])
+    #plt.xticks(x,labels = ticksss)
+    #for i in range(120):
+    #    plt.errorbar(x[i], base1ms[i][0], yerr = base1msstd[i][0],marker = 'o')        
+    #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+    #plt.legend()
+    #plt.show()
