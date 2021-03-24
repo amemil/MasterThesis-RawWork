@@ -11,17 +11,17 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 plt.style.use('seaborn-darkgrid')
 
-'''
-data18105 = loadmat('camkii10_180105.spikes.cellinfo.mat')
-sessioninfo105 = loadmat('camkii10_180105.sessionInfo.mat')
-stiminfo = loadmat('stim_info180105.mat')
+
+#data18105 = loadmat('camkii10_180105.spikes.cellinfo.mat')
+#sessioninfo105 = loadmat('camkii10_180105.sessionInfo.mat')
+#stiminfo = loadmat('stim_info180105.mat')
 #cellparams = loadmat('camkii10_180105_CellParams.mat')
 #eventtree = loadmat('camkii10_180105_EventTree.mat')
-pulse = loadmat('TTL_pulse180105.mat')
+#pulse = loadmat('TTL_pulse180105.mat')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-
+#jux = loadmat('JuxtaGroundTruth.mat')
 '''
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
@@ -58,7 +58,7 @@ for j in range(51):
         #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
     plt.legend()
     plt.show()
-
+'''
 
 '''
 for j in range(51):
