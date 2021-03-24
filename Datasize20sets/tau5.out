@@ -1,3 +1,8 @@
-slurmstepd: error: Job 3345725 exceeded memory limit (134556 > 10240), being killed
-slurmstepd: error: Exceeded job memory limit
-slurmstepd: error: *** JOB 3345725 ON compute-2-0-22 CANCELLED AT 2021-02-08T14:11:01 ***
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+

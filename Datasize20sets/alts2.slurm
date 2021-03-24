@@ -2,9 +2,9 @@
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
 #SBATCH --time=12-00:10:00
-#SBATCH --nodes=2500
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=10
+#SBATCH --mem=2500
 #SBATCH --job-name="alt2"
 #SBATCH --output=alt2.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no

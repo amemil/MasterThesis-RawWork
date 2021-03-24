@@ -1,3 +1,2 @@
-slurmstepd: error: Job 3345810 exceeded memory limit (135420 > 10240), being killed
-slurmstepd: error: Exceeded job memory limit
-slurmstepd: error: *** JOB 3345810 ON compute-2-0-22 CANCELLED AT 2021-02-08T14:13:04 ***
+slurmstepd: error: *** JOB 3951283 ON compute-2-0-26 CANCELLED AT 2021-02-26T12:31:34 ***
+slurmstepd: error: *** JOB 3951284 ON compute-2-0-26 CANCELLED AT 2021-03-10T12:41:20 DUE TO TIME LIMIT ***
