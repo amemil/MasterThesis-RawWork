@@ -641,6 +641,11 @@ if __name__ == "__main__":
                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=4\
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
         theta_4ms_freq.append(inference4.standardMH(W2[j*2000],-3.1,-3.1))
+        
+    np.save('1msbase',theta_1ms_baseline)
+    np.save('1msfreq',theta_1ms_freq)
+    np.save('4msbase',theta_4ms_baseline)
+    np.save('4msfreq',theta_4ms_freq)
     #b1est = inference.b1_estimation()
     #b2est,w0est = inference.b2_w0_estimation()
 
