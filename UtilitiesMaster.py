@@ -601,7 +601,7 @@ class ExperimentDesign(ParameterInference):
         
 
 if __name__ == "__main__":  
-    
+    '''
     #data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
     #data.create_data()
     #s1,s2,_,W=data.get_data()
@@ -682,3 +682,4 @@ if __name__ == "__main__":
     #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
     #plt.legend()
     #plt.show()
+    '''
