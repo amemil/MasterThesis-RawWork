@@ -634,7 +634,7 @@ if __name__ == "__main__":
                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
         theta_1ms_freq.append(inference2.standardMH(W2[i*500],-3.1,-3.1))
-    for j in range(30):    
+    for j in range(24):    
         inference3 = ParameterInference(s1[j*2500:(j+1)*2500],s2[j*2500:(j+1)*2500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=5\
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
@@ -653,7 +653,7 @@ if __name__ == "__main__":
     np.save('prefreq3',s12)
     np.save('postfreq3',s22)
     np.save('weightbase3',W)
-    np.save('weightfreq3'W2)
+    np.save('weightfreq3',W2)
     #b1est = inference.b1_estimation()
     #b2est,w0est = inference.b2_w0_estimation()
 
