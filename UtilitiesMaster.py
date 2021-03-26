@@ -601,14 +601,14 @@ class ExperimentDesign(ParameterInference):
         
 
 if __name__ == "__main__":  
-    '''
-    #data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
-    #data.create_data()
-    #s1,s2,_,W=data.get_data()
-    #data.plot_weight_trajectory()
-    #data2 = SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
-    #data2.create_freq_data()
-    #s12,s22,_,W2 = data2.get_data()
+    
+    data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
+    data.create_data()
+    s1,s2,_,W=data.get_data()
+    data.plot_weight_trajectory()
+    data2 = SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=1.0,sec = 120, binsize = 1/500.0,freq = 50)
+    data2.create_freq_data()
+    s12,s22,_,W2 = data2.get_data()
     
     #data.create_data()
 
@@ -619,35 +619,41 @@ if __name__ == "__main__":
     #                              ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,freqs_init=np.array([20,50,100,200,500]),maxtime=120\
     #                                  ,Ap=0.005, tau=0.02, genstd=0.001,b1=-3.1, b2=-3.1, w0=1.0)
     #design.onlineDesign()
-    #theta_1ms_baseline = [] 
-    #theta_1ms_freq = []
-    #theta_4ms_baseline = []
-    #theta_4ms_freq = []
+    theta_1ms_baseline = [] 
+    theta_1ms_freq = []
+    theta_5ms_baseline = []
+    theta_5ms_freq = []
     #for i in range(120):
     #    b_1ms_A.append(np.mean(theta_1ms_baseline[i][300:][0]))
-    #for i in range(120):    
-    #    inference1 = ParameterInference(s1[i*500:(i+1)*500],s2[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-    #                                    , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
-    #                                        ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
-    #    theta_1ms_baseline.append(inference1.standardMH(W[i*500],-3.1,-3.1))
-    #    inference2 = ParameterInference(s12[i*500:(i+1)*500],s22[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-    #                                    , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
-    #                                        ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
-    #    theta_1ms_freq.append(inference2.standardMH(W2[i*500],-3.1,-3.1))
-    #for j in range(30):    
-    #    inference3 = ParameterInference(s1[j*2000:(j+1)*2000],s2[j*2000:(j+1)*2000],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-    #                                    , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=4\
-    #                                        ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
-    #    theta_4ms_baseline.append(inference3.standardMH(W[j*2000],-3.1,-3.1))
-    #    inference4 = ParameterInference(s12[j*2000:(j+1)*2000],s22[j*2000:(j+1)*2000],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-    #                                    , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=4\
-    #                                        ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
-    #    theta_4ms_freq.append(inference4.standardMH(W2[j*2000],-3.1,-3.1))
+    for i in range(120):    
+        inference1 = ParameterInference(s1[i*500:(i+1)*500],s2[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_1ms_baseline.append(inference1.standardMH(W[i*500],-3.1,-3.1))
+        inference2 = ParameterInference(s12[i*500:(i+1)*500],s22[i*500:(i+1)*500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=1\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_1ms_freq.append(inference2.standardMH(W2[i*500],-3.1,-3.1))
+    for j in range(30):    
+        inference3 = ParameterInference(s1[j*2500:(j+1)*2500],s2[j*2500:(j+1)*2500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=5\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_5ms_baseline.append(inference3.standardMH(W[j*2500],-3.1,-3.1))
+        inference4 = ParameterInference(s12[j*2500:(j+1)*2500],s22[j*2500:(j+1)*2500],P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=5\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        theta_5ms_freq.append(inference4.standardMH(W2[j*2500],-3.1,-3.1))
         
-    #np.save('1msbase',theta_1ms_baseline)
-    #np.save('1msfreq',theta_1ms_freq)
-    #np.save('4msbase',theta_4ms_baseline)
-    #np.save('4msfreq',theta_4ms_freq)
+    np.save('1msbase3',theta_1ms_baseline)
+    np.save('1msfreq3',theta_1ms_freq)
+    np.save('5msbase3',theta_5ms_baseline)
+    np.save('5msfreq3',theta_5ms_freq)
+    np.save('prebase3',s1)
+    np.save('postbase3',s2)
+    np.save('prefreq3',s12)
+    np.save('postfreq3',s22)
+    np.save('weightbase3',W)
+    np.save('weightfreq3'W2)
     #b1est = inference.b1_estimation()
     #b2est,w0est = inference.b2_w0_estimation()
 
@@ -682,4 +688,4 @@ if __name__ == "__main__":
     #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
     #plt.legend()
     #plt.show()
-    '''
+    
