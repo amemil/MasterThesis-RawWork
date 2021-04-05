@@ -6,3 +6,27 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:205: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:200: RuntimeWarning: divide by zero encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py:2821: RuntimeWarning: overflow encountered in exp
+  return np.exp(self._logpdf(x, a))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:200: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:200: RuntimeWarning: overflow encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+0.9955899731210096
+1.1421671194850136
+0.9622735000771726
+1.0448081772787967
+1.1766993344126317
+1.0159188833736368
+0.7413925340376115
+1.0144814189302558
+1.0823523883085922
+1.071252041399978
+1.061476139202137
+1.1213858727272583
+0.8867212783038566
+1.0089443031344838
