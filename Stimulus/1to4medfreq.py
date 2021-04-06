@@ -40,7 +40,7 @@ for i in range(4):
                  ,binsize = 1/500.0,Afix = 0.005)
         b1est1_sub = inference_sub.b1_estimation()
         b2est1_sub,w0est1_sub = inference_sub.b2_w0_estimation()
-        est = inference_sub.standardMH() 
+        est = inference_sub.standardMH_() 
         samples_temp.append(est)
     samples.append(samples_temp)
     
