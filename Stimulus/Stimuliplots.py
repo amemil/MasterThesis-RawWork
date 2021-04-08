@@ -17,7 +17,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import UtilitiesMaster as ut
 
 sns.set_style("darkgrid")
-'''
+
 
 Tau1s = np.load('TauSamples1to4stim.npy')
 Tau2s = np.load('TauSamples5to8stim.npy')
@@ -33,8 +33,8 @@ for i in range(5):
         meanss_temp = []
         stdss_temp = []
         for k in range(5):
-            meanss_temp.append(np.mean(tauss[i][j][k][300:][0]))
-            stdss_temp.append(np.sqrt(np.var(tauss[i][j][k][300:][0])))
+            meanss_temp.append(np.mean(tauss[i][j][k][300:]))
+            stdss_temp.append(np.sqrt(np.var(tauss[i][j][k][300:])))
         stdss.append(stdss_temp)
         meanss.append(meanss_temp)
         
@@ -55,7 +55,8 @@ plt.ylim([0,0.1])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], meanss[i], yerr = meansvars[i],marker = 'o')
+    plt.errorbar(x[i], meanss[i], yerr = meansvars[i],marker = 'o',color='b')
+    #plt.errorbar(x[i],meanss[i],yerr = stdss[i],marker='o',color='k')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -73,8 +74,8 @@ for i in range(3):
         meanshs_temp = []
         stdshs_temp = []
         for k in range(5):
-            meanshs_temp.append(np.mean(taushs[i][j][k][300:][0]))
-            stdshs_temp.append(np.sqrt(np.var(taushs[i][j][k][300:][0])))
+            meanshs_temp.append(np.mean(taushs[i][j][k][300:]))
+            stdshs_temp.append(np.sqrt(np.var(taushs[i][j][k][300:])))
         stdshs.append(stdshs_temp)
         meanshs.append(meanshs_temp)
         
@@ -99,10 +100,10 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 
 ## Frequency stimuli
-'''
+
 s1mf = np.load('Samples1to4medfreq.npy')
 s2mf = np.load('Samples5to8medfreq.npy')
 s3mf= np.load('Samples9to12medfreq.npy')
@@ -121,8 +122,8 @@ for i in range(3):
         meansAmf_temp = []
         stdsAmf_temp = []
         for k in range(5):
-            meansAmf_temp.append(np.mean(smf[i][j][k][300:][0]))
-            stdsAmf_temp.append(np.sqrt(np.var(smf[i][j][k][300:][0])))
+            meansAmf_temp.append(np.mean(smf[i][j][k][300:].mean(0)[0]))
+            stdsAmf_temp.append(np.sqrt(np.var(smf[i][j][k][300:].mean(0)[0])))
         stdsAmf.append(stdsAmf_temp)
         meansAmf.append(meansAmf_temp)
         
@@ -138,10 +139,14 @@ for i in range(3):
         meansAhf_temp = []
         stdsAhf_temp = []
         for k in range(5):
-            meansAhf_temp.append(np.mean(shf[i][j][k][300:][0]))
-            stdsAhf_temp.append(np.sqrt(np.var(shf[i][j][k][300:][0])))
-        stdsAhf.append(stdsAhf_temp)
-        meansAhf.append(meansAhf_temp)
+            if i == 1 and j == 0:
+                pass
+            else:
+                meansAhf_temp.append(np.mean(shf[i][j][k][300:].mean(0)[0]))
+                stdsAhf_temp.append(np.sqrt(np.var(shf[i][j][k][300:].mean(0)[0])))
+            if i != 1 and j != 0:
+                stdsAhf.append(stdsAhf_temp)
+                meansAhf.append(meansAhf_temp)
         
 meansvarAhf = np.sqrt(np.asarray(meansAhf).var(0))     
 meansAhf = np.asarray(meansAhf).mean(0)
@@ -155,8 +160,8 @@ for i in range(3):
         meansTmf_temp = []
         stdsTmf_temp = []
         for k in range(5):
-            meansTmf_temp.append(np.mean(smf[i][j][k][300:][1]))
-            stdsTmf_temp.append(np.sqrt(np.var(smf[i][j][k][300:][1])))
+            meansTmf_temp.append(np.mean(smf[i][j][k][300:].mean(0)[1]))
+            stdsTmf_temp.append(np.sqrt(np.var(smf[i][j][k][300:].mean(0)[1])))
         stdsTmf.append(stdsTmf_temp)
         meansTmf.append(meansTmf_temp)
         
@@ -173,10 +178,14 @@ for i in range(3):
         meansThf_temp = []
         stdsThf_temp = []
         for k in range(5):
-            meansThf_temp.append(np.mean(shf[i][j][k][300:][1]))
-            stdsThf_temp.append(np.sqrt(np.var(shf[i][j][k][300:][1])))
-        stdsThf.append(stdsThf_temp)
-        meansThf.append(meansThf_temp)
+            if i == 1 and j == 0:
+                pass
+            else:
+                meansThf_temp.append(np.mean(shf[i][j][k][300:].mean(0)[1]))
+                stdsThf_temp.append(np.sqrt(np.var(shf[i][j][k][300:].mean(0)[1])))
+            if i != 1 and j != 0:
+                stdsThf.append(stdsThf_temp)
+                meansThf.append(meansThf_temp)
         
 meansvarThf = np.sqrt(np.asarray(meansThf).var(0))     
 meansThf = np.asarray(meansThf).mean(0)
@@ -242,8 +251,8 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
 
+'''
 datamf = np.load('data1to4medfreq.npy')
 datamf2 = np.load('data5to8medfreq.npy')
 datamf3 = np.load('data9to12medfreq.npy')
@@ -261,3 +270,4 @@ for i in range(1,150000):
 plt.figure()
 plt.plot(t,Traj)
 plt.show()
+'''
