@@ -21,7 +21,7 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-#jux = loadmat('JuxtaGroundTruth.mat')
+jux = loadmat('JuxtaGroundTruth.mat')
 '''
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
