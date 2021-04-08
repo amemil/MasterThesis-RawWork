@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=12-00:10:00
+#SBATCH --time=15-00:10:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=2500
@@ -13,6 +13,6 @@
 module load GCCcore/.9.3.0
 module load Python/3.8.2
 
-source ../../datasci/bin/activate
+source ../../dataci/bin/activate
 
 python3 Sim5to8.py
