@@ -1,0 +1,14 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Traceback (most recent call last):
+  File "Sim17to20high.py", line 17, in <module>
+    data = np.load('taudata17to20highstim.npy')
+  File "/cluster/work/emilamy/dataci/lib/python3.6/site-packages/numpy/lib/npyio.py", line 416, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: 'taudata17to20highstim.npy'

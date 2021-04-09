@@ -1,0 +1,15 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:205: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+Traceback (most recent call last):
+  File "Amed1.py", line 37, in <module>
+    np.save('Ainfmedfreq1.npy')
+  File "<__array_function__ internals>", line 4, in save
+TypeError: _save_dispatcher() missing 1 required positional argument: 'arr'
