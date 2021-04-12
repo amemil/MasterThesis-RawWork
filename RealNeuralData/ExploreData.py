@@ -21,7 +21,128 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-jux = loadmat('JuxtaGroundTruth.mat')
+#jux = loadmat('JuxtaGroundTruth.mat')
+ses1spikes = jux['ses']['times'][16]
+ses1stim=jux['ses']['stimTimes'][16]
+ses1spikeidraw = jux['ses']['ID'][16]
+ses1spikeid = []
+for i in range(len(ses1spikeidraw)):
+    ses1spikeid.append(ses1spikeidraw[i][-1])
+spiketrains = []
+for i in range(len(np.unique(np.asarray(ses1spikeid)))):
+    spiketrains.append([])
+for i in range(len(ses1spikes)):
+    spiketrains[ses1spikeid[i]-2].append(ses1spikes[i])
+for i in range(len(spiketrains)):
+    spiketrains[i] = np.asarray(spiketrains[i]).flatten()
+
+def cicc(lags,significance,n):
+    return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
+
+startstim = 3000
+stopstim = 3100
+
+pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
+
+
+post = spiketrains[11][(np.where((spiketrains[11] > startstim) & (spiketrains[11] < stopstim)))]
+
+postint = spiketrains[11].astype(int)
+preint = spiketrains[-1].astype(int)
+srp = []
+srpre = []
+for i in range(int(max(spiketrains[11]))):
+    srp.append(np.count_nonzero(postint==i))
+for i in range(int(max(spiketrains[-1]))):
+    srpre.append(np.count_nonzero(preint==i))
+
+plt.figure()
+plt.plot(np.linspace(1,len(srp),len(srp)),srp)
+plt.show()
+
+plt.figure()
+plt.plot(np.linspace(1,len(srpre),len(srpre)),srpre)
+plt.show()
+
+
+lineSize = [0.4, 0.4]
+plt.figure()
+plt.title('Spike Trains of selected neurons - pre v index '+str(i))
+plt.xlabel('Time (seconds)')
+plt.xlim([startstim,stopstim])
+plt.ylim([-0.5,1.9])
+plt.ylabel('Neuron')
+plt.eventplot([pre,post],linelengths=lineSize)#,colors= colorCodes)
+#plt.axvline(3914,color='g',linestyle='--',alpha=0.8)
+#plt.axvline(4034,color='g',linestyle='--',alpha=0.8,label='Possible stimulation time')
+plt.legend(loc=('upper center'))
+plt.show()
+
+'''
+for i in range(len(spiketrains)-1):
+    
+    post = spiketrains[i][(np.where((spiketrains[i] > startstim) & (spiketrains[i] < stopstim)))]
+
+    lineSize = [0.4, 0.4]
+    plt.figure()
+    plt.title('Spike Trains of selected neurons - pre v index '+str(i))
+    plt.xlabel('Time (seconds)')
+    plt.xlim([startstim,stopstim])
+    plt.ylim([-0.5,1.9])
+    plt.ylabel('Neuron')
+    plt.eventplot([pre,post],linelengths=lineSize)#,colors= colorCodes)
+#plt.axvline(3914,color='g',linestyle='--',alpha=0.8)
+#plt.axvline(4034,color='g',linestyle='--',alpha=0.8,label='Possible stimulation time')
+    plt.legend(loc=('upper center'))
+    plt.show()
+
+'''
+
+interesting = [11]
+
+for i in range(len(interesting)):
+    post = spiketrains[interesting[i]][(np.where((spiketrains[interesting[i]] > startstim) & (spiketrains[interesting[i]] < stopstim)))]
+
+    prems = pre*1000
+
+    postms = post * 1000
+
+    prems = prems.astype(int)
+
+    postms = postms.astype(int)
+
+
+    
+    start = min(prems[0],postms[0])
+    end = max(prems[-1],postms[-1])
+    binsize = 1
+    bins = int((end-start)/binsize)
+    timesteps = np.linspace(start,end-binsize,bins)
+
+    s1,s2 = np.zeros(bins),np.zeros(bins)
+    for j in range(bins):
+        if (timesteps[j] in prems):#: or timesteps[i]+1 in st2pos):
+            s1[j] = 1
+        if (timesteps[j] in postms):# or timesteps[i]+1 in st5pos):
+            s2[j] = 1
+        
+    maxlag = 10
+    lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
+    #ccov = plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
+    #ccor = (ccov[1]) / (len(s1) * s1.std() * s2.std())
+    ci = cicc(lags,0.99,len(s1))
+
+    plt.figure()
+    plt.title('Cross-correlation pre v index '+str(interesting[i]))
+    plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
+    plt.plot(lags,ci[1],'r--',label='99% CI under $H_0$')
+    plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
+    #plt.ylim((-0.035,0.035))
+    #plt.xticks(x,labels = ms)
+    plt.xlabel('Timelag (ms)')
+    plt.legend(loc=1,fancybox = True)
+    plt.show()
+
 '''
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
@@ -339,3 +460,7 @@ plt.yticks([0,1],labels=['1','2'])
 plt.legend()
 plt.show()
 '''  
+
+
+
+#

@@ -122,7 +122,7 @@ class ParameterInference():
     '''
     Class for estimating b1,b2,w0,Ap,Am,tau from SimulatedData, given data s1,s2.
     '''
-    def __init__(self,s1,s2,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+    def __init__(self,s1,s2,timesteps,P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                  , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
                      ,binsize = 1/200.0,taufix = 0.02,Afix = 0.005):
         self.s1 = s1
@@ -139,6 +139,7 @@ class ParameterInference():
         self.binsize = binsize
         self.Afix = Afix
         self.taufix = taufix
+        self.timesteps = timesteps
     
     def get_sec(self):
         return self.sec
@@ -227,12 +228,12 @@ class ParameterInference():
         Possible to speed it up? 
         How to initiate w0 and vp?
         '''
-        timesteps = np.int(self.sec/self.binsize)
-        t = np.zeros(timesteps)
-        wp = np.full((self.P,timesteps),np.float(self.w0est))
+        #timesteps = np.int(self.sec/self.binsize)
+        t = np.zeros(self.timesteps)
+        wp = np.full((self.P,self.timesteps),np.float(self.w0est))
         vp = np.ones(self.P)
         log_posterior = 0
-        for i in range(1,timesteps):
+        for i in range(1,self.timesteps):
             v_normalized = self.normalize(vp)
             perplexity = self.perplexity_func(v_normalized)
             if perplexity < 0.66:
@@ -254,12 +255,12 @@ class ParameterInference():
         Possible to speed it up? 
         How to initiate w0 and vp?
         '''
-        timesteps = np.int(self.sec/self.binsize)
-        t = np.zeros(timesteps)
-        wp = np.full((self.P,timesteps),np.float(self.w0est))
+        #timesteps = np.int(self.sec/self.binsize)
+        t = np.zeros(self.timesteps)
+        wp = np.full((self.P,self.timesteps),np.float(self.w0est))
         vp = np.ones(self.P)
         log_posterior = 0
-        for i in range(1,timesteps):
+        for i in range(1,self.timesteps):
             v_normalized = self.normalize(vp)
             perplexity = self.perplexity_func(v_normalized)
             if perplexity < 0.66:
@@ -275,13 +276,13 @@ class ParameterInference():
         return wp,t,log_posterior
     
     
-    def standardMH(self,w0est,b1,b2):
+    def standardMH(self):#,w0est,b1,b2):
         '''
         Monte Carlo sampling with particle filtering, Metropolis Hastings algorithm
         '''
-        self.w0est = w0est
-        self.b1est = b1
-        self.b2est = b2
+        #self.w0est = w0est
+        #self.b1est = b1
+        #self.b2est = b2
         theta_prior = np.array([0.001,0.005])#self.parameter_priors()
         theta = np.array([theta_prior])
         shapes = np.copy(self.shapes_prior)
