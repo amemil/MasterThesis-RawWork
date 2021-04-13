@@ -6,3 +6,4 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
+slurmstepd: error: *** JOB 173400 ON idun-03-17 CANCELLED AT 2021-04-10T10:03:54 ***

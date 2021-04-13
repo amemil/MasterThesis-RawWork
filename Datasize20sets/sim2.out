@@ -22,3 +22,4 @@ Also make sure that all modulefiles written in TCL start with the string
 
 
 
+slurmstepd: error: *** JOB 173381 ON idun-02-27 CANCELLED AT 2021-04-10T10:04:30 ***

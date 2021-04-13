@@ -6,3 +6,13 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+Traceback (most recent call last):
+  File "sim9to12mhfreq.py", line 46, in <module>
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 328, in standardMH
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 272, in particle_filter
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 174, in resampling
+  File "<__array_function__ internals>", line 6, in copy
+  File "/cluster/work/emilamy/dataci/lib/python3.6/site-packages/numpy/lib/function_base.py", line 792, in copy
+numpy.core._exceptions.MemoryError: Unable to allocate 938. KiB for an array with shape (120000,) and data type float64
