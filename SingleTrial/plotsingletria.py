@@ -8,6 +8,12 @@ Created on Wed Apr  7 15:35:37 2021
 
 import numpy as np              
 import matplotlib.pyplot as plt 
+from scipy.interpolate import make_interp_spline, BSpline
+import math
+from scipy.ndimage.filters import gaussian_filter1d
+import seaborn as sns
+from scipy.stats import norm
+
 plt.style.use('seaborn-darkgrid')
 
 emsb = np.load('1msbase3.npy') #1s trial baseline inference
@@ -78,21 +84,53 @@ base10msmeans = []
 base10msstds = []
 f10msmeans= []
 f10msstds = []
+
+trueA = 0.005
+trueTau = 0.02
+
+absoluteErrorA1s = []
+absoluteErrorA5s = []
+absoluteErrorA10s = []
+
+absoluteErrorTau1s = []
+absoluteErrorTau5s = []
+absoluteErrorTau10s = []
+
+entropiesA1s = []
+entropiesA5s = []
+entropiesA10s = []
+
+entropiesTau1s = []
+entropiesTau5s = []
+entropiesTau10s = []
+
 for i in range(120):
     base1msmeans.append(np.mean(emsb[i][300:],axis=0))
     base1msstds.append(np.sqrt(np.var(emsb[i][300:],axis=0)))
     f1msmeans.append(np.mean(emsf[i][300:],axis=0))
     f1msstds.append(np.sqrt(np.var(emsf[i][300:],axis=0)))
+    absoluteErrorA1s.append(abs(np.mean(emsb[i][300:],axis=0) - trueA))
+    absoluteErrorA1s.append(abs(np.mean(emsf[i][300:],axis=0) - trueA))
+    entropiesA1s.append(norm.entropy(loc = np.mean(emsb[i][300:],axis=0),scale = np.sqrt(np.var(emsb[i][300:],axis=0))))
+    entropiesA1s.append(norm.entropy(loc = np.mean(emsf[i][300:],axis=0),scale = np.sqrt(np.var(emsf[i][300:],axis=0))))
 for i in range(24):
     base5msmeans.append(np.mean(fmsb[i][300:],axis=0))
     base5msstds.append(np.sqrt(np.var(fmsb[i][300:],axis=0)))
     f5msmeans.append(np.mean(fmsf[i][300:],axis=0))
     f5msstds.append(np.sqrt(np.var(fmsf[i][300:],axis=0)))
+    absoluteErrorA5s.append(abs(np.mean(fmsb[i][300:],axis=0) - trueA))
+    absoluteErrorA5s.append(abs(np.mean(fmsf[i][300:],axis=0) - trueA))
+    entropiesA5s.append(norm.entropy(loc = np.mean(fmsb[i][300:],axis=0),scale = np.sqrt(np.var(fmsb[i][300:],axis=0))))
+    entropiesA5s.append(norm.entropy(loc = np.mean(fmsf[i][300:],axis=0),scale = np.sqrt(np.var(fmsf[i][300:],axis=0))))
 for i in range(12):
     base10msmeans.append(np.mean(tensb[i][300:],axis=0))
     base10msstds.append(np.sqrt(np.var(tensb[i][300:],axis=0)))
     f10msmeans.append(np.mean(tensf[i][300:],axis=0))
     f10msstds.append(np.sqrt(np.var(tensf[i][300:],axis=0)))
+    absoluteErrorA10s.append(abs(np.mean(tensb[i][300:],axis=0) - trueA))
+    absoluteErrorA10s.append(abs(np.mean(tensf[i][300:],axis=0) - trueA))
+    entropiesA10s.append(norm.entropy(loc = np.mean(tensb[i][300:],axis=0),scale = np.sqrt(np.var(tensf[i][300:],axis=0))))
+    entropiesA10s.append(norm.entropy(loc = np.mean(tensb[i][300:],axis=0),scale = np.sqrt(np.var(tensf[i][300:],axis=0))))
 
 tw1msmeans = []
 tw1msstds = []
@@ -106,22 +144,40 @@ tw10msmeans = []
 tw10msstds = []
 hun10msmeans= []
 hun10msstds = []
+
 for i in range(120):
     tw1msmeans.append(np.mean(es20hz[i][300:],axis=0))
     tw1msstds.append(np.sqrt(np.var(es20hz[i][300:],axis=0)))
     hun1msmeans.append(np.mean(es100hz[i][300:],axis=0))
     hun1msstds.append(np.sqrt(np.var(es100hz[i][300:],axis=0)))
+    absoluteErrorA1s.append(abs(np.mean(es20hz[i][300:],axis=0) - trueA))
+    absoluteErrorA1s.append(abs(np.mean(es100hz[i][300:],axis=0) - trueA))
+    entropiesA1s.append(norm.entropy(loc = np.mean(es20hz[i][300:],axis=0),scale = np.sqrt(np.var(es20hz[i][300:],axis=0))))
+    entropiesA1s.append(norm.entropy(loc = np.mean(es100hz[i][300:],axis=0),scale = np.sqrt(np.var(es100hz[i][300:],axis=0))))
 for i in range(24):
     tw5msmeans.append(np.mean(fs20hz[i][300:],axis=0))
     tw5msstds.append(np.sqrt(np.var(fs20hz[i][300:],axis=0)))
     hun5msmeans.append(np.mean(fs100hz[i][300:],axis=0))
     hun5msstds.append(np.sqrt(np.var(fs100hz[i][300:],axis=0)))
+    absoluteErrorA1s.append(abs(np.mean(fs20hz[i][300:],axis=0) - trueA))
+    absoluteErrorA1s.append(abs(np.mean(fs100hz[i][300:],axis=0) - trueA))
+    entropiesA1s.append(norm.entropy(loc = np.mean(fs20hz[i][300:],axis=0),scale = np.sqrt(np.var(fs20hz[i][300:],axis=0))))
+    entropiesA1s.append(norm.entropy(loc = np.mean(fs100hz[i][300:],axis=0),scale = np.sqrt(np.var(fs100hz[i][300:],axis=0))))
 for i in range(12):
     tw10msmeans.append(np.mean(ts20hz[i][300:],axis=0))
     tw10msstds.append(np.sqrt(np.var(ts20hz[i][300:],axis=0)))
     hun10msmeans.append(np.mean(ts100hz[i][300:],axis=0))
     hun10msstds.append(np.sqrt(np.var(ts100hz[i][300:],axis=0)))
+    absoluteErrorA1s.append(abs(np.mean(ts20hz[i][300:],axis=0) - trueA))
+    absoluteErrorA1s.append(abs(np.mean(ts100hz[i][300:],axis=0) - trueA))
+    entropiesA1s.append(norm.entropy(loc = np.mean(ts20hz[i][300:],axis=0),scale = np.sqrt(np.var(ts20hz[i][300:],axis=0))))
+    entropiesA1s.append(norm.entropy(loc = np.mean(ts100hz[i][300:],axis=0),scale = np.sqrt(np.var(ts100hz[i][300:],axis=0))))
 
+
+trueA = 0.005
+trueTau = 0.02
+
+'''
 x = np.linspace(1,120,120)
 
 fig, axes = plt.subplots(2,2, figsize=(8,8))
@@ -135,9 +191,21 @@ for ax_row in axes:
             #ax.ylim([0,0.2])
             #ax.xlim([0,121])
             #plt.xticks(x,labels = ticksss)
+            #it_temp = []
+            #meanstemp = []
             for i in range(120):
-                ax.errorbar(x[i], base1msmeans[i][0], yerr = base1msstds[i][0],marker = 'o')        
+                ax.errorbar(x[i], base1msmeans[i][0], yerr = base1msstds[i][0],marker = 'o')
+                #if math.isnan(base1msmeans[i][0]) == False:
+                #    meanstemp.append(base1msmeans[i][0])
+                #    it_temp.append(i+1)
+            #Final_array_smooth = gaussian_filter1d(meanstemp, sigma=2)
+            #x_int = np.linspace(1,120,len(Final_array_smooth))
+            #smooth = make_interp_spline(it_temp, meanstemp,k=1)
+            #y_int = smooth(x_int)
+            #ax.plot(it_temp,Final_array_smooth,'k-')
+            #sns.lineplot(it_temp,meanstemp)
             ax.axhline(0.005,color='r',linestyle='--',label='True Value')
+            #ax.plot(it_temp,Final_array_smooth,'k-')
             ax.set_ylabel('A estimation')
             ax.set_title('Baseline stimulus')
             ax.legend()
@@ -149,7 +217,7 @@ for ax_row in axes:
             #ax.xlim([0,121])
             #plt.xticks(x,labels = ticksss)
             for i in range(120):
-                ax.errorbar(x[i], f1msmeans[i][0], yerr = f1msstds[i][0],marker = 'o')        
+                ax.errorbar(x[i], f1msmeans[i][0], yerr = f1msstds[i][0],marker = 'o')
             ax.axhline(0.005,color='r',linestyle='--',label='True Value')
             #ax.set_xlabel('A estimation')
             ax.set_title('50 Hz additional stimulus')
@@ -198,7 +266,7 @@ for ax_row in axes:
             #ax.xlim([0,121])
             #plt.xticks(x,labels = ticksss)
             for i in range(24):
-                ax.errorbar(x[i], base5msmeans[i][0], yerr = base5msstds[i][0],marker = 'o')        
+                ax.errorbar(x[i], base5msmeans[i][0], yerr = base5msstds[i][0],marker = 'o') 
             ax.axhline(0.005,color='r',linestyle='--',label='True Value')
             ax.set_ylabel('A estimation')
             ax.set_title('Baseline stimulus')
@@ -211,7 +279,7 @@ for ax_row in axes:
             #ax.xlim([0,121])
             #plt.xticks(x,labels = ticksss)
             for i in range(24):
-                ax.errorbar(x[i], f5msmeans[i][0], yerr = f5msstds[i][0],marker = 'o')        
+                ax.errorbar(x[i], f5msmeans[i][0], yerr = f5msstds[i][0],marker = 'o')   
             ax.axhline(0.005,color='r',linestyle='--',label='True Value')
             #ax.set_xlabel('A estimation')
             ax.set_title('50 Hz additional stimulus')
@@ -855,3 +923,55 @@ for ax_row in axes:
         j += 1
 plt.tight_layout()
 plt.show()
+'''
+plt.figure()
+plt.title('Entropy versus absolute error (A estimation)')
+plt.xlabel('Absolute error')
+plt.ylabel('Entropy')
+for i in range(len(absoluteErrorA1s)):
+    if math.isnan(absoluteErrorA1s[i][0]) == False and entropiesA1s[i][0] > -6:
+        if i == 0:
+            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'rx',label = '1s trials')
+        else:
+            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'rx')
+for i in range(len(absoluteErrorA5s)):
+    if math.isnan(absoluteErrorA5s[i][0]) == False and entropiesA5s[i][0] > -6:
+        if i == 0:
+            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'gx',label = '5s trials')
+        else:
+            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'gx')
+for i in range(len(absoluteErrorA10s)):
+    if math.isnan(absoluteErrorA10s[i][0]) == False and entropiesA10s[i][0] > -6:
+        if i == 2:
+            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bx',label = '10s trials')
+        else:
+            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bx')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Entropy versus absolute error (Tau estimation)')
+plt.xlabel('Absolute error')
+plt.ylabel('Entropy')
+for i in range(len(absoluteErrorA1s)):
+    if math.isnan(absoluteErrorA1s[i][1]) == False and entropiesA1s[i][1] > -5:
+        if i == 0:
+            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'rx',label = '1s trials')
+        else:
+            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'rx')
+for i in range(len(absoluteErrorA5s)):
+    if math.isnan(absoluteErrorA5s[i][1]) == False and entropiesA5s[i][1] > -5:
+        if i == 0:
+            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'gx',label = '5s trials')
+        else:
+            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'gx')
+for i in range(len(absoluteErrorA10s)):
+    if math.isnan(absoluteErrorA10s[i][1]) == False and entropiesA10s[i][1] > -5:
+        if i == 2:
+            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bx',label = '10s trials')
+        else:
+            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bx')
+plt.legend()
+plt.show()
+            
+    

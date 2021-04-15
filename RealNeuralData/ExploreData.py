@@ -21,7 +21,7 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-#jux = loadmat('JuxtaGroundTruth.mat')
+jux = loadmat('JuxtaGroundTruth.mat')
 ses1spikes = jux['ses']['times'][16]
 ses1stim=jux['ses']['stimTimes'][16]
 ses1spikeidraw = jux['ses']['ID'][16]
@@ -39,8 +39,8 @@ for i in range(len(spiketrains)):
 def cicc(lags,significance,n):
     return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
 
-startstim = 3000
-stopstim = 3100
+startstim = 5110
+stopstim = 5210
 
 pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
@@ -57,14 +57,31 @@ for i in range(int(max(spiketrains[-1]))):
     srpre.append(np.count_nonzero(preint==i))
 
 plt.figure()
-plt.plot(np.linspace(1,len(srp),len(srp)),srp)
+plt.title('Observed firing rate presynaptic (stimulated) neuron')
+plt.xlabel('Time [s]')
+plt.ylabel('Firing rate [spikes / sec]')
+plt.plot(np.linspace(1,len(srpre),len(srpre)),srpre,label = 'Observed rate')
+for i in range(len(ses1stim)):
+    if i == 0:
+        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx',label = 'Stimulation')
+    else:
+        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx')
+plt.legend()
 plt.show()
 
 plt.figure()
-plt.plot(np.linspace(1,len(srpre),len(srpre)),srpre)
+plt.title('Observed firing rate postsynaptic neuron')
+plt.xlabel('Time [s]')
+plt.ylabel('Firing rate [spikes / sec]')
+plt.plot(np.linspace(1,len(srp),len(srp)),srp,label = 'Observed rate')
+#for i in range(len(ses1stim)):
+#    if i == 0:
+#        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'ro',label = 'Stimulation')
+#    else:
+#        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'ro')
 plt.show()
 
-
+'''
 lineSize = [0.4, 0.4]
 plt.figure()
 plt.title('Spike Trains of selected neurons - pre v index '+str(i))
@@ -77,7 +94,7 @@ plt.eventplot([pre,post],linelengths=lineSize)#,colors= colorCodes)
 #plt.axvline(4034,color='g',linestyle='--',alpha=0.8,label='Possible stimulation time')
 plt.legend(loc=('upper center'))
 plt.show()
-
+'''
 '''
 for i in range(len(spiketrains)-1):
     
@@ -133,14 +150,14 @@ for i in range(len(interesting)):
     ci = cicc(lags,0.99,len(s1))
 
     plt.figure()
-    plt.title('Cross-correlation pre v index '+str(interesting[i]))
+    plt.title('Cross-correlation candidate neuron pair (Stimulated period)')#+str(interesting[i]))
     plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
     plt.plot(lags,ci[1],'r--',label='99% CI under $H_0$')
     plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
     #plt.ylim((-0.035,0.035))
     #plt.xticks(x,labels = ms)
     plt.xlabel('Timelag (ms)')
-    plt.legend(loc=1,fancybox = True)
+    plt.legend(loc=1)
     plt.show()
 
 '''

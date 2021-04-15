@@ -22,3 +22,4 @@ inference.b2_w0_estimation()
 sample = inference.standardMH()
 
 np.save('NonstimCand1Sample',sample)
+

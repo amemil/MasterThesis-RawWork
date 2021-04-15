@@ -12,6 +12,110 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r maps}
 library(RcppCNPy)
 library(EnvStats)
-A = npyLoad("ASamples.npy")
+A1 = npyLoad("A1.npy")
+A2 = npyLoad("A2.npy")
+A3 = npyLoad("A3.npy")
+A4 = npyLoad("A4.npy")
+A5 = npyLoad("A5.npy")
+
+Maps = c()
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.1, by = stepsize)
+
+
+Maps <- append(Maps,(which.max(unlist(lapply(x, FUN = dens, A1[c(1,1200)]))) - 1)*stepsize)
+Maps <- append(Maps,(which.max(unlist(lapply(x, FUN = dens, A2[c(1,1200)]))) - 1)*stepsize)
+Maps <- append(Maps,(which.max(unlist(lapply(x, FUN = dens, A3[c(1,1200)]))) - 1)*stepsize)
+Maps <- append(Maps,(which.max(unlist(lapply(x, FUN = dens, A4[c(1,1200)]))) - 1)*stepsize)
+Maps <- append(Maps,(which.max(unlist(lapply(x, FUN = dens, A5[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsA.npy",Maps)
+
+tau1 = npyLoad("tau1.npy")
+tau2 = npyLoad("tau2.npy")
+tau3 = npyLoad("tau3.npy")
+tau4 = npyLoad("tau4.npy")
+tau5 = npyLoad("tau5.npy")
+
+Maps2 = c()
+
+
+Maps2 <- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, tau1[c(1,1200)]))) - 1)*stepsize)
+Maps2 <- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, tau2[c(1,1200)]))) - 1)*stepsize)
+Maps2 <- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, tau3[c(1,1200)]))) - 1)*stepsize)
+Maps2 <- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, tau4[c(1,1200)]))) - 1)*stepsize)
+Maps2 <- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, tau5[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsTau.npy",Maps2)
+
+A1sim = npyLoad("Asim1.npy")
+A2sim = npyLoad("Asim2.npy")
+A3sim = npyLoad("Asim3.npy")
+A4sim = npyLoad("Asim4.npy")
+A5sim = npyLoad("Asim5.npy")
+
+Maps3 = c()
+
+Maps3 <- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, A1sim[c(1,1200)]))) - 1)*stepsize)
+Maps3 <- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, A2sim[c(1,1200)]))) - 1)*stepsize)
+Maps3 <- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, A3sim[c(1,1200)]))) - 1)*stepsize)
+Maps3 <- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, A4sim[c(1,1200)]))) - 1)*stepsize)
+Maps3 <- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, A5sim[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsASim.npy",Maps3)
+
+tau1sim = npyLoad("tausim1.npy")
+tau2sim = npyLoad("tausim2.npy")
+tau3sim = npyLoad("tausim3.npy")
+tau4sim = npyLoad("tausim4.npy")
+tau5sim = npyLoad("tausim5.npy")
+
+Maps4 = c()
+
+
+Maps4 <- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, tau1sim[c(1,1200)]))) - 1)*stepsize)
+Maps4 <- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, tau2sim[c(1,1200)]))) - 1)*stepsize)
+Maps4 <- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, tau3sim[c(1,1200)]))) - 1)*stepsize)
+Maps4 <- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, tau4sim[c(1,1200)]))) - 1)*stepsize)
+Maps4 <- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, tau5sim[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsTauSim.npy",Maps4)
+
+A1alt = npyLoad("Aalt1.npy")
+A2alt = npyLoad("Aalt2.npy")
+A3alt = npyLoad("Aalt3.npy")
+A4alt = npyLoad("Aalt4.npy")
+A5alt = npyLoad("Aalt5.npy")
+
+Maps5 = c()
+
+
+Maps5 <- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, A1alt[c(1,1200)]))) - 1)*stepsize)
+Maps5 <- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, A2alt[c(1,1200)]))) - 1)*stepsize)
+Maps5 <- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, A3alt[c(1,1200)]))) - 1)*stepsize)
+Maps5 <- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, A4alt[c(1,1200)]))) - 1)*stepsize)
+Maps5 <- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, A5alt[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsAAlt.npy",Maps5)
+
+tau1alt = npyLoad("taualt1.npy")
+tau2alt = npyLoad("taualt2.npy")
+tau3alt = npyLoad("taualt3.npy")
+tau4alt = npyLoad("taualt4.npy")
+tau5alt = npyLoad("taualt5.npy")
+
+Maps6 = c()
+
+
+Maps6 <- append(Maps6,(which.max(unlist(lapply(x, FUN = dens, tau1alt[c(1,1200)]))) - 1)*stepsize)
+Maps6 <- append(Maps6,(which.max(unlist(lapply(x, FUN = dens, tau2alt[c(1,1200)]))) - 1)*stepsize)
+Maps6 <- append(Maps6,(which.max(unlist(lapply(x, FUN = dens, tau3alt[c(1,1200)]))) - 1)*stepsize)
+Maps6 <- append(Maps6,(which.max(unlist(lapply(x, FUN = dens, tau4alt[c(1,1200)]))) - 1)*stepsize)
+Maps6 <- append(Maps6,(which.max(unlist(lapply(x, FUN = dens, tau5alt[c(1,1200)]))) - 1)*stepsize)
+
+npySave("MapsTauAlt.npy",Maps6)
 ```
 

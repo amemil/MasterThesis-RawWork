@@ -1,0 +1,41 @@
+---
+title: "MapRealMaster"
+author: "Emil Myhre"
+date: "13 4 2021"
+output: html_document
+---
+
+---
+title: "RealDataMAP"
+author: "Emil Myhre"
+date: "29 11 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r MAP}
+library(RcppCNPy)
+library(EnvStats)
+Stim = npyLoad("StimCand1Sample.npy")
+NonStim = npyLoad("NonstimCand1Sample.npy")
+StimA = Stim[c(300:1500),1]
+StimTau = Stim[c(300:1500),2]
+NonStimA = NonStim[c(300:1500),1]
+NonStimTau = NonStim[c(300:1500),2]
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.1, by = stepsize)
+MapAStim = which.max(unlist(lapply(x, FUN = dens, StimA)) - 1)*stepsize
+MapTauStim =  which.max(unlist(lapply(x, FUN = dens, StimTau)) - 1)*stepsize
+MapANonStim =  which.max(unlist(lapply(x, FUN = dens, NonStimA)) - 1)*stepsize
+MapTauNonStim =  which.max(unlist(lapply(x, FUN = dens, NonStimTau)) - 1)*stepsize
+npySave("MapAStimCand1.npy",MapAStim)
+npySave("MapTauStimCand1.npy",MapTauStim)
+npySave("MapANonStimCand1.npy",MapANonStim)
+npySave("MapTauNonStimCand1.npy",MapTauNonStim)
+```
