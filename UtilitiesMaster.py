@@ -675,8 +675,9 @@ class ExperimentDesign():
             ests = np.vstack((ests, means))
             entrs = np.vstack((entrs,self.NormEntropy(cov)))
             new_shapes, new_rates = self.adjust_proposal(means,sample)
-            inference_optim.set_shapes_prior(new_shapes)
-            inference_optim.set_rates_prior(new_rates)
+            if optimised == True:
+                inference_optim.set_shapes_prior(new_shapes)
+                inference_optim.set_rates_prior(new_rates)
         return ests,entrs,optimal_freqs
           
             
