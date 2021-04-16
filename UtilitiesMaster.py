@@ -665,7 +665,7 @@ class ExperimentDesign():
             elif constant == True:
                 self.datasim(freq_const,self.Ap,self.tau,init=init,optim = False,l=False)
             elif nofreq == True:
-                self.datasim_const(freq_const,self.Ap,self.tau,init=init,optim = False,l=False)
+                self.datasim_const(self.Ap,self.tau,init=init,optim = False,l=False)
             inference_whole.set_s1(self.s1)
             inference_whole.set_s2(self.s2)
             inference_whole.set_sec(np.int(len(self.s1)*self.binsize))
@@ -709,12 +709,12 @@ class ExperimentDesign():
                 optimal_freqs.append(self.freq_optimiser(means,cov,init = init, optim = True,l=False,inference = inference_optim))
                 self.s1,self.s2=self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = True,l=False)
             elif constant == True:
-                self.s1,self.s2=self.datasim_constant(self.Ap,self.tau,init=init,optim = True,l=False)
+                self.s1,self.s2=self.datasim(self.freqs_init[0],self.Ap,self.tau,init=init,optim = True,l=False)
             elif random == True:
                 freq_temp = np.random.choice(self.freqs_init)
                 self.s1,self.s2=self.datasim(freq_temp,self.Ap,self.tau,init=init,optim = True,l=False)
-            elif constant == True:
-                self.s1,self.s2=self.datasim(self.freqs_init[0],self.Ap,self.tau,init=init,optim = True,l=False)
+            elif nofreq == True:
+                self.s1,self.s2=self.datasim_const(self.Ap,self.tau,init=init,optim = True,l=False)
             inference_whole.set_s1(self.s1)
             inference_whole.set_s2(self.s2)
             sample = inference_whole.standardMH_mv(means,cov)
