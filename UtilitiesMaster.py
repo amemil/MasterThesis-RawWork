@@ -696,7 +696,7 @@ class ExperimentDesign():
         #cov = np.cov(np.transpose(self.test))
         entrs = np.array([self.NormEntropy(cov)])
         ests = np.array([means])
-        new_shapes, new_rates = self.adjust_proposal(means,self.test)
+        new_shapes, new_rates = self.adjust_proposal(means,sample)
         if optimised == True:
             inference_optim = ParameterInference(1,1,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                                                  , shapes_prior = new_shapes, rates_prior = new_rates,sec=self.trialsize\

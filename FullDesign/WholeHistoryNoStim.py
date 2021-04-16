@@ -13,7 +13,7 @@ import UtilitiesMaster as ut
 
 design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,trialsize=5\
                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20,longinit = 60)
-means,entrs,optms = design.onlineDesign_initdata(nofreq =True,constant = False, random = False, optimised = False)
+means,entrs,optms = design.onlineDesign_wh(nofreq =True,constant = False, random = False, optimised = False)
 
 np.save('EstimatesWholeNofreq1',means)
 np.save('EntropiesWholeNofreq1',entrs)
