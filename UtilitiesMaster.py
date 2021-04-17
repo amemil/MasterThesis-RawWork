@@ -587,7 +587,7 @@ class ExperimentDesign():
                 self.s2 = np.hstack((self.s2,s2))
                 self.W = np.hstack((self.W,W))
         else:
-            return s1,s2
+            return s1,s2,W
         
     def datasim_const(self,a,tau,init=False,optim = False,l = False):
         iterations = [np.int(self.trialsize/self.binsize),np.int(self.longinit/self.binsize)][l==True]
@@ -612,7 +612,7 @@ class ExperimentDesign():
                 self.s2 = np.hstack((self.s2,s2))
                 self.W = np.hstack((self.W,W))
         else:
-            return s1,s2
+            return s1,s2,W
         
     
     def adjust_proposal(self,means,sample):
@@ -625,7 +625,7 @@ class ExperimentDesign():
         for j in range(len(self.freqs_init)):
             entropies_temp = []
             for k in range(self.reals):
-                s1temp, s2temp = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
+                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
                 inference.set_s1(s1temp)
                 inference.set_s2(s2temp)
                 sample_temp = inference.standardMH_mv(means,cov)
@@ -686,7 +686,7 @@ class ExperimentDesign():
         optimal_freqs = []
         trials = np.int(self.maxtime / self.trialsize)
         init = True
-        s1init, s2init=self.datasim(self.freqs_init[0],self.Ap,self.tau,init = init, optim = True,l = True)
+        s1init,s2init,_=self.datasim(self.freqs_init[0],self.Ap,self.tau,init = init, optim = True,l = True)
         inference_long = ParameterInference(s1init,s2init,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=self.longinit\
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
@@ -707,14 +707,14 @@ class ExperimentDesign():
         for i in range(trials):
             if optimised == True:
                 optimal_freqs.append(self.freq_optimiser(means,cov,init = init, optim = True,l=False,inference = inference_optim))
-                self.s1,self.s2=self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = True,l=False)
+                self.s1,self.s2,self.W=self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = True,l=False)
             elif constant == True:
-                self.s1,self.s2=self.datasim(self.freqs_init[0],self.Ap,self.tau,init=init,optim = True,l=False)
+                self.s1,self.s2,self.W=self.datasim(self.freqs_init[0],self.Ap,self.tau,init=init,optim = True,l=False)
             elif random == True:
                 freq_temp = np.random.choice(self.freqs_init)
-                self.s1,self.s2=self.datasim(freq_temp,self.Ap,self.tau,init=init,optim = True,l=False)
+                self.s1,self.s2,self.W=self.datasim(freq_temp,self.Ap,self.tau,init=init,optim = True,l=False)
             elif nofreq == True:
-                self.s1,self.s2=self.datasim_const(self.Ap,self.tau,init=init,optim = True,l=False)
+                self.s1,self.s2,self.W=self.datasim_const(self.Ap,self.tau,init=init,optim = True,l=False)
             inference_whole.set_s1(self.s1)
             inference_whole.set_s2(self.s2)
             sample = inference_whole.standardMH_mv(means,cov)
