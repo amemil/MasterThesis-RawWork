@@ -1,0 +1,20 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+Traceback (most recent call last):
+  File "17to20medfreq.py", line 43, in <module>
+    est = inference_sub.standardMH() 
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 328, in standardMH
+    _,_,new_log_post = self.particle_filter(theta_next[0],theta_next[1])
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 265, in particle_filter
+    wp = np.full((self.P,timesteps),np.float(self.w0est))
+  File "/cluster/work/emilamy/dataci/lib/python3.6/site-packages/numpy/core/numeric.py", line 314, in full
+    a = empty(shape, dtype, order)
+numpy.core._exceptions.MemoryError: Unable to allocate 68.7 MiB for an array with shape (100, 90000) and data type float64

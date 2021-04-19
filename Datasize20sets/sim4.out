@@ -1,25 +1,8 @@
-Lmod has detected the following error: The following module(s) are unknown:
-"GCCcore/.9.3.0"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "GCCcore/.9.3.0"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-Lmod has detected the following error: The following module(s) are unknown:
-"Python/3.8.2"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "Python/3.8.2"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-slurmstepd: error: *** JOB 173383 ON idun-02-23 CANCELLED AT 2021-04-10T10:04:42 ***

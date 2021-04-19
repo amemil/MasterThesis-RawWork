@@ -1,39 +1,8 @@
-Lmod has detected the following error: The following module(s) are unknown:
-"GCCcore/.9.3.0"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "GCCcore/.9.3.0"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-Lmod has detected the following error: The following module(s) are unknown:
-"Python/3.8.2"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "Python/3.8.2"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: overflow encountered in exp
-  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
-Traceback (most recent call last):
-  File "Sim17to20.py", line 39, in <module>
-    Tauest = inference_sub.standardMH() 
-  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 328, in standardMH
-    _,_,new_log_post = self.particle_filter(theta_next[0],theta_next[1])
-  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 272, in particle_filter
-    wp = self.resampling(v_normalized,wp)
-  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 170, in resampling
-    wp_new = np.copy(wp)
-  File "<__array_function__ internals>", line 6, in copy
-  File "/cluster/work/emilamy/dataci/lib/python3.6/site-packages/numpy/lib/function_base.py", line 792, in copy
-    return array(a, order=order, subok=subok, copy=True)
-numpy.core._exceptions.MemoryError: Unable to allocate 68.7 MiB for an array with shape (100, 90000) and data type float64

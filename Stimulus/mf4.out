@@ -1,0 +1,33 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py:2821: RuntimeWarning: overflow encountered in exp
+  return np.exp(self._logpdf(x, a))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:212: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:212: RuntimeWarning: divide by zero encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+1.1951291785792557
+0.9673717588366105
+1.2346935181963752
+1.3191182946659303
+1.132133654148598
+0.9435545262195082
+1.0959169801125543
+1.1055078851607445
+0.9998754137466432
+Traceback (most recent call last):
+  File "13to16medfreq.py", line 44, in <module>
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 328, in standardMH
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 272, in particle_filter
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 174, in resampling
+  File "<__array_function__ internals>", line 6, in copy
+  File "/cluster/work/emilamy/dataci/lib/python3.6/site-packages/numpy/lib/function_base.py", line 792, in copy
+numpy.core._exceptions.MemoryError: Unable to allocate 703. KiB for an array with shape (90000,) and data type float64

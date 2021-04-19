@@ -1,0 +1,18 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:238: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:171: RuntimeWarning: divide by zero encountered in log
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:171: RuntimeWarning: invalid value encountered in multiply
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:287: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/self.P)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:168: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
