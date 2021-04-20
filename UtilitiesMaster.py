@@ -625,7 +625,8 @@ class ExperimentDesign():
         for j in range(len(self.freqs_init)):
             entropies_temp = []
             for k in range(self.reals):
-                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
+                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],self.Ap,self.tau,init = init, optim = optim,l = l)
+                #s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
                 inference.set_s1(s1temp)
                 inference.set_s2(s2temp)
                 sample_temp = inference.standardMH_mv(means,cov)
@@ -752,10 +753,11 @@ if __name__ == "__main__":
 
     #np.random.seed(5) 
     '''
-    
-    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
-                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
-    ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
+    a = np.ones((2,2))
+    print(np.linalg.norm(a,axis=1))
+    #design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
+    #             ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
+    #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
     '''
     theta_1ms_baseline = [] 
     theta_1ms_freq = []
