@@ -15,6 +15,6 @@ design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,tri
                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20,longinit = 60)
 means,entrs,optms = design.onlineDesign_initdata(nofreq =False,constant = False, random = False, optimised = True)
 
-np.save('EstimatesInitOptim1',means)
-np.save('EntropiesInitOptim1',entrs)
-np.save('OptFrequenciesInitOptim1',optms)
+np.save('EstimatesInitOptimUpdatedW0est',means)
+np.save('EntropiesInitOptimUpdatedW0est',entrs)
+np.save('OptFrequenciesInitOptimUpdatedW0est',optms)
