@@ -21,7 +21,7 @@ def rmse(predictions, targets):
     return np.sqrt(((predictions - targets) ** 2).mean())
 
 ### WHOLE HISTORY STUFF ####
-
+'''
 estimates_optim = np.load('EstimatesWholeOptim1.npy')
 estimates_random = np.load('EstimatesWholeRandom1.npy')
 estimates_const = np.load('EstimatesWholeConst20_1.npy')
@@ -40,11 +40,29 @@ mse_random = []
 mse_const = []
 mse_nf = []
 
+mse_optim_a = []
+mse_random_a = []
+mse_const_a = []
+mse_nf_a = []
+
+mse_optim_t = []
+mse_random_t = []
+mse_const_t = []
+mse_nf_t = []
+
 for i in range(len(estimates_optim)):
     mse_optim.append(rmse(truevalues, estimates_optim[i]))
     mse_random.append(rmse(truevalues, estimates_random[i]))
     mse_const.append(rmse(truevalues, estimates_const[i]))
     mse_nf.append(rmse(truevalues,estimates_nf[i]))
+    mse_optim_a.append(rmse(truevalues[0], estimates_optim[i][0]))
+    mse_random_a.append(rmse(truevalues[0], estimates_random[i][0]))
+    mse_const_a.append(rmse(truevalues[0], estimates_const[i]))
+    mse_nf_a.append(rmse(truevalues[0],estimates_nf[i][0]))
+    mse_optim_t.append(rmse(truevalues[1], estimates_optim[i][1]))
+    mse_random_t.append(rmse(truevalues[1], estimates_random[i][1]))
+    mse_const_t.append(rmse(truevalues[1], estimates_const[i][1]))
+    mse_nf_t.append(rmse(truevalues[1],estimates_nf[i][1]))
 
 plt.figure()
 plt.title('Inference on whole spike history')
@@ -59,14 +77,130 @@ plt.legend()
 plt.show()
 
 plt.figure()
-plt.title('Entropies on whole spike history')
+plt.title('A inference on whole spike history')
 plt.xlabel('Trial')
 plt.ylabel('RMSE')
+x = np.linspace(1,13,13)
+plt.plot(x,mse_optim_a,'rx-',label='Optimised Frequency')
+plt.plot(x,mse_random_a,'bx-',label='Randomised Frequency')
+plt.plot(x,mse_const_a,'gx-',label='Constant 20Hz')
+plt.plot(x,mse_nf_a,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Tau inference on whole spike history')
+plt.xlabel('Trial')
+plt.ylabel('RMSE')
+x = np.linspace(1,13,13)
+plt.plot(x,mse_optim_t,'rx-',label='Optimised Frequency')
+plt.plot(x,mse_random_t,'bx-',label='Randomised Frequency')
+plt.plot(x,mse_const_t,'gx-',label='Constant 20Hz')
+plt.plot(x,mse_nf_t,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Entropies on whole spike history')
+plt.xlabel('Trial')
+plt.ylabel('Entropy')
 x = np.linspace(1,13,13)
 plt.plot(x,entropies_optim,'rx-',label='Optimised Frequency')
 plt.plot(x,entropies_random,'bx-',label='Randomised Frequency')
 plt.plot(x,entropies_const,'gx-',label='Constant 20Hz')
 plt.plot(x,entropies_nf,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+'''
+
+
+estimates_init_optim = np.load('EstimatesInitOptim1.npy')
+estimates_init_random = np.load('EstimatesInitRandom1.npy')
+estimates_init_const = np.load('EstimatesInitConst20_1.npy')
+estimates_init_nf = np.load('EstimatesInitNoFreq1.npy')
+
+optimal_init_freqs = np.load('OptFrequenciesInitOptim1.npy')
+#optimal_const = np.load('OptFrequenciesWholeConst20_1.npy')
+
+entropies_init_optim = np.load('EntropiesInitOptim1.npy')
+entropies_init_random = np.load('EntropiesInitRandom1.npy')
+entropies_init_const = np.load('EntropiesInitConst20_1.npy')
+entropies_init_nf = np.load('EntropiesInitNoFreq1.npy')
+
+mse_init_optim = []
+mse_init_random = []
+mse_init_const = []
+mse_init_nf = []
+
+mse_init_optim_a = []
+mse_init_random_a = []
+mse_init_const_a = []
+mse_init_nf_a = []
+
+mse_init_optim_t = []
+mse_init_random_t = []
+mse_init_const_t = []
+mse_init_nf_t = []
+
+for i in range(len(estimates_init_optim)):
+    mse_init_optim.append(rmse(truevalues, estimates_init_optim[i]))
+    mse_init_random.append(rmse(truevalues, estimates_init_random[i]))
+    mse_init_const.append(rmse(truevalues, estimates_init_const[i]))
+    mse_init_nf.append(rmse(truevalues,estimates_init_nf[i]))
+    mse_init_optim_a.append(rmse(truevalues[0], estimates_init_optim[i][0]))
+    mse_init_random_a.append(rmse(truevalues[0], estimates_init_random[i][0]))
+    mse_init_const_a.append(rmse(truevalues[0], estimates_init_const[i]))
+    mse_init_nf_a.append(rmse(truevalues[0],estimates_init_nf[i][0]))
+    mse_init_optim_t.append(rmse(truevalues[1], estimates_init_optim[i][1]))
+    mse_init_random_t.append(rmse(truevalues[1], estimates_init_random[i][1]))
+    mse_init_const_t.append(rmse(truevalues[1], estimates_init_const[i][1]))
+    mse_init_nf_t.append(rmse(truevalues[1],estimates_init_nf[i][1]))
+
+plt.figure()
+plt.title('Inference with initial data')
+plt.xlabel('Trial')
+plt.ylabel('RMSE')
+x = np.linspace(1,13,13)
+plt.plot(x,mse_init_optim,'rx-',label='Optimised Frequency')
+plt.plot(x,mse_init_random,'bx-',label='Randomised Frequency')
+plt.plot(x,mse_init_const,'gx-',label='Constant 20Hz')
+plt.plot(x,mse_init_nf,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('A inference with initial data')
+plt.xlabel('Trial')
+plt.ylabel('RMSE')
+x = np.linspace(1,13,13)
+plt.plot(x,mse_init_optim_a,'rx-',label='Optimised Frequency')
+plt.plot(x,mse_init_random_a,'bx-',label='Randomised Frequency')
+plt.plot(x,mse_init_const_a,'gx-',label='Constant 20Hz')
+plt.plot(x,mse_init_nf_a,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Tau inference with initial data')
+plt.xlabel('Trial')
+plt.ylabel('RMSE')
+x = np.linspace(1,13,13)
+plt.plot(x,mse_init_optim_t,'rx-',label='Optimised Frequency')
+plt.plot(x,mse_init_random_t,'bx-',label='Randomised Frequency')
+plt.plot(x,mse_init_const_t,'gx-',label='Constant 20Hz')
+plt.plot(x,mse_init_nf_t,'kx-',label='Baseline frequency')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Entropies with initial data')
+plt.xlabel('Trial')
+plt.ylabel('Entropy')
+x = np.linspace(1,13,13)
+plt.plot(x,entropies_init_optim,'rx-',label='Optimised Frequency')
+plt.plot(x,entropies_init_random,'bx-',label='Randomised Frequency')
+plt.plot(x,entropies_init_const,'gx-',label='Constant 20Hz')
+plt.plot(x,entropies_init_nf,'kx-',label='Baseline frequency')
 plt.legend()
 plt.show()
     

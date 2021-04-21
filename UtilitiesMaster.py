@@ -158,6 +158,8 @@ class ParameterInference():
         self.shapes_prior = shapes_prior
     def set_rates_prior(self,rates_prior):
         self.rates_prior = rates_prior
+    def set_w0est(self,w0est):
+        self.w0est=w0est
     
     
     def b1_estimation(self):
@@ -658,6 +660,7 @@ class ExperimentDesign():
         init = False
         for i in range(trials):
             if optimised == True:
+                inference_optim.set_w0est(self.W[-1])
                 optimal_freqs.append(self.freq_optimiser(means,cov,init = init, optim = True,l=False,inference = inference_optim))
                 self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = False,l=False)
             elif random == True:
@@ -707,6 +710,8 @@ class ExperimentDesign():
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
         for i in range(trials):
             if optimised == True:
+                if init == False:
+                    inference_optim.set_w0est(self.W[-1])
                 optimal_freqs.append(self.freq_optimiser(means,cov,init = init, optim = True,l=False,inference = inference_optim))
                 self.s1,self.s2,self.W=self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = True,l=False)
             elif constant == True:
@@ -718,6 +723,8 @@ class ExperimentDesign():
                 self.s1,self.s2,self.W=self.datasim_const(self.Ap,self.tau,init=init,optim = True,l=False)
             inference_whole.set_s1(self.s1)
             inference_whole.set_s2(self.s2)
+            if init == False:
+                inference_whole.set_w0est(self.W[-1])
             sample = inference_whole.standardMH_mv(means,cov)
             if i == 0:
                 init = False
