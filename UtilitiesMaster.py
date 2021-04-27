@@ -627,8 +627,8 @@ class ExperimentDesign():
         for j in range(len(self.freqs_init)):
             entropies_temp = []
             for k in range(self.reals):
-                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],self.Ap,self.tau,init = init, optim = optim,l = l)
-                #s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
+                #s1temp,s2temp,_ = self.datasim(self.freqs_init[j],self.Ap,self.tau,init = init, optim = optim,l = l)
+                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
                 inference.set_s1(s1temp)
                 inference.set_s2(s2temp)
                 sample_temp = inference.standardMH_mv(means,cov)
@@ -637,6 +637,23 @@ class ExperimentDesign():
                 #print(entropies_temp)
             entropies.append(np.mean(entropies_temp))
             print(entropies)
+        return self.freqs_init[np.where(entropies == np.amin(entropies))[0][0]]
+    
+    def freq_optimiser_true(self,init,optim,l,inference):
+        entropies = []
+        for j in range(len(self.freqs_init)):
+            entropies_temp = []
+            for k in range(self.reals):
+                s1temp,s2temp,_ = self.datasim(self.freqs_init[j],self.Ap,self.tau,init = init, optim = optim,l = l)
+                #s1temp,s2temp,_ = self.datasim(self.freqs_init[j],means[0],means[1],init = init, optim = optim,l = l)
+                inference.set_s1(s1temp)
+                inference.set_s2(s2temp)
+                sample_temp = inference.standardMH()
+                cov_temp = np.cov(np.transpose(sample_temp[300:,:]))
+                entropies_temp.append(self.NormEntropy(cov_temp))
+                #print(entropies_temp)
+            entropies.append(np.mean(entropies_temp))
+            #print(entropies)
         return self.freqs_init[np.where(entropies == np.amin(entropies))[0][0]]
         
     def onlineDesign_wh(self,nofreq = False, constant = False, random = False, optimised = True):
@@ -678,6 +695,53 @@ class ExperimentDesign():
             cov = np.cov(np.transpose(sample[300:,:]))
             ests = np.vstack((ests, means))
             entrs = np.vstack((entrs,self.NormEntropy(cov)))
+            new_shapes, new_rates = self.adjust_proposal(means,sample)
+            if optimised == True:
+                inference_optim.set_shapes_prior(new_shapes)
+                inference_optim.set_rates_prior(new_rates)
+        return ests,entrs,optimal_freqs
+    
+    def onlineDesign_wh_true(self,nofreq = False, constant = False, random = False, optimised = True):
+        freq_const = self.freqs_init[0]
+        optimal_freqs = []
+        trials = np.int(self.maxtime / self.trialsize)
+        init = True
+        inference_whole = ParameterInference(1,1,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                        , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=self.trialsize\
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        if optimised == True:
+            inference_optim = ParameterInference(1,1,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                                 , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=self.trialsize\
+                                                     ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
+        means = 1
+        cov = 1
+        for i in range(trials):
+            if optimised == True:
+                if init == False:
+                    inference_optim.set_w0est(self.W[-1])
+                    optimal_freqs.append(self.freq_optimiser(means,cov,init = init, optim = True,l=False,inference = inference_optim))
+                    self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = False,l=False)
+                else:
+                    optimal_freqs.append(self.freq_optimiser_true(init = init, optim = True,l=False,inference = inference_optim))
+                    self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = False,l=False)
+            elif random == True:
+                freq_temp = np.random.choice(self.freqs_init)
+                self.datasim(freq_temp,self.Ap,self.tau,init=init,optim = False,l=False)
+            elif constant == True:
+                self.datasim(freq_const,self.Ap,self.tau,init=init,optim = False,l=False)
+            elif nofreq == True:
+                self.datasim_const(self.Ap,self.tau,init=init,optim = False,l=False)
+            inference_whole.set_s1(self.s1)
+            inference_whole.set_s2(self.s2)
+            inference_whole.set_sec(np.int(len(self.s1)*self.binsize))
+            sample = inference_whole.standardMH()
+            means, cov = [np.mean(sample[300:,0]),np.mean(sample[300:,1])], np.cov(np.transpose(sample[300:,:]))
+            if i == 0:
+                init = True
+                ests, entrs = np.array([means]), np.array([self.NormEntropy(cov)])
+            else:
+                ests = np.vstack((ests, means))
+                entrs = np.vstack((entrs,self.NormEntropy(cov)))
             new_shapes, new_rates = self.adjust_proposal(means,sample)
             if optimised == True:
                 inference_optim.set_shapes_prior(new_shapes)
@@ -728,7 +792,6 @@ class ExperimentDesign():
             sample = inference_whole.standardMH_mv(means,cov)
             if i == 0:
                 init = False
-            sample = inference_whole.standardMH_mv(means,cov)
             means, cov = [np.mean(sample[300:,0]),np.mean(sample[300:,1])], np.cov(np.transpose(sample[300:,:]))
             ests = np.vstack((ests, means))
             entrs = np.vstack((entrs,self.NormEntropy(cov)))
@@ -760,8 +823,8 @@ if __name__ == "__main__":
 
     #np.random.seed(5) 
     '''
-    a = np.ones((2,2))
-    print(np.linalg.norm(a,axis=1))
+    #a = np.ones((2,2))
+    #print(np.linalg.norm(a,axis=1))
     #design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
     #             ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
     #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)

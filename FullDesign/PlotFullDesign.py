@@ -15,22 +15,28 @@ from scipy.stats import norm
 
 plt.style.use('seaborn-darkgrid')
 
-truevalues = [0.005,0.02]  
+truevalues = np.array([0.005,0.02])
 
-def rmse(predictions, targets):
+def rmse(targets, predictions):
     return np.sqrt(((predictions - targets) ** 2).mean())
 
+def rmse_norm(targets, predictions):
+    rmse = np.sqrt(((predictions - targets) ** 2).mean())
+    norm = rmse / targets
+    return(norm)
+
+
 ### WHOLE HISTORY STUFF ####
-'''
-estimates_optim = np.load('EstimatesWholeOptim1.npy')
+
+estimates_optim = np.load('EstimatesWholeOptimUpdatedW0est.npy')
 estimates_random = np.load('EstimatesWholeRandom1.npy')
 estimates_const = np.load('EstimatesWholeConst20_1.npy')
 estimates_nf = np.load('EstimatesWholeNoFreq1.npy')
 
-optimal_freqs = np.load('OptFrequenciesWholeOptim1.npy')
+optimal_freqs = np.load('OptFrequenciesWholeOptimTrueValuesInOptimUpdatedW0est.npy')
 #optimal_const = np.load('OptFrequenciesWholeConst20_1.npy')
 
-entropies_optim = np.load('EntropiesWholeOptim1.npy')
+entropies_optim = np.load('EntropiesWholeOptimTrueValuesInOptimUpdatedW0est.npy')
 entropies_random = np.load('EntropiesWholeRandom1.npy')
 entropies_const = np.load('EntropiesWholeConst20_1.npy')
 entropies_nf = np.load('EntropiesWholeNoFreq1.npy')
@@ -55,14 +61,14 @@ for i in range(len(estimates_optim)):
     mse_random.append(rmse(truevalues, estimates_random[i]))
     mse_const.append(rmse(truevalues, estimates_const[i]))
     mse_nf.append(rmse(truevalues,estimates_nf[i]))
-    mse_optim_a.append(rmse(truevalues[0], estimates_optim[i][0]))
-    mse_random_a.append(rmse(truevalues[0], estimates_random[i][0]))
-    mse_const_a.append(rmse(truevalues[0], estimates_const[i]))
-    mse_nf_a.append(rmse(truevalues[0],estimates_nf[i][0]))
-    mse_optim_t.append(rmse(truevalues[1], estimates_optim[i][1]))
-    mse_random_t.append(rmse(truevalues[1], estimates_random[i][1]))
-    mse_const_t.append(rmse(truevalues[1], estimates_const[i][1]))
-    mse_nf_t.append(rmse(truevalues[1],estimates_nf[i][1]))
+    mse_optim_a.append(rmse_norm(truevalues[0], estimates_optim[i][0]))
+    mse_random_a.append(rmse_norm(truevalues[0], estimates_random[i][0]))
+    mse_const_a.append(rmse_norm(truevalues[0], estimates_const[i][0]))
+    mse_nf_a.append(rmse_norm(truevalues[0],estimates_nf[i][0]))
+    mse_optim_t.append(rmse_norm(truevalues[1], estimates_optim[i][1]))
+    mse_random_t.append(rmse_norm(truevalues[1], estimates_random[i][1]))
+    mse_const_t.append(rmse_norm(truevalues[1], estimates_const[i][1]))
+    mse_nf_t.append(rmse_norm(truevalues[1],estimates_nf[i][1]))
 
 plt.figure()
 plt.title('Inference on whole spike history')
@@ -79,7 +85,7 @@ plt.show()
 plt.figure()
 plt.title('A inference on whole spike history')
 plt.xlabel('Trial')
-plt.ylabel('RMSE')
+plt.ylabel('Normalised RMSE')
 x = np.linspace(1,13,13)
 plt.plot(x,mse_optim_a,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_a,'bx-',label='Randomised Frequency')
@@ -91,7 +97,7 @@ plt.show()
 plt.figure()
 plt.title('Tau inference on whole spike history')
 plt.xlabel('Trial')
-plt.ylabel('RMSE')
+plt.ylabel('Normalised RMSE')
 x = np.linspace(1,13,13)
 plt.plot(x,mse_optim_t,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_t,'bx-',label='Randomised Frequency')
@@ -111,18 +117,21 @@ plt.plot(x,entropies_const,'gx-',label='Constant 20Hz')
 plt.plot(x,entropies_nf,'kx-',label='Baseline frequency')
 plt.legend()
 plt.show()
+
+
+# init history!
+
 '''
 
-
-estimates_init_optim = np.load('EstimatesInitOptim1.npy')
+estimates_init_optim = np.load('EstimatesInitOptimUpdatedW0est.npy')
 estimates_init_random = np.load('EstimatesInitRandom1.npy')
 estimates_init_const = np.load('EstimatesInitConst20_1.npy')
 estimates_init_nf = np.load('EstimatesInitNoFreq1.npy')
 
-optimal_init_freqs = np.load('OptFrequenciesInitOptim1.npy')
+optimal_init_freqs = np.load('OptFrequenciesInitOptimUpdatedW0est.npy')
 #optimal_const = np.load('OptFrequenciesWholeConst20_1.npy')
 
-entropies_init_optim = np.load('EntropiesInitOptim1.npy')
+entropies_init_optim = np.load('EntropiesInitOptimUpdatedW0est.npy')
 entropies_init_random = np.load('EntropiesInitRandom1.npy')
 entropies_init_const = np.load('EntropiesInitConst20_1.npy')
 entropies_init_nf = np.load('EntropiesInitNoFreq1.npy')
@@ -203,5 +212,5 @@ plt.plot(x,entropies_init_const,'gx-',label='Constant 20Hz')
 plt.plot(x,entropies_init_nf,'kx-',label='Baseline frequency')
 plt.legend()
 plt.show()
-    
+'''  
 
