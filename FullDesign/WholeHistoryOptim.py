@@ -11,11 +11,17 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import UtilitiesMaster as ut
 
-design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,trialsize=5\
-                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20,longinit = 60)
-means,entrs,optms = design.onlineDesign_wh(nofreq =False,constant = False, random = False, optimised = True)
+s1init = np.load('FixedInitS1.npy')
+s2init = np.load('FixedInitS2.npy')
+Winit = np.load('FixedInitW.npy')
 
-np.save('EstimatesWholeOptimUpdatedW0est',means)
-np.save('EntropiesWholeOptimTrueValuesInOptimUpdatedW0est',entrs)
-np.save('OptFrequenciesWholeOptimTrueValuesInOptimUpdatedW0est',optms)
+design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,trialsize=5\
+                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20,longinit = 60\
+                     ,s1init = s1init,s2init = s2init,Winit = Winit)
+means,entrs,optms,mutinfs = design.onlineDesign_wh(nofreq =False,constant = False, random = False, optimised = True)
+
+np.save('WholeHistoryEstimates2',means)
+np.save('WholeHistoryEntropies2',entrs)
+np.save('WholeHistoryOptfrqs2',optms)
+np.save('WholeHistoryMutInfs2',mutinfs)
 
