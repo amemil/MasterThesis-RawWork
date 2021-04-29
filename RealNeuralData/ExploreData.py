@@ -21,7 +21,24 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-#jux = loadmat('JuxtaGroundTruth.mat')
+jux = loadmat('JuxtaGroundTruth.mat')
+
+ses1spikes = jux['ses']['times'][i]
+ses1stim=jux['ses']['stimTimes'][i]
+ses1spikeidraw = jux['ses']['ID'][i]
+ses1spikeid = []
+for i in range(len(ses1spikeidraw)):
+    ses1spikeid.append(ses1spikeidraw[i][-1])
+spiketrains = []
+for i in range(len(np.unique(np.asarray(ses1spikeid)))):
+    spiketrains.append([])
+for i in range(len(ses1spikes)):
+    spiketrains[ses1spikeid[i]-2].append(ses1spikes[i])
+for i in range(len(spiketrains)):
+    spiketrains[i] = np.asarray(spiketrains[i]).flatten()
+
+def cicc(lags,significance,n):
+    return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
 for i in range(18):
     ses1spikes = jux['ses']['times'][i]
     ses1stim=jux['ses']['stimTimes'][i]

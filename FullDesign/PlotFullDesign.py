@@ -69,7 +69,7 @@ for i in range(len(estimates_optim)):
     mse_random_t.append(rmse_norm(truevalues[1], estimates_random[i][1]))
     mse_const_t.append(rmse_norm(truevalues[1], estimates_const[i][1]))
     mse_nf_t.append(rmse_norm(truevalues[1],estimates_nf[i][1]))
-
+'''
 plt.figure()
 plt.title('Inference on whole spike history')
 plt.xlabel('Trial')
@@ -81,7 +81,7 @@ plt.plot(x,mse_const,'gx-',label='Constant 20Hz')
 plt.plot(x,mse_nf,'kx-',label='Baseline frequency')
 plt.legend()
 plt.show()
-
+'''
 plt.figure()
 plt.title('A inference on whole spike history')
 plt.xlabel('Trial')
@@ -91,6 +91,7 @@ plt.plot(x,mse_optim_a,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_a,'bx-',label='Randomised Frequency')
 plt.plot(x,mse_const_a,'gx-',label='Constant 20Hz')
 plt.plot(x,mse_nf_a,'kx-',label='Baseline frequency')
+plt.yscale('log')
 plt.legend()
 plt.show()
 
@@ -103,6 +104,7 @@ plt.plot(x,mse_optim_t,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_t,'bx-',label='Randomised Frequency')
 plt.plot(x,mse_const_t,'gx-',label='Constant 20Hz')
 plt.plot(x,mse_nf_t,'kx-',label='Baseline frequency')
+plt.yscale('log')
 plt.legend()
 plt.show()
 
