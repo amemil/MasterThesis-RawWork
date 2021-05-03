@@ -1,0 +1,16 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtOld.py:23: RuntimeWarning: invalid value encountered in log
+  return np.log(x/(1-x))
+Traceback (most recent call last):
+  File "Stim2.py", line 23, in <module>
+    inference.b2_w0_estimation()
+  File "/cluster/work/emilamy/MasterThesisRaw/UtOld.py", line 216, in b2_w0_estimation
+    score,score2 = np.matmul(x,self.s2[1:] - mu),np.matmul(x2,s2short[1:] - mu2)
+ValueError: operands could not be broadcast together with shapes (779,) (514,) 
