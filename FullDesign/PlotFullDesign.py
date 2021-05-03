@@ -28,18 +28,20 @@ def rmse_norm(targets, predictions):
 
 ### WHOLE HISTORY STUFF ####
 
-estimates_optim = np.load('EstimatesWholeOptimUpdatedW0est.npy')
-estimates_random = np.load('EstimatesWholeRandom1.npy')
-estimates_const = np.load('EstimatesWholeConst20_1.npy')
-estimates_nf = np.load('EstimatesWholeNoFreq1.npy')
+estimates_optim = np.load('WholeHistoryEstimates2.npy')
+estimates_random = np.load('EstimatesWholeRandom2.npy')
+estimates_const = np.load('EstimatesWholeConst20_2.npy')
+estimates_nf = np.load('EstimatesWholeNoFreq2.npy')
 
-optimal_freqs = np.load('OptFrequenciesWholeOptimTrueValuesInOptimUpdatedW0est.npy')
+optimal_freqs = np.load('WholeHistoryOptfrqs2.npy')
+mutinfs= np.load('WholeHistoryMutInfs2.npy')
 #optimal_const = np.load('OptFrequenciesWholeConst20_1.npy')
 
-entropies_optim = np.load('EntropiesWholeOptimTrueValuesInOptimUpdatedW0est.npy')
-entropies_random = np.load('EntropiesWholeRandom1.npy')
-entropies_const = np.load('EntropiesWholeConst20_1.npy')
-entropies_nf = np.load('EntropiesWholeNoFreq1.npy')
+#entropies_optim = np.load('EntropiesWholeOptimTrueValuesInOptimUpdatedW0est.npy')
+entropies_optim = np.load('WholeHistoryEntropies2.npy')
+entropies_random = np.load('EntropiesWholeRandom2.npy')
+entropies_const = np.load('EntropiesWholeConst20_2.npy')
+entropies_nf = np.load('EntropiesWholeNoFreq2.npy')
 
 mse_optim = []
 mse_random = []
@@ -90,7 +92,7 @@ x = np.linspace(1,13,13)
 plt.plot(x,mse_optim_a,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_a,'bx-',label='Randomised Frequency')
 plt.plot(x,mse_const_a,'gx-',label='Constant 20Hz')
-plt.plot(x,mse_nf_a,'kx-',label='Baseline frequency')
+plt.plot(x,mse_nf_a,'kx-',label='Baseline firing')
 plt.yscale('log')
 plt.legend()
 plt.show()
@@ -103,7 +105,7 @@ x = np.linspace(1,13,13)
 plt.plot(x,mse_optim_t,'rx-',label='Optimised Frequency')
 plt.plot(x,mse_random_t,'bx-',label='Randomised Frequency')
 plt.plot(x,mse_const_t,'gx-',label='Constant 20Hz')
-plt.plot(x,mse_nf_t,'kx-',label='Baseline frequency')
+plt.plot(x,mse_nf_t,'kx-',label='Baseline firing')
 plt.yscale('log')
 plt.legend()
 plt.show()
@@ -116,11 +118,21 @@ x = np.linspace(1,13,13)
 plt.plot(x,entropies_optim,'rx-',label='Optimised Frequency')
 plt.plot(x,entropies_random,'bx-',label='Randomised Frequency')
 plt.plot(x,entropies_const,'gx-',label='Constant 20Hz')
-plt.plot(x,entropies_nf,'kx-',label='Baseline frequency')
+plt.plot(x,entropies_nf,'kx-',label='Baseline firing')
 plt.legend()
 plt.show()
 
+plt.figure()
+plt.title('Mutual information')
+plt.xlabel('Trial')
+plt.ylabel('MC approximated MU')
+x = np.linspace(1,12,12)
+plt.plot(x,mutinfs[:,0],'rx-',label='20Hz')
+plt.plot(x,mutinfs[:,1],'bx-',label='50Hz')
+plt.plot(x,mutinfs[:,3],'gx-',label='200Hz')
+plt.plot(x,mutinfs[:,2],'kx-',label='100Hz')
 
+plt.legend()
 # init history!
 
 '''
