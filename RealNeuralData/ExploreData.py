@@ -21,11 +21,12 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
+'''
 jux = loadmat('JuxtaGroundTruth.mat')
 
-ses1spikes = jux['ses']['times'][i]
-ses1stim=jux['ses']['stimTimes'][i]
-ses1spikeidraw = jux['ses']['ID'][i]
+ses1spikes = jux['ses']['times'][16]
+ses1stim=jux['ses']['stimTimes'][16]
+ses1spikeidraw = jux['ses']['ID'][16]
 ses1spikeid = []
 for i in range(len(ses1spikeidraw)):
     ses1spikeid.append(ses1spikeidraw[i][-1])
@@ -39,7 +40,9 @@ for i in range(len(spiketrains)):
 
 def cicc(lags,significance,n):
     return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
-for i in range(18):
+'''
+'''
+#for i in range(18):
     ses1spikes = jux['ses']['times'][i]
     ses1stim=jux['ses']['stimTimes'][i]
     ses1spikeidraw = jux['ses']['ID'][i]
@@ -56,36 +59,39 @@ for i in range(18):
 
     def cicc(lags,significance,n):
         return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
+'''
 
-    #startstim = 5110
-    #stopstim = 5210
+startstim = 2900
+stopstim = 3000
 
-    #pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
+pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
 
-    #post = spiketrains[11][(np.where((spiketrains[11] > startstim) & (spiketrains[11] < stopstim)))]
+post = spiketrains[11][(np.where((spiketrains[11] > startstim) & (spiketrains[11] < stopstim)))]
     
-    #postint = spiketrains[11].astype(int)
-    preint = spiketrains[-1].astype(int)
-    #srp = []
-    srpre = []
-    #for i in range(int(max(spiketrains[11]))):
-    #    srp.append(np.count_nonzero(postint==i))
-    for i in range(int(max(spiketrains[-1]))):
-        srpre.append(np.count_nonzero(preint==i))
+postint = spiketrains[11].astype(int)
+preint = spiketrains[-1].astype(int)
+srp = []
+srpre = []
+for i in range(int(max(spiketrains[11]))):
+    srp.append(np.count_nonzero(postint==i))
+for i in range(int(max(spiketrains[-1]))):
+    srpre.append(np.count_nonzero(preint==i))
 
-    plt.figure()
-    plt.title('Observed firing rate presynaptic (stimulated) neuron')
-    plt.xlabel('Time [s]')
-    plt.ylabel('Firing rate [spikes / sec]')
-    plt.plot(np.linspace(1,len(srpre),len(srpre)),srpre,label = 'Observed rate')
-    for i in range(len(ses1stim)):
-        if i == 0:
-            plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx',label = 'Stimulation')
-        else:
-            plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx')
-    plt.legend()
-    plt.show()
+'''
+plt.figure()
+plt.title('Observed firing rate presynaptic (stimulated) neuron')
+plt.xlabel('Time [s]')
+plt.ylabel('Firing rate [spikes / sec]')
+plt.plot(np.linspace(1,len(srpre),len(srpre)),srpre,label = 'Observed rate')
+for i in range(len(ses1stim)):
+    if i == 0:
+        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx',label = 'Stimulation')
+    else:
+        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx')
+plt.legend()
+plt.show()
+'''
 '''
 plt.figure()
 plt.title('Observed firing rate postsynaptic neuron')
