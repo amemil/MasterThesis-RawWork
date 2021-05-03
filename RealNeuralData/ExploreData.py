@@ -61,22 +61,38 @@ def cicc(lags,significance,n):
         return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
 '''
 
-startstim = 2900
-stopstim = 3000
+startstim = 5220
+stopstim = 5320
 
 pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
 
 post = spiketrains[11][(np.where((spiketrains[11] > startstim) & (spiketrains[11] < stopstim)))]
     
-postint = spiketrains[11].astype(int)
-preint = spiketrains[-1].astype(int)
+preint = pre*1000
+postint = post*1000
+
+postint = postint.astype(int)
+preint = preint.astype(int)
 srp = []
 srpre = []
 for i in range(int(max(spiketrains[11]))):
     srp.append(np.count_nonzero(postint==i))
 for i in range(int(max(spiketrains[-1]))):
     srpre.append(np.count_nonzero(preint==i))
+
+start = min(preint[0],postint[0])
+end = max(preint[-1],postint[-1])
+binsize = 1
+bins = int((end-start)/binsize)
+timesteps = np.linspace(start,end-binsize,bins)
+
+s1,s2 = np.zeros(bins),np.zeros(bins)
+for i in range(bins):
+    if (timesteps[i] in preint):#: or timesteps[i]+1 in st2pos):
+        s1[i] = 1
+    if (timesteps[i] in postint):# or timesteps[i]+1 in st5pos):
+        s2[i] = 1
 
 '''
 plt.figure()
