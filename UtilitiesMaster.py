@@ -1,5 +1,6 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
+import math
 #from tqdm import tqdm
 from scipy.stats import gamma
 from scipy.stats import multivariate_normal
@@ -637,7 +638,8 @@ class ExperimentDesign():
                 cov_temp = np.cov(np.transpose(sample_temp[300:,:]))
                 entropies_temp.append(self.NormEntropy(cov_temp))
                 #print(entropies_temp)
-            entropies.append(np.mean(entropies_temp))
+            entropies_temp_clean = [x for x in entropies_temp if math.isnan(x) == False]
+            entropies.append(np.mean(entropies_temp_clean))
             #print(entropies)
         return self.freqs_init[np.where(entropies == np.amin(entropies))[0][0]],entropies
     

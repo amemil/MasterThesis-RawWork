@@ -925,8 +925,8 @@ plt.tight_layout()
 plt.show()
 '''
 plt.figure()
-plt.title('Entropy versus absolute error (A estimation)')
-plt.xlabel('Absolute error')
+plt.title('Entropy versus RMSE (A estimation)')
+plt.xlabel('RMSE')
 plt.ylabel('Entropy')
 for i in range(len(absoluteErrorA1s)):
     if math.isnan(absoluteErrorA1s[i][0]) == False and entropiesA1s[i][0] > -6:
@@ -950,8 +950,8 @@ plt.legend()
 plt.show()
 
 plt.figure()
-plt.title('Entropy versus absolute error (Tau estimation)')
-plt.xlabel('Absolute error')
+plt.title('Entropy versus RMSE (Tau estimation)')
+plt.xlabel('RMSE')
 plt.ylabel('Entropy')
 for i in range(len(absoluteErrorA1s)):
     if math.isnan(absoluteErrorA1s[i][1]) == False and entropiesA1s[i][1] > -5:
