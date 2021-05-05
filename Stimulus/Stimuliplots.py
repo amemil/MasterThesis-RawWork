@@ -18,7 +18,7 @@ import UtilitiesMaster as ut
 
 sns.set_style("darkgrid")
 
-
+'''
 Tau1s = np.load('TauSamples1to4stim.npy')
 Tau2s = np.load('TauSamples5to8stim.npy')
 Tau3s= np.load('TauSamples9to12stim.npy')
@@ -251,7 +251,7 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 '''
 datamf = np.load('data1to4medfreq.npy')
 datamf2 = np.load('data5to8medfreq.npy')
@@ -269,5 +269,328 @@ for i in range(1,150000):
 
 plt.figure()
 plt.plot(t,Traj)
+plt.show()
+'''
+
+### SIM 
+
+## DETERMINISTIC STIMULI 
+'''
+
+Sim1ms = np.load('SimSamples1to4medstim.npy')
+Sim2ms = np.load('SimSamples5to8medstim.npy')
+#Sim3ms =np.load('SimSamples9to12medstim.npy')
+Sim4ms =np.load('SimSamples13to16medstim.npy')
+Sim5ms =np.load('SimSamples17to20medstim.npy')
+
+sims = [Sim1ms,Sim2ms,Sim4ms,Sim5ms]
+
+meanssA = []
+meanssT = []
+
+stdssA = []
+stdssT = []
+
+for i in range(4):
+    for j in range(4):
+        mat = []
+        mtt = []
+        sat = []
+        stt = []
+        for k in range(5):
+            mat.append(np.mean(sims[i][j][k][300:],axis=0)[0])
+            mtt.append(np.mean(sims[i][j][k][300:],axis=0)[1])
+            sat.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[0]))
+            stt.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[1]))
+        meanssA.append(mat)
+        meanssT.append(mtt)
+        stdssA.append(sat)
+        stdssT.append(stt)
+
+meanssA.pop(4)
+meanssA.pop(7)
+meanssA.pop(8)
+meanssA.pop(11)
+meanssA.pop(11)
+
+stdssA.pop(4)
+stdssA.pop(7)
+stdssA.pop(8)
+stdssA.pop(11)
+stdssA.pop(11)
+
+meanssT.pop(8)
+meanssT.pop(9)
+meanssT.pop(12)
+meanssT.pop(12)
+
+stdssT.pop(8)
+stdssT.pop(9)
+stdssT.pop(12)
+stdssT.pop(12)
+
+meanssA = np.mean(meanssA,axis=0)
+meanssT = np.mean(meanssT,axis=0)
+stdssA = np.mean(stdssA,axis=0)
+stdssT = np.mean(stdssT,axis=0)
+
+x = [1,2,3,4,5]
+ticksss = ['60','120','180','240','300']
+plt.figure()
+plt.title('Inference of $A$ - Baseline stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$A$ estimation')
+plt.ylim([0,0.02])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssA[i], yerr = stdssA[i],marker = 'o')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Inference of $Tau$ - Baseline stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$Tau$ estimation')
+plt.ylim([0,0.06])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssT[i], yerr = stdssT[i],marker = 'o')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+'''
+### TETANIC STIMULI
+
+## 20 HZ
+'''
+Sim120hz = np.load('Samples1to4medfreq.npy')
+Sim220hz = np.load('Samples5to8medfreq.npy')
+Sim320hz =np.load('Samples9to12medfreq.npy')
+#Sim420hz =np.load('SimSamples13to16medfreq.npy')
+#Sim520hz =np.load('SimSamples17to20medfreq.npy')
+
+sims = [Sim120hz,Sim220hz,Sim320hz]#,Sim5ms]
+
+meanssA = []
+meanssT = []
+
+stdssA = []
+stdssT = []
+
+for i in range(3):
+    for j in range(4):
+        mat = []
+        mtt = []
+        sat = []
+        stt = []
+        for k in range(5):
+            mat.append(np.mean(sims[i][j][k][300:],axis=0)[0])
+            mtt.append(np.mean(sims[i][j][k][300:],axis=0)[1])
+            sat.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[0]))
+            stt.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[1]))
+        meanssA.append(mat)
+        meanssT.append(mtt)
+        stdssA.append(sat)
+        stdssT.append(stt)
+        
+meanssA.pop(6)
+meanssT.pop(6)
+stdssA.pop(6)
+stdssT.pop(6)
+
+meanssA = np.mean(meanssA,axis=0)
+meanssT = np.mean(meanssT,axis=0)
+stdssA = np.mean(stdssA,axis=0)
+stdssT = np.mean(stdssT,axis=0)
+
+x = [1,2,3,4,5]
+ticksss = ['60','120','180','240','300']
+plt.figure()
+plt.title('Inference of $A$ - 20Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$A$ estimation')
+plt.ylim([0,0.02])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssA[i], yerr = stdssA[i],marker = 'o')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Inference of $Tau$ - 20Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$Tau$ estimation')
+plt.ylim([0,0.06])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssT[i], yerr = stdssT[i],marker = 'o')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+'''
+## 100hz
+
+Sim1_100hz = np.load('Samples1to4highfreq.npy')
+Sim2_100hz = np.load('Samples5to8highfreq.npy')
+Sim3_100hz =np.load('Samples9to12highfreq.npy')
+Sim4_100hz =np.load('Samples13to16highfreq.npy')
+#Sim5_100hz =np.load('Samples17to20highfreq.npy')
+
+sims = [Sim1_100hz,Sim2_100hz,Sim3_100hz,Sim4_100hz]#,Sim5ms]
+
+meanssA = []
+meanssT = []
+
+stdssA = []
+stdssT = []
+
+for i in range(4):
+    for j in range(4):
+        mat = []
+        mtt = []
+        sat = []
+        stt = []
+        for k in range(5):
+            mat.append(np.mean(sims[i][j][k][300:],axis=0)[0])
+            mtt.append(np.mean(sims[i][j][k][300:],axis=0)[1])
+            sat.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[0]))
+            stt.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[1]))
+        meanssA.append(mat)
+        meanssT.append(mtt)
+        stdssA.append(sat)
+        stdssT.append(stt)
+
+meanssA.pop(1)
+meanssA.pop(2)
+meanssA.pop(2)
+meanssA.pop(8)
+meanssA.pop(8)
+meanssA.pop(8)
+
+
+stdssA.pop(1)
+stdssA.pop(2)
+stdssA.pop(2)
+stdssA.pop(8)
+stdssA.pop(8)
+stdssA.pop(8)
+
+meanssT.pop(1)
+meanssT.pop(2)
+meanssT.pop(2)
+meanssT.pop(8)
+meanssT.pop(8)
+meanssT.pop(8)
+
+stdssT.pop(1)
+stdssT.pop(2)
+stdssT.pop(2)
+stdssT.pop(8)
+stdssT.pop(8)
+stdssT.pop(8)
+
+meanssA = np.mean(meanssA,axis=0)
+meanssT = np.mean(meanssT,axis=0)
+stdssA = np.mean(stdssA,axis=0)
+stdssT = np.mean(stdssT,axis=0)
+
+x = [1,2,3,4,5]
+ticksss = ['60','120','180','240','300']
+plt.figure()
+plt.title('Inference of $A$ - 100Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$A$ estimation')
+plt.ylim([0,0.02])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssA[i], yerr = stdssA[i],marker = 'o')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Inference of $Tau$ - 100Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$Tau$ estimation')
+plt.ylim([0,0.06])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssT[i], yerr = stdssT[i],marker = 'o')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+### 200hz
+'''
+Sim1_200hz = np.load('Samples1to4megahighfreq.npy')
+Sim2_200hz = np.load('Samples5to8megahighfreq.npy')
+Sim3_200hz =np.load('Samples9to12megahighfreq.npy')
+Sim4_200hz =np.load('Samples13to16megahighfreq.npy')
+Sim5_200hz =np.load('Samples17to20megahighfreq.npy')
+
+sims = [Sim1_200hz,Sim2_200hz,Sim3_200hz,Sim4_200hz,Sim5_200hz]
+
+meanssA = []
+meanssT = []
+
+stdssA = []
+stdssT = []
+
+for i in range(5):
+    for j in range(4):
+        mat = []
+        mtt = []
+        sat = []
+        stt = []
+        for k in range(5):
+            mat.append(np.mean(sims[i][j][k][300:],axis=0)[0])
+            mtt.append(np.mean(sims[i][j][k][300:],axis=0)[1])
+            sat.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[0]))
+            stt.append(np.sqrt(np.var(sims[i][j][k][300:],axis=0)[1]))
+        meanssA.append(mat)
+        meanssT.append(mtt)
+        stdssA.append(sat)
+        stdssT.append(stt)
+
+meanssA = np.mean(meanssA,axis=0)
+meanssT = np.mean(meanssT,axis=0)
+stdssA = np.mean(stdssA,axis=0)
+stdssT = np.mean(stdssT,axis=0)
+
+x = [1,2,3,4,5]
+ticksss = ['60','120','180','240','300']
+plt.figure()
+plt.title('Inference of $A$ - 200Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$A$ estimation')
+plt.ylim([0,0.02])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssA[i], yerr = stdssA[i],marker = 'o')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Inference of $Tau$ - 200Hz additional stimulus')
+plt.xlabel('Datasize')
+plt.ylabel('$Tau$ estimation')
+plt.ylim([0,0.06])
+plt.xlim([0,6])
+plt.xticks(x,labels = ticksss)
+for i in range(5):
+    plt.errorbar(x[i], meanssT[i], yerr = stdssT[i],marker = 'o')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
 plt.show()
 '''

@@ -531,7 +531,7 @@ class ParameterInference():
 
 class ExperimentDesign():
     def __init__(self,freqs_init=np.array([20,50,100,200]),maxtime=120,trialsize=5\
-                 ,Ap=0.005, tau=0.02, genstd=0.001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20, longinit = 60,s1init = 1,s2init =1,Winit =1):
+                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20, longinit = 60,s1init = 1,s2init =1,Winit =1):
         self.maxtime = maxtime
         self.freqs_init = freqs_init
         self.Ap = Ap
@@ -655,6 +655,7 @@ class ExperimentDesign():
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
         
         sample = inference_whole.standardMH()
+        posts = [sample]
         means, cov = [np.mean(sample[300:,0]),np.mean(sample[300:,1])], np.cov(np.transpose(sample[300:,:]))
         ests, entrs = np.array([means]), np.array([self.NormEntropy(cov)])
         new_shapes, new_rates = self.adjust_proposal(means,sample)
@@ -681,6 +682,7 @@ class ExperimentDesign():
             inference_whole.set_s2(self.s2)
             inference_whole.set_sec(np.int(len(self.s1)*self.binsize))
             sample = inference_whole.standardMH()
+            posts.append(sample)
             means = [np.mean(sample[300:,0]),np.mean(sample[300:,1])]
             cov = np.cov(np.transpose(sample[300:,:]))
             ests = np.vstack((ests, means))
@@ -690,9 +692,9 @@ class ExperimentDesign():
                 inference_optim.set_shapes_prior(new_shapes)
                 inference_optim.set_rates_prior(new_rates)
         if optimised == True:
-            return ests,entrs,optimal_freqs,mutinfs
+            return ests,entrs,optimal_freqs,mutinfs,self.W,posts
         else:
-            return ests,entrs,optimal_freqs
+            return ests,entrs,optimal_freqs,self.W,posts
             
         
     def onlineDesign_initdata(self,nofreq = False, constant = False, random = False, optimised = True):
@@ -770,9 +772,14 @@ if __name__ == "__main__":
     '''
     #a = np.ones((2,2))
     #print(np.linalg.norm(a,axis=1))
-    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
-                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
-    s1,s2,W = design.datasim_const(0.005,0.02,init=True,optim = True,l = False)
+    for i in range(20):
+        design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
+                                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
+        s1,s2,W = design.datasim_const(0.005,0.02,init=True,optim = True,l = False)
+        np.save('s1init_'+str(i+1),s1)
+        np.save('s2init_'+str(i+1),s2)
+        np.save('Winit_'+str(i+1),W)
+        print(W[-1])
     #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
     '''
     theta_1ms_baseline = [] 
