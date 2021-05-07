@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=15-00:10:00
+#SBATCH --time=17-00:10:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=2500
+#SBATCH --mem=3000
 #SBATCH --job-name="mf4"
 #SBATCH --output=mf4.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
