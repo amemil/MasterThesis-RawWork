@@ -15,7 +15,7 @@ import UtilitiesMaster as ut
 datasizes = [60,120,180,240,300] #seconds
 
 #sim, 2ms binsize, different datasizes, freq stim
-'''
+
 samples = []
 datasets = []
 for i in range(4):
@@ -48,4 +48,4 @@ for i in range(4):
 np.save('Samples17to20highfreq',samples)
 #np.save('secondsss',datasizes)
 np.save('data17to20highfreq',datasets)
-'''
+

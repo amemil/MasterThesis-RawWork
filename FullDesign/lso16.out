@@ -1,0 +1,28 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:241: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:236: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:236: RuntimeWarning: divide by zero encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py:2821: RuntimeWarning: overflow encountered in exp
+  return np.exp(self._logpdf(x, a))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:222: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:222: RuntimeWarning: divide by zero encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:174: RuntimeWarning: divide by zero encountered in log
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:174: RuntimeWarning: invalid value encountered in multiply
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:290: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/self.P)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:171: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
