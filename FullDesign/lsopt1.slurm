@@ -4,7 +4,7 @@
 #SBATCH --time=7-00:10:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=5000
+#SBATCH --mem=6000
 #SBATCH --job-name="lso1"
 #SBATCH --output=lso1.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
