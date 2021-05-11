@@ -583,7 +583,7 @@ class ExperimentDesign():
             #print(lr)
             W[i] = W[i-1] + lr + np.random.normal(0,self.genstd) 
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
-            s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % freq == 0]
+            s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % int((1/self.binsize)/freq) == 0]
             t[i] = self.binsize*i
         if optim == False:
             if init == True:
@@ -774,14 +774,17 @@ if __name__ == "__main__":
     '''
     #a = np.ones((2,2))
     #print(np.linalg.norm(a,axis=1))
-    for i in range(20):
-        design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
+    #for i in range(20):
+    #    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
+    #                              ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
+    #    s1,s2,W = design.datasim_const(0.005,0.02,init=True,optim = True,l = False)
+    #    np.save('s1init_'+str(i+1),s1)
+    #    np.save('s2init_'+str(i+1),s2)
+    #    np.save('Winit_'+str(i+1),W)
+    #    print(W[-1])
+    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
                                   ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
-        s1,s2,W = design.datasim_const(0.005,0.02,init=True,optim = True,l = False)
-        np.save('s1init_'+str(i+1),s1)
-        np.save('s2init_'+str(i+1),s2)
-        np.save('Winit_'+str(i+1),W)
-        print(W[-1])
+    s1,s2,W = design.datasim(200,0.005,0.02,True,True,False)
     #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
     '''
     theta_1ms_baseline = [] 

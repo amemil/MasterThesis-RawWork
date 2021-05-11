@@ -44,3 +44,4 @@ for i in range(5):
     np.save('RandEntropies_'+str(indx[i]),entrs)
     np.save('RandW_'+str(indx[i]),W)
     np.save('RandPosts_'+str(indx[i]),posts)
+    np.save('RandFreqs_'+str(indx[i]),optms)
