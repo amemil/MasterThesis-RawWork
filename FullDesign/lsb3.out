@@ -6,3 +6,5 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:241: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
