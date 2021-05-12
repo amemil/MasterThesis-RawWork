@@ -19,8 +19,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r MAP}
 library(RcppCNPy)
 library(EnvStats)
-Stim = npyLoad("StimCand1Sample.npy")
-NonStim = npyLoad("NonstimCand1Sample.npy")
+Stim = npyLoad("StimCand1Sample2.npy")
+NonStim = npyLoad("NonstimCand1Sample2.npy")
 StimA = Stim[c(300:1500),1]
 StimTau = Stim[c(300:1500),2]
 NonStimA = NonStim[c(300:1500),1]
@@ -34,8 +34,8 @@ MapAStim = which.max(unlist(lapply(x, FUN = dens, StimA)) - 1)*stepsize
 MapTauStim =  which.max(unlist(lapply(x, FUN = dens, StimTau)) - 1)*stepsize
 MapANonStim =  which.max(unlist(lapply(x, FUN = dens, NonStimA)) - 1)*stepsize
 MapTauNonStim =  which.max(unlist(lapply(x, FUN = dens, NonStimTau)) - 1)*stepsize
-npySave("MapAStimCand1.npy",MapAStim)
-npySave("MapTauStimCand1.npy",MapTauStim)
-npySave("MapANonStimCand1.npy",MapANonStim)
-npySave("MapTauNonStimCand1.npy",MapTauNonStim)
+npySave("MapAStimCand2.npy",MapAStim)
+npySave("MapTauStimCand2.npy",MapTauStim)
+npySave("MapANonStimCand2.npy",MapANonStim)
+npySave("MapTauNonStimCand2.npy",MapTauNonStim)
 ```
