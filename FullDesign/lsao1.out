@@ -1,0 +1,21 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+0.03916636746412882
+0.017995952474903775
+Traceback (most recent call last):
+  File "LsOptA1.py", line 21, in <module>
+    means,entrs,optms,mutinfs,W,posts = design.onlineDesign_wh_A(nofreq =False,constant = False, random = False, optimised = True)
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 849, in onlineDesign_wh_A
+    opts_temp,mutinfs_temp = self.freq_optimiser_A(means,std,init = init, optim = True,l=False,inference = inference_optim)
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 738, in freq_optimiser_A
+    sample_temp = inference.standardMH_mv_a(means,std)
+  File "/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py", line 481, in standardMH_mv_a
+    choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+  File "mtrand.pyx", line 923, in numpy.random.mtrand.RandomState.choice
+ValueError: 'p' must be 1-dimensional
