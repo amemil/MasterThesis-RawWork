@@ -243,12 +243,14 @@ class ParameterInference():
         #print(spike_prob_ratio)
         proposal_ratio = 1
         prior_ratio = norm.pdf(theta_next,mean,std) / norm.pdf(theta_prior,mean,std)
+        print('prior_ratio:', prior_ratio)
         #print('next prior:', multivariate_normal.pdf(theta_next,mean,cov))
         #print('prev prior:', multivariate_normal.pdf(theta_prior,mean,cov))
         #print('prior ratio:', prior_ratio)
         for i in range(self.N):
             proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
             gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+        print('prop ratio:', proposal_ratio)
         return spike_prob_ratio * prior_ratio * proposal_ratio
 
 
@@ -411,6 +413,7 @@ class ParameterInference():
             _,_,new_log_post = self.particle_filter(self.Afix,theta_next[0])
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
             r = self.ratio(prob_old,prob_next,shapes,theta_next,theta_prior)
+            #print('r:', r)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
             #print('prior:',theta_prior)
@@ -477,7 +480,8 @@ class ParameterInference():
             #    print('old:',old_log_post)
             #    print('new:',new_log_post)
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
-            r = self.ratio_g_1(prob_old,prob_next,shapes,theta_next,theta_prior,mean,std)
+            r = self.ratio_g_1(prob_old,prob_next,shapes,theta_next,theta_prior,mean,std)[0]
+            print('r: ',r)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
             #print('prior:',theta_prior)
@@ -512,7 +516,7 @@ class ParameterInference():
             #    print('old:',old_log_post)
             #    print('new:',new_log_post)
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
-            r = self.ratio_g_1(prob_old,prob_next,shapes,theta_next,theta_prior,mean,std)
+            r = self.ratio_g_1(prob_old,prob_next,shapes,theta_next,theta_prior,mean,std)[0]
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
             #print('prior:',theta_prior)
