@@ -15,4 +15,4 @@ module spider load Python/3.8.2
 
 source ../../dataci/bin/activate
 
-python3 LsRand_OnlyTau_3.py
+python3 LsConst_OnlyTau_3.py
