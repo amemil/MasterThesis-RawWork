@@ -162,6 +162,8 @@ class ParameterInference():
         self.rates_prior = rates_prior
     def set_w0est(self,w0est):
         self.w0est=w0est
+    def set_N(self,N):
+        self.N = N
     
     
     def b1_estimation(self):
@@ -243,14 +245,14 @@ class ParameterInference():
         #print(spike_prob_ratio)
         proposal_ratio = 1
         prior_ratio = norm.pdf(theta_next,mean,std) / norm.pdf(theta_prior,mean,std)
-        print('prior_ratio:', prior_ratio)
+        #print('prior_ratio:', prior_ratio)
         #print('next prior:', multivariate_normal.pdf(theta_next,mean,cov))
         #print('prev prior:', multivariate_normal.pdf(theta_prior,mean,cov))
         #print('prior ratio:', prior_ratio)
         for i in range(self.N):
             proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
             gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
-        print('prop ratio:', proposal_ratio)
+        #print('prop ratio:', proposal_ratio)
         return spike_prob_ratio * prior_ratio * proposal_ratio
 
 
@@ -481,7 +483,7 @@ class ParameterInference():
             #    print('new:',new_log_post)
             prob_old,prob_next = self.scaled2_spike_prob(old_log_post,new_log_post)
             r = self.ratio_g_1(prob_old,prob_next,shapes,theta_next,theta_prior,mean,std)[0]
-            print('r: ',r)
+            #print('r: ',r)
             choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
             theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
             #print('prior:',theta_prior)
@@ -946,15 +948,17 @@ class ExperimentDesign():
         self.s1 = self.s1init
         self.s2 = self.s2init
         self.W = self.Winit
+        onlyA = True
+        change = False
         #self.datasim(freq_const,self.Ap,self.tau,init = init, optim = False,l= False)
         inference_whole = ParameterInference(self.s1,self.s2,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 1\
-                                        , shapes_prior = np.array([5]), rates_prior = np.array([100]),sec=self.trialsize\
+                                        , shapes_prior = np.array([4]), rates_prior = np.array([50]),sec=self.trialsize\
                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
         
-        sample = inference_whole.standardMH_afix()
+        sample = inference_whole.standardMH_taufix()
         posts = [sample]
         means, std = np.mean(sample[300:]), np.sqrt(np.var(sample[300:]))
-        ests, entrs = np.array([means]), np.array([norm.entropy(loc = means,scale = std)])
+        ests, entrs = [means], [norm.entropy(loc = means,scale = std)]
         new_shapes, new_rates = self.adjust_proposal_1d(means,sample)
         if optimised == True:
             inference_optim = ParameterInference(1,1,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 1\
@@ -964,7 +968,10 @@ class ExperimentDesign():
         for i in range(trials):
             if optimised == True:
                 inference_optim.set_w0est(self.W[-1])
-                opts_temp,mutinfs_temp = self.freq_optimiser_t(means,std,init = init, optim = True,l=False,inference = inference_optim)
+                if onlyA == True:
+                    opts_temp,mutinfs_temp = self.freq_optimiser_A(means,std,init = init, optim = True,l=False,inference = inference_optim)
+                else:
+                    opts_temp,mutinfs_temp = self.freq_optimiser(means,std,init = init, optim = True,l=False,inference = inference_optim)
                 optimal_freqs.append(opts_temp)
                 mutinfs.append(mutinfs_temp)
                 self.datasim(optimal_freqs[-1],self.Ap,self.tau,init=init,optim = False,l=False)
@@ -978,16 +985,40 @@ class ExperimentDesign():
             inference_whole.set_s1(self.s1)
             inference_whole.set_s2(self.s2)
             inference_whole.set_sec(np.int(len(self.s1)*self.binsize))
-            sample = inference_whole.standardMH_afix()
-            posts.append(sample)
-            means = np.mean(sample[300:])
-            std = np.sqrt(np.var(sample[300:]))
-            ests = np.vstack((ests, means))
-            entrs = np.vstack((entrs,norm.entropy(loc = means,scale = std)))
-            new_shapes, new_rates = self.adjust_proposal_1d(means,sample)
+            if onlyA == True:
+                sample = inference_whole.standardMH_taufix()
+                posts.append(sample)
+                means = np.mean(sample[300:])
+                std = np.sqrt(np.var(sample[300:]))
+                ests.append(means)
+                entrs.append(norm.entropy(loc = means,scale = std))
+                new_shapes, new_rates = self.adjust_proposal_1d(means,sample)
+                #print('estimateA: ',means)
+                #print('new_shapes: ',new_shapes)
+            else:
+                sample = inference_whole.standardMH()
+                posts.append(sample)
+                means = [np.mean(sample[300:,0]),np.mean(sample[300:,1])]
+                cov = np.cov(np.transpose(sample[300:,:]))
+                ests.append(means)
+                entrs.append(self.NormEntropy(cov))
+                new_shapes, new_rates = self.adjust_proposal(means,sample)
+                #print('ests: ',ests)
+                #print('entrs:',entrs)
             if optimised == True:
                 inference_optim.set_shapes_prior(new_shapes)
                 inference_optim.set_rates_prior(new_rates)
+            entrs.append(-9)
+            if entrs[-1] < -8 and change == False:
+                onlyA = False
+                change = True
+                inference_whole.set_N(2)
+                inference_whole.set_shapes_prior(np.array([4,5]))
+                inference_whole.set_rates_prior(np.array([50,100]))
+                if optimised == True:
+                    inference_optim.set_N(2)
+                    inference_optim.set_shapes_prior(np.array([new_shapes[0],5]))
+                    inference_optim.set_shapes_prior(np.array([new_rates[0],100]))    
         if optimised == True:
             return ests,entrs,optimal_freqs,mutinfs,self.W,posts
         else:
