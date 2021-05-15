@@ -36,11 +36,11 @@ s1s = [s1init1,s1init2,s1init3,s1init4,s1init5]
 s2s = [s2init1,s2init2,s2init3,s2init4,s2init5]
 ws = [Winit1,Winit2,Winit3,Winit4,Winit5]
 for i in range(5):
-    design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,trialsize=5\
+    design = ut.ExperimentDesign(freqs_init=np.array([10,20,50,100]),maxtime=60,trialsize=5\
                                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20,longinit = 60\
                                      ,s1init = s1s[i],s2init = s2s[i],Winit = ws[i])
     means,entrs,optms,W,posts = design.onlineDesign_wh(nofreq =True,constant = False, random = False, optimised = False)
-    np.save('BaseEstimates_'+str(indx[i]),means)
-    np.save('BaseEntropies_'+str(indx[i]),entrs)
-    np.save('BaseW_'+str(indx[i]),W)
-    np.save('BasePosts_'+str(indx[i]),posts)
+    np.save('BaseEstimatesNewGrid_'+str(indx[i]),means)
+    np.save('BaseEntropiesNewGrid_'+str(indx[i]),entrs)
+    np.save('BaseWNewGrid_'+str(indx[i]),W)
+    np.save('BasePostsNewGrid_'+str(indx[i]),posts)
