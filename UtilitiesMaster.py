@@ -1008,7 +1008,7 @@ class ExperimentDesign():
             if optimised == True:
                 inference_optim.set_shapes_prior(new_shapes)
                 inference_optim.set_rates_prior(new_rates)
-            entrs.append(-9)
+            #entrs.append(-9)
             if entrs[-1] < -8 and change == False:
                 onlyA = False
                 change = True
