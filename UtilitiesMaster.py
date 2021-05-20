@@ -82,7 +82,11 @@ class SimulatedData():
         s1[0] = np.random.binomial(1,inverse_logit(self.b1))
         for i in range(1,iterations):
             lr = learning_rule(s1,s2,self.Ap,self.Am,self.tau,self.tau,t,i,self.binsize)
-            W[i] = W[i-1] + lr + np.random.normal(0,self.std) 
+            step = W[i-1] + lr + np.random.normal(0,self.std) 
+            if step > 0:
+                W[i] = step
+            else:
+                W[i] = 0
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
             s1[i] = np.random.binomial(1,inverse_logit(self.b1)) 
             t[i] = self.binsize*i
@@ -98,7 +102,11 @@ class SimulatedData():
         s1[0] = 1
         for i in range(1,iterations):
             lr = learning_rule(s1,s2,self.Ap,self.Am,self.tau,self.tau,t,i,self.binsize)
-            W[i] = W[i-1] + lr + np.random.normal(0,self.std) 
+            step = W[i-1] + lr + np.random.normal(0,self.std) 
+            if step > 0:
+                W[i] = step
+            else:
+                W[i] = 0
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
             s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % int((1/self.binsize)/self.freq) == 0]
             t[i] = self.binsize*i
@@ -304,7 +312,9 @@ class ParameterInference():
             lr = learning_rule(self.s1,self.s2,A,A*1.05,tau,tau,t,i,self.binsize) 
             ls = self.likelihood_step(self.s1[i-1],self.s2[i],wp[:,i-1])  
             vp = ls*v_normalized
-            wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,self.infstd,size = self.P)
+            step = wp[:,i-1] + lr + np.random.normal(0,self.infstd,size = self.P)
+            step[step<0] = 0
+            wp[:,i] = step
             t[i] = i*self.binsize
             log_posterior += np.log(np.sum(vp)/self.P)
         #print(log_posterior)
@@ -666,7 +676,11 @@ class ExperimentDesign():
             #print(i)
             lr = learning_rule(s1,s2,a,1.05*a,tau,tau,t,i,self.binsize)
             #print(lr)
-            W[i] = W[i-1] + lr + np.random.normal(0,self.genstd) 
+            step = W[i-1] + lr + np.random.normal(0,self.genstd) 
+            if step > 0:
+                W[i] = step
+            else:
+                W[i] = 0
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
             s1[i] = [np.random.binomial(1,inverse_logit(self.b1)),1][i % int((1/self.binsize)/freq) == 0]
             t[i] = self.binsize*i
@@ -691,7 +705,11 @@ class ExperimentDesign():
         t = np.zeros(iterations)
         for i in range(1,iterations):
             lr = learning_rule(s1,s2,a,1.05*a,tau,tau,t,i,self.binsize)
-            W[i] = W[i-1] + lr + np.random.normal(0,self.genstd) 
+            step = W[i-1] + lr + np.random.normal(0,self.genstd) 
+            if step > 0:
+                W[i] = step
+            else:
+                W[i] = 0
             s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+self.b2))
             s1[i] = np.random.binomial(1,inverse_logit(self.b1))
             t[i] = self.binsize*i
@@ -840,8 +858,8 @@ class ExperimentDesign():
         sample = inference_whole.standardMH_taufix()
         posts = [sample]
         means, std = np.mean(sample[300:]), np.sqrt(np.var(sample[300:]))
-        print(means)
-        print(std)
+        #print(means)
+        #print(std)
         ests, entrs = np.array([means]), np.array([norm.entropy(loc = means,scale = std)])
         new_shapes, new_rates = self.adjust_proposal_1d(means,sample)
         if optimised == True:
@@ -869,13 +887,13 @@ class ExperimentDesign():
             sample = inference_whole.standardMH_taufix()
             posts.append(sample)
             means = np.mean(sample[300:])
-            print(means)
+            #print(means)
             std = np.sqrt(np.var(sample[300:]))
-            print(std)
+            #print(std)
             ests = np.vstack((ests, means))
             entrs = np.vstack((entrs,norm.entropy(loc = means,scale = std)))
             new_shapes, new_rates = self.adjust_proposal_1d(means,sample)
-            print('new_shapes: ',new_shapes)
+            #print('new_shapes: ',new_shapes)
             if optimised == True:
                 inference_optim.set_shapes_prior(new_shapes)
                 inference_optim.set_rates_prior(new_rates)
@@ -1110,7 +1128,7 @@ if __name__ == "__main__":
     #    print(W[-1])
     design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
                                   ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
-    s1,s2,W = design.datasim(200,0.005,0.02,True,True,False)
+    s1,s2,W = design.datasim(200,0.005,0.02,True,True,l=True)
     #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
     '''
     theta_1ms_baseline = [] 

@@ -256,14 +256,14 @@ lrref = np.concatenate((lrs2,lrs1))
 Westimates1 = np.load('WHestmimates_1.npy')
 Westimates2 = np.load('WHestmimates_2.npy')
 Westimates3 = np.load('WHestmimates_3.npy')
-Westimates4= np.load('WHestmimates_4.npy')
-#estimates5= np.load('WHestmimates_5.npy')
+#Westimates4= np.load('WHestmimates_4.npy')
+Westimates5= np.load('WHestmimates_5.npy')
 Westimates6= np.load('WHestmimates_6.npy')
 #estimates7= np.load('WHestmimates_7.npy')
-#estimates8= np.load('WHestmimates_8.npy')
-#estimates9= np.load('WHestmimates_9.npy')
+Westimates8= np.load('WHestmimates_8.npy')
+Westimates9= np.load('WHestmimates_9.npy')
 #estimates10= np.load('WHestmimates_10.npy')
-Westimates11= np.load('WHestmimates_11.npy')
+#Westimates11= np.load('WHestmimates_11.npy')
 Westimates12= np.load('WHestmimates_12.npy')
 Westimates13= np.load('WHestmimates_13.npy')
 Westimates14= np.load('WHestmimates_14.npy')
@@ -274,7 +274,7 @@ Westimates18= np.load('WHestmimates_18.npy')
 Westimates19= np.load('WHestmimates_19.npy')
 Westimates20= np.load('WHestmimates_20.npy')
 
-Wests= [Westimates1,Westimates2,Westimates3,Westimates4,Westimates6,Westimates11,Westimates12,Westimates13,Westimates14,\
+Wests= [Westimates1,Westimates2,Westimates3,Westimates5,Westimates6,Westimates8,Westimates9,Westimates12,Westimates13,Westimates14,\
         Westimates15,Westimates16,Westimates17,Westimates18,Westimates19,Westimates20]
 Wmse_lr = []
 Wmse = []
@@ -327,14 +327,14 @@ Wentropies19= np.load('WHentropies_19.npy')
 WHoptf1 = np.load('WHoptfrqs_1.npy')
 WHoptf2 = np.load('WHoptfrqs_2.npy')
 WHoptf3 = np.load('WHoptfrqs_3.npy')
-WHoptf4 = np.load('WHoptfrqs_4.npy')
-#WHoptf5 = np.load('WHoptfrqs_5.npy')
+#WHoptf4 = np.load('WHoptfrqs_4.npy')
+WHoptf5 = np.load('WHoptfrqs_5.npy')
 WHoptf6 = np.load('WHoptfrqs_6.npy')
 #WHoptf7 = np.load('WHoptfrqs_7.npy')
-#WHoptf8 = np.load('WHoptfrqs_8.npy')
-#WHoptf9 = np.load('WHoptfrqs_9.npy')
+WHoptf8 = np.load('WHoptfrqs_8.npy')
+WHoptf9 = np.load('WHoptfrqs_9.npy')
 #WHoptf10 = np.load('WHoptfrqs_10.npy')
-WHoptf11 = np.load('WHoptfrqs_11.npy')
+#WHoptf11 = np.load('WHoptfrqs_11.npy')
 WHoptf12 = np.load('WHoptfrqs_12.npy')
 WHoptf13 = np.load('WHoptfrqs_13.npy')
 WHoptf14 = np.load('WHoptfrqs_14.npy')
@@ -604,7 +604,7 @@ Rmse_t = np.mean(Rmse_t,axis=0)
 
 Bmse_a = np.mean(Bmse_a,axis=0)
 Bmse_t = np.mean(Bmse_t,axis=0)
-'''
+
 plt.figure()
 plt.title('RMSE on estimations in 2D space')
 plt.xlabel('Trial')
@@ -668,10 +668,10 @@ plt.plot(x,Bmse_t,'kx-',label='Baseline firing')
 plt.yscale('log')
 plt.legend()
 plt.show()
-'''
+
 ## histograms of frequencies
-'''
-opts = [WHoptf1,WHoptf2,WHoptf3,WHoptf4,WHoptf6,WHoptf11,WHoptf12,WHoptf13,WHoptf14,WHoptf15,WHoptf16,WHoptf17,WHoptf18\
+
+opts = [WHoptf1,WHoptf2,WHoptf3,WHoptf5,WHoptf6,WHoptf8,WHoptf9,WHoptf12,WHoptf13,WHoptf14,WHoptf15,WHoptf16,WHoptf17,WHoptf18\
         ,WHoptf19,WHoptf20]
 for j in range(12):
     chosen_temp = [0,0,0,0]
@@ -691,7 +691,7 @@ for j in range(12):
     plt.bar(freqs,chosen_temp)
     plt.show()
         
-'''
+
 
 ### Weight trajectories
 

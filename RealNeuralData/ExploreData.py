@@ -21,12 +21,12 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-'''
-jux = loadmat('JuxtaGroundTruth.mat')
 
-ses1spikes = jux['ses']['times'][16]
-ses1stim=jux['ses']['stimTimes'][16]
-ses1spikeidraw = jux['ses']['ID'][16]
+#jux = loadmat('JuxtaGroundTruth.mat')
+
+ses1spikes = jux['ses']['times'][14]
+ses1stim=jux['ses']['stimTimes'][14]
+ses1spikeidraw = jux['ses']['ID'][14]
 ses1spikeid = []
 for i in range(len(ses1spikeidraw)):
     ses1spikeid.append(ses1spikeidraw[i][-1])
@@ -40,7 +40,7 @@ for i in range(len(spiketrains)):
 
 def cicc(lags,significance,n):
     return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
-'''
+
 '''
 #for i in range(18):
     ses1spikes = jux['ses']['times'][i]
@@ -59,15 +59,18 @@ def cicc(lags,significance,n):
 
     def cicc(lags,significance,n):
         return stats.norm.interval(significance,0,np.sqrt(1/(n-abs(lags))))
+    
+session 7, ind 26
+session 14 ind 18
 '''
 
-startstim = 5220
-stopstim = 5320
+startstim = 175
+stopstim = 275
 
 pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
 
-post = spiketrains[11][(np.where((spiketrains[11] > startstim) & (spiketrains[11] < stopstim)))]
+post = spiketrains[18][(np.where((spiketrains[18] > startstim) & (spiketrains[18] < stopstim)))]
     
 preint = pre*1000
 postint = post*1000
@@ -76,7 +79,7 @@ postint = postint.astype(int)
 preint = preint.astype(int)
 srp = []
 srpre = []
-for i in range(int(max(spiketrains[11]))):
+for i in range(int(max(spiketrains[18]))):
     srp.append(np.count_nonzero(postint==i))
 for i in range(int(max(spiketrains[-1]))):
     srpre.append(np.count_nonzero(preint==i))
@@ -93,7 +96,22 @@ for i in range(bins):
         s1[i] = 1
     if (timesteps[i] in postint):# or timesteps[i]+1 in st5pos):
         s2[i] = 1
+maxlag = 10
+lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
+#ccov = plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
+#ccor = (ccov[1]) / (len(s1) * s1.std() * s2.std())
+ci = cicc(lags,0.99,len(s1))
 
+plt.figure()
+plt.title('Cross-correlation candidate neuron pair (Stimulated period)')#+str(interesting[i]))
+plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
+plt.plot(lags,ci[1],'r--',label='99% CI under $H_0$')
+plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
+#plt.ylim((-0.035,0.035))
+#plt.xticks(x,labels = ms)
+plt.xlabel('Timelag (ms)')
+plt.legend(loc=1)
+plt.show()
 '''
 plt.figure()
 plt.title('Observed firing rate presynaptic (stimulated) neuron')
