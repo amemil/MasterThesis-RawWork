@@ -6,3 +6,13 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:309: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/self.P)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:174: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:247: RuntimeWarning: divide by zero encountered in true_divide
+  prior_ratio = norm.pdf(theta_next,mean,std) / norm.pdf(theta_prior,mean,std)
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: divide by zero encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: invalid value encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
