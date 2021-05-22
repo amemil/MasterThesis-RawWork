@@ -633,7 +633,7 @@ class ParameterInference():
 
 class ExperimentDesign():
     def __init__(self,freqs_init=np.array([20,50,100,200]),maxtime=120,trialsize=5\
-                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20, longinit = 60,s1init = 1,s2init =1,Winit =1):
+                 ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 20, longinit = 60,s1init = 1,s2init =1,Winit =1,W=0):
         self.maxtime = maxtime
         self.freqs_init = freqs_init
         self.Ap = Ap
@@ -650,7 +650,7 @@ class ExperimentDesign():
         self.w0est = w0
         #self.s1 = np.zeros(np.int(self.maxtime/self.binsize))
         #self.s2 = np.zeros(np.int(self.maxtime/self.binsize))
-        #self.W = np.zeros(np.int(self.maxtime/self.binsize))
+        self.W = W
         #self.test= test
         self.reals = reals
         self.longinit = longinit
