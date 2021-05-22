@@ -14,7 +14,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 import seaborn as sns
 from scipy.stats import norm
 
-plt.style.use('seaborn-darkgrid')
+plt.style.use('default')
 
 emsb = np.load('1msbase3.npy') #1s trial baseline inference
 emsf = np.load('1msfreq3.npy') #1s trial 50hz inference 
@@ -159,19 +159,19 @@ for i in range(24):
     tw5msstds.append(np.sqrt(np.var(fs20hz[i][300:],axis=0)))
     hun5msmeans.append(np.mean(fs100hz[i][300:],axis=0))
     hun5msstds.append(np.sqrt(np.var(fs100hz[i][300:],axis=0)))
-    absoluteErrorA1s.append(abs(np.mean(fs20hz[i][300:],axis=0) - trueA))
-    absoluteErrorA1s.append(abs(np.mean(fs100hz[i][300:],axis=0) - trueA))
-    entropiesA1s.append(norm.entropy(loc = np.mean(fs20hz[i][300:],axis=0),scale = np.sqrt(np.var(fs20hz[i][300:],axis=0))))
-    entropiesA1s.append(norm.entropy(loc = np.mean(fs100hz[i][300:],axis=0),scale = np.sqrt(np.var(fs100hz[i][300:],axis=0))))
+    absoluteErrorA5s.append(abs(np.mean(fs20hz[i][300:],axis=0) - trueA))
+    absoluteErrorA5s.append(abs(np.mean(fs100hz[i][300:],axis=0) - trueA))
+    entropiesA5s.append(norm.entropy(loc = np.mean(fs20hz[i][300:],axis=0),scale = np.sqrt(np.var(fs20hz[i][300:],axis=0))))
+    entropiesA5s.append(norm.entropy(loc = np.mean(fs100hz[i][300:],axis=0),scale = np.sqrt(np.var(fs100hz[i][300:],axis=0))))
 for i in range(12):
     tw10msmeans.append(np.mean(ts20hz[i][300:],axis=0))
     tw10msstds.append(np.sqrt(np.var(ts20hz[i][300:],axis=0)))
     hun10msmeans.append(np.mean(ts100hz[i][300:],axis=0))
     hun10msstds.append(np.sqrt(np.var(ts100hz[i][300:],axis=0)))
-    absoluteErrorA1s.append(abs(np.mean(ts20hz[i][300:],axis=0) - trueA))
-    absoluteErrorA1s.append(abs(np.mean(ts100hz[i][300:],axis=0) - trueA))
-    entropiesA1s.append(norm.entropy(loc = np.mean(ts20hz[i][300:],axis=0),scale = np.sqrt(np.var(ts20hz[i][300:],axis=0))))
-    entropiesA1s.append(norm.entropy(loc = np.mean(ts100hz[i][300:],axis=0),scale = np.sqrt(np.var(ts100hz[i][300:],axis=0))))
+    absoluteErrorA10s.append(abs(np.mean(ts20hz[i][300:],axis=0) - trueA))
+    absoluteErrorA10s.append(abs(np.mean(ts100hz[i][300:],axis=0) - trueA))
+    entropiesA10s.append(norm.entropy(loc = np.mean(ts20hz[i][300:],axis=0),scale = np.sqrt(np.var(ts20hz[i][300:],axis=0))))
+    entropiesA10s.append(norm.entropy(loc = np.mean(ts100hz[i][300:],axis=0),scale = np.sqrt(np.var(ts100hz[i][300:],axis=0))))
 
 
 trueA = 0.005

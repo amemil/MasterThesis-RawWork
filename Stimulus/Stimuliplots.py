@@ -16,7 +16,25 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import UtilitiesMaster as ut
 
-sns.set_style("darkgrid")
+plt.style.use('default')
+
+def rmse(targets, predictions):
+    return np.sqrt(((predictions - targets) ** 2).mean())
+
+
+def lr1(s2,s1,Ap,delta,taup):
+    return s2*s1*Ap*np.exp(-delta/taup)
+
+def lr2(s1,s2,Am,delta,taum):
+    return -s1*s2*Am*np.exp(delta/taum)
+
+deltas = np.linspace(0,0.1,10000)
+deltas2 = np.linspace(-0.1,0,10000)   
+lrs1 = lr1(1,1,0.005,deltas,0.02)
+lrs2 = lr2(1,1,0.005,deltas2,0.02) 
+
+lrref = np.concatenate((lrs2,lrs1))
+
 
 '''
 Tau1s = np.load('TauSamples1to4stim.npy')
@@ -436,7 +454,7 @@ plt.show()
 
 '''
 ## 100hz
-
+'''
 Sim1_100hz = np.load('Samples1to4highfreq.npy')
 Sim2_100hz = np.load('Samples5to8highfreq.npy')
 Sim3_100hz =np.load('Samples9to12highfreq.npy')
@@ -496,11 +514,22 @@ stdssT.pop(8)
 stdssT.pop(8)
 stdssT.pop(8)
 
-meanssA = np.mean(meanssA,axis=0)
-meanssT = np.mean(meanssT,axis=0)
-stdssA = np.mean(stdssA,axis=0)
-stdssT = np.mean(stdssT,axis=0)
+rmselr100 = []
+datasizes = []
+for i in range(10):
+    for j in range(5):
+        lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
+        lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])
+        lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+        rmselr100.append(rmse(lrref, lr_est))
+        datasizes.append((j+1)*60)
+'''     
 
+#meanssA = np.mean(meanssA,axis=0)
+#meanssT = np.mean(meanssT,axis=0)
+#stdssA = np.mean(stdssA,axis=0)
+#stdssT = np.mean(stdssT,axis=0)
+'''
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
@@ -528,7 +557,7 @@ for i in range(5):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 ### 200hz
 '''
 Sim1_200hz = np.load('Samples1to4megahighfreq.npy')
@@ -561,6 +590,20 @@ for i in range(5):
         stdssA.append(sat)
         stdssT.append(stt)
 
+rmselr200 = []
+datasizes2 = []
+for i in range(20):
+    for j in range(5):
+        lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
+        lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])
+        lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+        rmselr200.append(rmse(lrref, lr_est))
+        datasizes2.append((j+1)*60)
+'''
+
+
+
+'''
 meanssA = np.mean(meanssA,axis=0)
 meanssT = np.mean(meanssT,axis=0)
 stdssA = np.mean(stdssA,axis=0)
@@ -594,3 +637,34 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
+
+rmse100 = np.load('rmselr100hz.npy')
+rmse200 = np.load('rmselr250hz.npy')
+rmsebase = np.load('rmselrbase.npy')
+
+datasizes100 = np.load('DatasizeLabels100hz.npy')
+datasizes200 = np.load('DatasizeLabels250hz.npy')
+datasizesbase = np.load('DatasizeLabelsBase.npy')
+
+rmses = np.hstack((rmse100,rmse200,rmsebase))
+datasizes = np.hstack((datasizes100,datasizes200,datasizesbase))
+
+stimulus100 = []
+stimulus200 = []
+stimulusbase = []
+for i in range(len(rmse100)):
+    stimulus100.append(100)
+for i in range(len(rmse200)):
+    stimulus200.append(200)
+for i in range(len(rmsebase)):
+    stimulusbase.append(0)
+    
+stimulus = np.hstack((stimulus100,stimulus200,stimulusbase))
+
+data = np.transpose(np.asarray([rmses,datasizes,stimulus]))
+df = pd.DataFrame(data, columns =['RMSE', 'Datasize (sec)','Stimulus'])
+#df = df.pivot("Datasize (sec)", "Stimulus", "RMSE")
+
+ax = sns.lineplot(data=df, x="Datasize (sec)", y="RMSE",hue="Stimulus",palette=['orangered','chartreuse','royalblue'])
+ax.legend(['Baseline firing', '100Hz', '250Hz'])
+

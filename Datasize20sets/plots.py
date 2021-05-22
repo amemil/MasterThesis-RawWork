@@ -137,6 +137,35 @@ meanssT.pop(5)
 stdssA.pop(5)
 stdssT.pop(5)
 
+def rmse(targets, predictions):
+    return np.sqrt(((predictions - targets) ** 2).mean())
+
+
+def lr1(s2,s1,Ap,delta,taup):
+    return s2*s1*Ap*np.exp(-delta/taup)
+
+def lr2(s1,s2,Am,delta,taum):
+    return -s1*s2*Am*np.exp(delta/taum)
+
+deltas = np.linspace(0,0.1,10000)
+deltas2 = np.linspace(-0.1,0,10000)   
+lrs1 = lr1(1,1,0.005,deltas,0.02)
+lrs2 = lr2(1,1,0.005,deltas2,0.02) 
+
+lrref = np.concatenate((lrs2,lrs1))
+
+
+rmselrbase = []
+datasizes3 = []
+for i in range(19):
+    for j in range(5):
+        lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
+        lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])
+        lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+        rmselrbase.append(rmse(lrref, lr_est))
+        datasizes3.append((j+1)*60)
+      
+'''
 meanssA = np.mean(meanssA,axis=0)
 meanssT = np.mean(meanssT,axis=0)
 stdssA = np.mean(stdssA,axis=0)
@@ -171,3 +200,4 @@ plt.legend()
 plt.show()
 
 
+'''
