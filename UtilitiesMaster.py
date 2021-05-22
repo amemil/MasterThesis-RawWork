@@ -1116,6 +1116,9 @@ if __name__ == "__main__":
 
     #np.random.seed(5) 
     '''
+    data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-1.4, b2=-3.1, w0=1.0,sec = 60, binsize = 1/500.0,freq = 50)
+    data.create_data()
+    s1,s2,_,W = data.get_data()
     #a = np.ones((2,2))
     #print(np.linalg.norm(a,axis=1))
     #for i in range(20):
@@ -1126,9 +1129,9 @@ if __name__ == "__main__":
     #    np.save('s2init_'+str(i+1),s2)
     #    np.save('Winit_'+str(i+1),W)
     #    print(W[-1])
-    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
-                                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 1,longinit = 60)
-    s1,s2,W = design.datasim(200,0.005,0.02,True,True,l=True)
+    #design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
+    #                              ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-1.4, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 15,longinit = 60)
+    #s1,s2,W = design.datasim(200,0.005,0.02,True,True,l=True)
     #ests,entr,opts = design.onlineDesign_wh(nofreq =False,constant = True, random = False, optimised = False)
     '''
     theta_1ms_baseline = [] 
