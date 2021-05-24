@@ -63,43 +63,70 @@ def cicc(lags,significance,n):
 session 7, ind 26
 session 14 ind 18
 '''
+## 275-355, 355-435, 435-515,515-595,595-675, 675-755, 755-835,835-915,915-995,995-1075
 
-startstim = 0
-stopstim = 2000
+## 35-115,115-195,195-275,1175-1255,1255-1335,1335-1415,1415-1495,1495-1575,1575-1655,1655-1735
 
-pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
-
-
-post = spiketrains[32][(np.where((spiketrains[32] > startstim) & (spiketrains[32] < stopstim)))]
-srp = []
-srpre = []
-
-postint = post.astype(int)
-preint = pre.astype(int)
-for i in range(int(max(spiketrains[32]))):
-    srp.append(np.count_nonzero(postint==i))
-for i in range(int(max(spiketrains[-1]))):
-    srpre.append(np.count_nonzero(preint==i))
+for i in range(10):
+    '''
+    if i == 0:
+        startstim = 35
+        stopstim = 115
+    if i == 1:
+        startstim = 115
+        stopstim = 195
+    if i == 2:
+        startstim = 195
+        stopstim = 275
+    '''
     
-preint = pre*1000
-postint = post*1000
+    startstim = 275+(i*80)
+    stopstim = 355+(i*80)
+    
+    print('start:',startstim)
+    print('stop:',stopstim)
+    pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
-postint = postint.astype(int)
-preint = preint.astype(int)
+
+    post = spiketrains[32][(np.where((spiketrains[32] > startstim) & (spiketrains[32] < stopstim)))]
+    srp = []
+    srpre = []
+
+    postint = post.astype(int)
+    preint = pre.astype(int)
+    for j in range(int(max(spiketrains[32]))):
+        srp.append(np.count_nonzero(postint==j))        
+    for j in range(int(max(spiketrains[-1]))):
+        srpre.append(np.count_nonzero(preint==j))
+    
+    preint = pre*1000
+    postint = post*1000
+    
+    postint = postint.astype(int)
+    preint = preint.astype(int)
 
 
-start = min(preint[0],postint[0])
-end = max(preint[-1],postint[-1])
-binsize = 1
-bins = int((end-start)/binsize)
-timesteps = np.linspace(start,end-binsize,bins)
+    start = min(preint[0],postint[0])
+    end = max(preint[-1],postint[-1])
+    binsize = 1
+    bins = int((end-start)/binsize)
+    timesteps = np.linspace(start,end-binsize,bins)
+    s1,s2 = [],[]
+#s1,s2 = np.zeros(int(bins/2)),np.zeros(int(bins/2))
+    for k in range(0,bins,2):
+        if (timesteps[k] in preint) or (timesteps[k]+1 in preint):#: or timesteps[i]+1 in st2pos):
+            s1.append(1)
+        else:
+            s1.append(0)
+        if (timesteps[k] in postint) or (timesteps[k]+1 in postint):# or timesteps[i]+1 in st5pos):
+            s2.append(1)
+        else:
+            s2.append(0)
+    
+    np.save('PreLargeScaleStim_'+str(i+1),s1)
+    np.save('PostLargeScaleStim_'+str(i+1),s2)
+
 '''
-s1,s2 = np.zeros(bins),np.zeros(bins)
-for i in range(bins):
-    if (timesteps[i] in preint):#: or timesteps[i]+1 in st2pos):
-        s1[i] = 1
-    if (timesteps[i] in postint):# or timesteps[i]+1 in st5pos):
-        s2[i] = 1
 maxlag = 10
 lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
 #ccov = plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
@@ -116,7 +143,7 @@ plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
 plt.xlabel('Timelag (ms)')
 plt.legend(loc=1)
 plt.show()
-'''
+
 plt.figure()
 plt.title('Observed firing rate presynaptic (stimulated) neuron')
 plt.xlabel('Time [s]')
@@ -143,8 +170,8 @@ plt.plot(np.linspace(1,len(srp),len(srp)),srp,label = 'Observed rate')
 #        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'ro')
 plt.show()
 
-'''
-lineSize = [0.4, 0.4]
+
+lineSizes= [0.4, 0.4]
 plt.figure()
 plt.title('Spike Trains of selected neurons - pre v index '+str(i))
 plt.xlabel('Time (seconds)')
@@ -156,8 +183,7 @@ plt.eventplot([pre,post],linelengths=lineSize)#,colors= colorCodes)
 #plt.axvline(4034,color='g',linestyle='--',alpha=0.8,label='Possible stimulation time')
 plt.legend(loc=('upper center'))
 plt.show()
-'''
-'''
+
 for i in range(len(spiketrains)-1):
     
     post = spiketrains[i][(np.where((spiketrains[i] > startstim) & (spiketrains[i] < stopstim)))]
@@ -175,8 +201,6 @@ for i in range(len(spiketrains)-1):
     plt.legend(loc=('upper center'))
     plt.show()
 
-'''
-'''
 interesting = [11]
 
 for i in range(len(interesting)):
@@ -221,8 +245,7 @@ for i in range(len(interesting)):
     plt.xlabel('Timelag (ms)')
     plt.legend(loc=1)
     plt.show()
-'''
-'''
+
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
     stim = stiminfo["stim"]["ts"][1]
@@ -258,9 +281,7 @@ for j in range(51):
         #plt.axhline(0.005,color='r',linestyle='--',label='True Value')
     plt.legend()
     plt.show()
-'''
 
-'''
 for j in range(51):
     st1 = np.concatenate(data18105['spikes']['times'][j])
     st1 = st1.astype(int)+1
@@ -287,8 +308,7 @@ for j in range(51):
             plt.plot(stim[0][i][0],1,'ro')
     plt.legend()
     plt.show()
-'''
-'''
+
 data18102 = loadmat('camkii10_180102.spikes.cellinfo.mat')
 data18104 = loadmat('camkii10_180104.spikes.cellinfo.mat')
 data18220 = loadmat('camkii13_181220.spikes.cellinfo.mat')
@@ -308,9 +328,7 @@ data19112 = loadmat('camkii13_190112.spikes.cellinfo.mat')
 data19113 = loadmat('camkii13_190113.spikes.cellinfo.mat')
 data19114 = loadmat('camkii13_190114.spikes.cellinfo.mat')
 data19115 = loadmat('camkii13_190115.spikes.cellinfo.mat')
-'''
 
-'''
 #data18102 = loadmat('camkii10_180102.spikes.cellinfo.mat')
 #st1 = np.concatenate(data18102['spikes']['times'][13])
 #st2 = np.concatenate(data18102['spikes']['times'][1])
@@ -541,5 +559,3 @@ plt.show()
 '''  
 
 
-
-#
