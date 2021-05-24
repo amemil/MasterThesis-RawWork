@@ -11,13 +11,13 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import UtilitiesMaster as ut
 
-s1 = np.load('s1Trial8.npy')
-s2=np.load('s2Trial8.npy')
-W = np.load('WTrial8.npy')
+s1 = np.load('s1Trial8_2.npy')
+s2=np.load('s2Trial8_2.npy')
+W = np.load('WTrial8_2.npy')
 
 inference = ut.ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=35\
-                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,b1est = -1.4,b2est = -3.1,w0est = 1)
+                                            ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005,b1est = -2,b2est = -3.1,w0est = 1)
 sample = inference.standardMH()
 means, cov = [np.mean(sample[300:,0]),np.mean(sample[300:,1])], np.cov(np.transpose(sample[300:,:]))
 
@@ -32,4 +32,4 @@ inference_optim = ut.ParameterInference(1,1,P = 50, Usim = 100, Ualt = 200,it = 
 
 _,mutinfs = design.freq_optimiser(means,cov,init=False,optim=True,l=False,inference = inference_optim)
 
-np.save('MutinfsTrial8',mutinfs)
+np.save('MutinfsTrial8_2',mutinfs)
