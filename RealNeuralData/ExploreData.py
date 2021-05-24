@@ -24,9 +24,9 @@ plt.style.use('seaborn-darkgrid')
 
 #jux = loadmat('JuxtaGroundTruth.mat')
 
-ses1spikes = jux['ses']['times'][14]
-ses1stim=jux['ses']['stimTimes'][14]
-ses1spikeidraw = jux['ses']['ID'][14]
+ses1spikes = jux['ses']['times'][5]
+ses1stim=jux['ses']['stimTimes'][5]
+ses1spikeidraw = jux['ses']['ID'][5]
 ses1spikeid = []
 for i in range(len(ses1spikeidraw)):
     ses1spikeid.append(ses1spikeidraw[i][-1])
@@ -64,32 +64,36 @@ session 7, ind 26
 session 14 ind 18
 '''
 
-startstim = 175
-stopstim = 275
+startstim = 0
+stopstim = 2000
 
 pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
 
-post = spiketrains[18][(np.where((spiketrains[18] > startstim) & (spiketrains[18] < stopstim)))]
+post = spiketrains[32][(np.where((spiketrains[32] > startstim) & (spiketrains[32] < stopstim)))]
+srp = []
+srpre = []
+
+postint = post.astype(int)
+preint = pre.astype(int)
+for i in range(int(max(spiketrains[32]))):
+    srp.append(np.count_nonzero(postint==i))
+for i in range(int(max(spiketrains[-1]))):
+    srpre.append(np.count_nonzero(preint==i))
     
 preint = pre*1000
 postint = post*1000
 
 postint = postint.astype(int)
 preint = preint.astype(int)
-srp = []
-srpre = []
-for i in range(int(max(spiketrains[18]))):
-    srp.append(np.count_nonzero(postint==i))
-for i in range(int(max(spiketrains[-1]))):
-    srpre.append(np.count_nonzero(preint==i))
+
 
 start = min(preint[0],postint[0])
 end = max(preint[-1],postint[-1])
 binsize = 1
 bins = int((end-start)/binsize)
 timesteps = np.linspace(start,end-binsize,bins)
-
+'''
 s1,s2 = np.zeros(bins),np.zeros(bins)
 for i in range(bins):
     if (timesteps[i] in preint):#: or timesteps[i]+1 in st2pos):
@@ -125,8 +129,8 @@ for i in range(len(ses1stim)):
         plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'rx')
 plt.legend()
 plt.show()
-'''
-'''
+
+
 plt.figure()
 plt.title('Observed firing rate postsynaptic neuron')
 plt.xlabel('Time [s]')
@@ -138,7 +142,7 @@ plt.plot(np.linspace(1,len(srp),len(srp)),srp,label = 'Observed rate')
 #    else:
 #        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'ro')
 plt.show()
-'''
+
 '''
 lineSize = [0.4, 0.4]
 plt.figure()

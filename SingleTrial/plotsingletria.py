@@ -67,10 +67,31 @@ for i in range(120):
     frf.append(counter2)
     fr20.append(counter3)
     fr100.append(counter4)
+
+
+trueA = 0.005
+trueTau = 0.02
     
-    
-    
-    
+def rmse(targets, predictions):
+    return np.sqrt(((predictions - targets) ** 2).mean())
+
+def lr1(s2,s1,Ap,delta,taup):
+    return s2*s1*Ap*np.exp(-delta/taup)
+
+def lr2(s1,s2,Ap,delta,taum):
+    return -s1*s2*Ap*1.05*np.exp(delta/taum)
+
+
+deltas = np.linspace(0,0.1,10000)
+deltas2 = np.linspace(-0.1,0,10000)   
+lrs1 = lr1(1,1,trueA,deltas,trueTau)
+lrs2 = lr2(1,1,trueA,deltas2,trueTau) 
+
+lrref = np.concatenate((lrs2,lrs1))
+
+def NormEntropy(sigma):
+    return 0.5 * np.log(np.linalg.det(2*np.pi*np.exp(1)*sigma))
+
     
 base1msmeans = []
 base1msstds = []
@@ -84,9 +105,6 @@ base10msmeans = []
 base10msstds = []
 f10msmeans= []
 f10msstds = []
-
-trueA = 0.005
-trueTau = 0.02
 
 absoluteErrorA1s = []
 absoluteErrorA5s = []
@@ -104,6 +122,13 @@ entropiesTau1s = []
 entropiesTau5s = []
 entropiesTau10s = []
 
+entropy2d1s = []
+entropy2d5s = []
+entropy2d10s = []
+rmselr1s = []
+rmselr5s = []
+rmselr10s = []
+
 for i in range(120):
     base1msmeans.append(np.mean(emsb[i][300:],axis=0))
     base1msstds.append(np.sqrt(np.var(emsb[i][300:],axis=0)))
@@ -111,8 +136,18 @@ for i in range(120):
     f1msstds.append(np.sqrt(np.var(emsf[i][300:],axis=0)))
     absoluteErrorA1s.append(abs(np.mean(emsb[i][300:],axis=0) - trueA))
     absoluteErrorA1s.append(abs(np.mean(emsf[i][300:],axis=0) - trueA))
+    lrs1_temp = lr1(1,1,base1msmeans[-1][0],deltas,base1msmeans[-1][1])
+    lrs2_temp = lr2(1,1,base1msmeans[-1][0],deltas2,base1msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr1s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,f1msmeans[-1][0],deltas,f1msmeans[-1][1])
+    lrs2_temp = lr2(1,1,f1msmeans[-1][0],deltas2,f1msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr1s.append(rmse(lrref, lr_est))
     entropiesA1s.append(norm.entropy(loc = np.mean(emsb[i][300:],axis=0),scale = np.sqrt(np.var(emsb[i][300:],axis=0))))
     entropiesA1s.append(norm.entropy(loc = np.mean(emsf[i][300:],axis=0),scale = np.sqrt(np.var(emsf[i][300:],axis=0))))
+    entropy2d1s.append(NormEntropy(np.cov(np.transpose(emsb[i][300:,:]))))
+    entropy2d1s.append(NormEntropy(np.cov(np.transpose(emsf[i][300:,:]))))
 for i in range(24):
     base5msmeans.append(np.mean(fmsb[i][300:],axis=0))
     base5msstds.append(np.sqrt(np.var(fmsb[i][300:],axis=0)))
@@ -120,8 +155,18 @@ for i in range(24):
     f5msstds.append(np.sqrt(np.var(fmsf[i][300:],axis=0)))
     absoluteErrorA5s.append(abs(np.mean(fmsb[i][300:],axis=0) - trueA))
     absoluteErrorA5s.append(abs(np.mean(fmsf[i][300:],axis=0) - trueA))
+    lrs1_temp = lr1(1,1,base5msmeans[-1][0],deltas,base5msmeans[-1][1])
+    lrs2_temp = lr2(1,1,base5msmeans[-1][0],deltas2,base5msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr5s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,f5msmeans[-1][0],deltas,f5msmeans[-1][1])
+    lrs2_temp = lr2(1,1,f5msmeans[-1][0],deltas2,f5msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr5s.append(rmse(lrref, lr_est))
     entropiesA5s.append(norm.entropy(loc = np.mean(fmsb[i][300:],axis=0),scale = np.sqrt(np.var(fmsb[i][300:],axis=0))))
     entropiesA5s.append(norm.entropy(loc = np.mean(fmsf[i][300:],axis=0),scale = np.sqrt(np.var(fmsf[i][300:],axis=0))))
+    entropy2d5s.append(NormEntropy(np.cov(np.transpose(fmsb[i][300:,:]))))
+    entropy2d5s.append(NormEntropy(np.cov(np.transpose(fmsf[i][300:,:]))))
 for i in range(12):
     base10msmeans.append(np.mean(tensb[i][300:],axis=0))
     base10msstds.append(np.sqrt(np.var(tensb[i][300:],axis=0)))
@@ -129,8 +174,18 @@ for i in range(12):
     f10msstds.append(np.sqrt(np.var(tensf[i][300:],axis=0)))
     absoluteErrorA10s.append(abs(np.mean(tensb[i][300:],axis=0) - trueA))
     absoluteErrorA10s.append(abs(np.mean(tensf[i][300:],axis=0) - trueA))
-    entropiesA10s.append(norm.entropy(loc = np.mean(tensb[i][300:],axis=0),scale = np.sqrt(np.var(tensf[i][300:],axis=0))))
-    entropiesA10s.append(norm.entropy(loc = np.mean(tensb[i][300:],axis=0),scale = np.sqrt(np.var(tensf[i][300:],axis=0))))
+    lrs1_temp = lr1(1,1,base10msmeans[-1][0],deltas,base10msmeans[-1][1])
+    lrs2_temp = lr2(1,1,base10msmeans[-1][0],deltas2,base10msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr10s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,f10msmeans[-1][0],deltas,f10msmeans[-1][1])
+    lrs2_temp = lr2(1,1,f10msmeans[-1][0],deltas2,f10msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr10s.append(rmse(lrref, lr_est))
+    entropiesA10s.append(norm.entropy(loc = np.mean(tensb[i][300:],axis=0),scale = np.sqrt(np.var(tensb[i][300:],axis=0))))
+    entropiesA10s.append(norm.entropy(loc = np.mean(tensf[i][300:],axis=0),scale = np.sqrt(np.var(tensf[i][300:],axis=0))))
+    entropy2d10s.append(NormEntropy(np.cov(np.transpose(tensb[i][300:,:]))))
+    entropy2d10s.append(NormEntropy(np.cov(np.transpose(tensf[i][300:,:]))))
 
 tw1msmeans = []
 tw1msstds = []
@@ -152,8 +207,18 @@ for i in range(120):
     hun1msstds.append(np.sqrt(np.var(es100hz[i][300:],axis=0)))
     absoluteErrorA1s.append(abs(np.mean(es20hz[i][300:],axis=0) - trueA))
     absoluteErrorA1s.append(abs(np.mean(es100hz[i][300:],axis=0) - trueA))
+    lrs1_temp = lr1(1,1,tw1msmeans[-1][0],deltas,tw1msmeans[-1][1])
+    lrs2_temp = lr2(1,1,tw1msmeans[-1][0],deltas2,tw1msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr1s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,hun1msmeans[-1][0],deltas,hun1msmeans[-1][1])
+    lrs2_temp = lr2(1,1,hun1msmeans[-1][0],deltas2,hun1msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr1s.append(rmse(lrref, lr_est))
     entropiesA1s.append(norm.entropy(loc = np.mean(es20hz[i][300:],axis=0),scale = np.sqrt(np.var(es20hz[i][300:],axis=0))))
     entropiesA1s.append(norm.entropy(loc = np.mean(es100hz[i][300:],axis=0),scale = np.sqrt(np.var(es100hz[i][300:],axis=0))))
+    entropy2d1s.append(NormEntropy(np.cov(np.transpose(es20hz[i][300:,:]))))
+    entropy2d1s.append(NormEntropy(np.cov(np.transpose(es100hz[i][300:,:]))))
 for i in range(24):
     tw5msmeans.append(np.mean(fs20hz[i][300:],axis=0))
     tw5msstds.append(np.sqrt(np.var(fs20hz[i][300:],axis=0)))
@@ -161,8 +226,18 @@ for i in range(24):
     hun5msstds.append(np.sqrt(np.var(fs100hz[i][300:],axis=0)))
     absoluteErrorA5s.append(abs(np.mean(fs20hz[i][300:],axis=0) - trueA))
     absoluteErrorA5s.append(abs(np.mean(fs100hz[i][300:],axis=0) - trueA))
+    lrs1_temp = lr1(1,1,tw5msmeans[-1][0],deltas,tw5msmeans[-1][1])
+    lrs2_temp = lr2(1,1,tw5msmeans[-1][0],deltas2,tw5msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr5s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,hun5msmeans[-1][0],deltas,hun5msmeans[-1][1])
+    lrs2_temp = lr2(1,1,hun5msmeans[-1][0],deltas2,hun5msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr5s.append(rmse(lrref, lr_est))
     entropiesA5s.append(norm.entropy(loc = np.mean(fs20hz[i][300:],axis=0),scale = np.sqrt(np.var(fs20hz[i][300:],axis=0))))
     entropiesA5s.append(norm.entropy(loc = np.mean(fs100hz[i][300:],axis=0),scale = np.sqrt(np.var(fs100hz[i][300:],axis=0))))
+    entropy2d5s.append(NormEntropy(np.cov(np.transpose(fs20hz[i][300:,:]))))
+    entropy2d5s.append(NormEntropy(np.cov(np.transpose(fs100hz[i][300:,:]))))
 for i in range(12):
     tw10msmeans.append(np.mean(ts20hz[i][300:],axis=0))
     tw10msstds.append(np.sqrt(np.var(ts20hz[i][300:],axis=0)))
@@ -170,8 +245,18 @@ for i in range(12):
     hun10msstds.append(np.sqrt(np.var(ts100hz[i][300:],axis=0)))
     absoluteErrorA10s.append(abs(np.mean(ts20hz[i][300:],axis=0) - trueA))
     absoluteErrorA10s.append(abs(np.mean(ts100hz[i][300:],axis=0) - trueA))
+    lrs1_temp = lr1(1,1,tw10msmeans[-1][0],deltas,tw10msmeans[-1][1])
+    lrs2_temp = lr2(1,1,tw10msmeans[-1][0],deltas2,tw10msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr10s.append(rmse(lrref, lr_est))
+    lrs1_temp = lr1(1,1,hun10msmeans[-1][0],deltas,hun10msmeans[-1][1])
+    lrs2_temp = lr2(1,1,hun10msmeans[-1][0],deltas2,hun10msmeans[-1][1])
+    lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+    rmselr10s.append(rmse(lrref, lr_est))
     entropiesA10s.append(norm.entropy(loc = np.mean(ts20hz[i][300:],axis=0),scale = np.sqrt(np.var(ts20hz[i][300:],axis=0))))
     entropiesA10s.append(norm.entropy(loc = np.mean(ts100hz[i][300:],axis=0),scale = np.sqrt(np.var(ts100hz[i][300:],axis=0))))
+    entropy2d10s.append(NormEntropy(np.cov(np.transpose(ts20hz[i][300:,:]))))
+    entropy2d10s.append(NormEntropy(np.cov(np.transpose(ts100hz[i][300:,:]))))
 
 
 trueA = 0.005
@@ -928,24 +1013,25 @@ plt.figure()
 plt.title('Entropy versus RMSE (A estimation)')
 plt.xlabel('RMSE')
 plt.ylabel('Entropy')
+plt.yticks(ticks=[-2,-3,-4,-5],labels=['-2','-3','-4','-5'])
 for i in range(len(absoluteErrorA1s)):
     if math.isnan(absoluteErrorA1s[i][0]) == False and entropiesA1s[i][0] > -6:
         if i == 0:
-            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'rx',label = '1s trials')
+            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'ro',label = '1s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'rx')
+            plt.plot(absoluteErrorA1s[i][0],entropiesA1s[i][0],'ro',alpha=0.4)
 for i in range(len(absoluteErrorA5s)):
     if math.isnan(absoluteErrorA5s[i][0]) == False and entropiesA5s[i][0] > -6:
         if i == 0:
-            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'gx',label = '5s trials')
+            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'go',label = '5s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'gx')
+            plt.plot(absoluteErrorA5s[i][0],entropiesA5s[i][0],'go',alpha=0.4)
 for i in range(len(absoluteErrorA10s)):
     if math.isnan(absoluteErrorA10s[i][0]) == False and entropiesA10s[i][0] > -6:
         if i == 2:
-            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bx',label = '10s trials')
+            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bo',label = '10s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bx')
+            plt.plot(absoluteErrorA10s[i][0],entropiesA10s[i][0],'bo',alpha=0.4)
 plt.legend()
 plt.show()
 
@@ -953,24 +1039,51 @@ plt.figure()
 plt.title('Entropy versus RMSE (Tau estimation)')
 plt.xlabel('RMSE')
 plt.ylabel('Entropy')
+plt.yticks(ticks=[-2,-3,-4],labels=['-2','-3','-4'])
 for i in range(len(absoluteErrorA1s)):
     if math.isnan(absoluteErrorA1s[i][1]) == False and entropiesA1s[i][1] > -5:
         if i == 0:
-            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'rx',label = '1s trials')
+            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'ro',label = '1s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'rx')
+            plt.plot(absoluteErrorA1s[i][1],entropiesA1s[i][1],'ro',alpha=0.4)
 for i in range(len(absoluteErrorA5s)):
     if math.isnan(absoluteErrorA5s[i][1]) == False and entropiesA5s[i][1] > -5:
         if i == 0:
-            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'gx',label = '5s trials')
+            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'go',label = '5s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'gx')
+            plt.plot(absoluteErrorA5s[i][1],entropiesA5s[i][1],'go',alpha=0.4)
 for i in range(len(absoluteErrorA10s)):
     if math.isnan(absoluteErrorA10s[i][1]) == False and entropiesA10s[i][1] > -5:
         if i == 2:
-            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bx',label = '10s trials')
+            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bo',label = '10s trials',alpha=0.4)
         else:
-            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bx')
+            plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bo',alpha=0.4)
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.title('Entropy versus RMSE learning rule')
+plt.xlabel('RMSE')
+plt.ylabel('Entropy')
+plt.yticks(ticks=[-4,-6,-8],labels=['-4','-6','-8'])
+for i in range(len(rmselr1s)):
+    if math.isnan(rmselr1s[i]) == False and entropy2d1s[i] > -10:
+        if i == 0:
+            plt.plot(rmselr1s[i],entropy2d1s[i],'ro',label = '1s trials',alpha=0.4)
+        else:
+            plt.plot(rmselr1s[i],entropy2d1s[i],'ro',alpha=0.4)
+for i in range(len(rmselr5s)):
+    if math.isnan(rmselr5s[i]) == False and entropy2d5s[i] > -10:
+        if i == 0:
+            plt.plot(rmselr5s[i],entropy2d5s[i],'go',label = '5s trials',alpha=0.4)
+        else:
+            plt.plot(rmselr5s[i],entropy2d5s[i],'go',alpha=0.4)
+for i in range(len(rmselr10s)):
+    if math.isnan(rmselr10s[i]) == False and entropy2d10s[i] > -10:
+        if i == 2:
+            plt.plot(rmselr10s[i],entropy2d10s[i],'bo',label = '10s trials',alpha=0.4)
+        else:
+            plt.plot(rmselr10s[i],entropy2d10s[i],'bo',alpha=0.4)
 plt.legend()
 plt.show()
             

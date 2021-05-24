@@ -26,7 +26,7 @@ def lr1(s2,s1,Ap,delta,taup):
     return s2*s1*Ap*np.exp(-delta/taup)
 
 def lr2(s1,s2,Am,delta,taum):
-    return -s1*s2*Am*np.exp(delta/taum)
+    return -s1*s2*Am*1.05*np.exp(delta/taum)
 
 deltas = np.linspace(0,0.1,10000)
 deltas2 = np.linspace(-0.1,0,10000)   
