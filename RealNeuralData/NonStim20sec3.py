@@ -13,8 +13,8 @@ import UtOld as ut
 
 samples = []
 for i in range(21,31):
-    pre = np.load('Pre20secLsNonStim_'+str(i+1)+'.npy')
-    post = np.load('Post20secLsNonStim_'+str(i+1)+'.npy')
+    pre = np.load('Pre20secLsNonStim_'+str(i)+'.npy')
+    post = np.load('Post20secLsNonStim_'+str(i)+'.npy')
     inference = ut.ParameterInference(pre,post,len(pre),P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                                       , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
                                           ,binsize = 1/500.0,taufix = 0.02,Afix = 0.005)
