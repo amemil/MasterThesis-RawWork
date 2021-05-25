@@ -1116,8 +1116,9 @@ if __name__ == "__main__":
 
     #np.random.seed(5) 
     '''
-    for i in range(0,50,2):
-        print(i+1)
+    data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-1.4, b2=-3.1, w0=1.0,sec = 20, binsize = 1/500.0,freq = 50)
+    data.create_data()
+    s1,s2,_,W=data.get_data()
     #a = np.ones((2,2))
     #print(np.linalg.norm(a,axis=1))
     #for i in range(20):

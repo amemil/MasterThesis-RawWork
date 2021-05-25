@@ -67,24 +67,18 @@ session 14 ind 18
 
 ## 35-115,115-195,195-275,1175-1255,1255-1335,1335-1415,1415-1495,1495-1575,1575-1655,1655-1735
 
-for i in range(10):
-    '''
-    if i == 0:
-        startstim = 35
-        stopstim = 115
-    if i == 1:
-        startstim = 115
-        stopstim = 195
-    if i == 2:
-        startstim = 195
-        stopstim = 275
-    '''
+# stim periods: 275-1160, 1713-2019 (utenom 1837-1850)
+# non-stim : 0-275, 1160-1713
+
+for i in range(40):
     
-    startstim = 275+(i*80)
-    stopstim = 355+(i*80)
+
+    startstim = 280+((i)*20)
+    stopstim = 300+((i)*20)
     
-    print('start:',startstim)
-    print('stop:',stopstim)
+    print('['+str(startstim)+', '+str(stopstim)+']')
+    
+
     pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
 
 
@@ -123,8 +117,9 @@ for i in range(10):
         else:
             s2.append(0)
     
-    np.save('PreLargeScaleStim_'+str(i+1),s1)
-    np.save('PostLargeScaleStim_'+str(i+1),s2)
+    np.save('Pre20secLsStim_'+str(i+1),s1)
+    np.save('Post20secLsStim_'+str(i+1),s2)
+
 
 '''
 maxlag = 10
@@ -143,7 +138,8 @@ plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
 plt.xlabel('Timelag (ms)')
 plt.legend(loc=1)
 plt.show()
-
+'''
+'''
 plt.figure()
 plt.title('Observed firing rate presynaptic (stimulated) neuron')
 plt.xlabel('Time [s]')
@@ -169,8 +165,8 @@ plt.plot(np.linspace(1,len(srp),len(srp)),srp,label = 'Observed rate')
 #    else:
 #        plt.plot(np.linspace(ses1stim[i][0],ses1stim[i][1],100),np.ones(100),'ro')
 plt.show()
-
-
+'''
+'''
 lineSizes= [0.4, 0.4]
 plt.figure()
 plt.title('Spike Trains of selected neurons - pre v index '+str(i))

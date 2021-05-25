@@ -253,10 +253,10 @@ lrref = np.concatenate((lrs2,lrs1))
 
 # optimal regime
 
-'''
+
 
 #### [20-250hz] GRID###  
-
+'''
 Westimates1 = np.load('WHestmimates_1.npy')
 Westimates2 = np.load('WHestmimates_2.npy')
 Westimates3 = np.load('WHestmimates_3.npy')
@@ -304,9 +304,9 @@ for i in range(len(Wests)):
     Wmse_t.append(Wmse_t_temp)
         
 
+'''
 
-
-
+'''
 Wentropies1 = np.load('WHentropies_1.npy')
 Wentropies2 = np.load('WHentropies_2.npy')
 Wentropies3 = np.load('WHentropies_3.npy')
@@ -700,7 +700,7 @@ for j in range(12):
 
 
 ### Weight trajectories
-
+'''
         
 W_weight1 = np.load('WHw_1.npy')
 W_weight2 = np.load('WHw_2.npy')
@@ -795,6 +795,31 @@ B_weight18 = np.load('BaseW_18.npy')
 B_weight19 = np.load('BaseW_19.npy')
 #B_weight20 = np.load('BaseW_20.npy')
 
+##dales law weights
+WD_weight1 = np.load('WHwDalesLaw_1.npy')
+#WD_weight2 = np.load('WHwDalesLaw_2.npy')
+WD_weight3 =np.load('WHwDalesLaw_3.npy')
+WD_weight4 =np.load('WHwDalesLaw_4.npy')
+WD_weight5 = np.load('WHwDalesLaw_5.npy')
+WD_weight6 = np.load('WHwDalesLaw_6.npy')
+WD_weight7 = np.load('WHwDalesLaw_7.npy')
+WD_weight8 = np.load('WHwDalesLaw_8.npy')
+WD_weight9 = np.load('WHwDalesLaw_9.npy')
+WD_weight10 =np.load('WHwDalesLaw_10.npy')
+WD_weight11 = np.load('WHwDalesLaw_11.npy')
+WD_weight12 = np.load('WHwDalesLaw_12.npy')
+WD_weight13 = np.load('WHwDalesLaw_13.npy')
+WD_weight14 = np.load('WHwDalesLaw_14.npy')
+WD_weight15 = np.load('WHwDalesLaw_15.npy')
+WD_weight16 = np.load('WHwDalesLaw_16.npy')
+WD_weight17 = np.load('WHwDalesLaw_17.npy')
+WD_weight18 = np.load('WHwDalesLaw_18.npy')
+WD_weight19 = np.load('WHwDalesLaw_19.npy')
+WD_weight20 = np.load('WHwDalesLaw_20.npy')
+
+WDws = [WD_weight1,WD_weight3,WD_weight4,WD_weight5,WD_weight6,WD_weight7,WD_weight8,WD_weight9,WD_weight10,WD_weight11,WD_weight12,WD_weight13,WD_weight14,WD_weight15\
+       ,WD_weight16,WD_weight17,WD_weight18,WD_weight19,WD_weight20]
+
 Bws = [B_weight1,B_weight2,B_weight3,B_weight4,B_weight6,B_weight7,B_weight8,B_weight9,B_weight11,B_weight12,B_weight13\
        ,B_weight14,B_weight16,B_weight17,B_weight18,B_weight19]
 
@@ -802,6 +827,7 @@ Wws = np.mean(Wws,axis=0)
 Cws = np.mean(Cws,axis=0)
 Rws = np.mean(Rws,axis=0)
 Bws = np.mean(Bws,axis=0)
+WDws = np.mean(WDws,axis=0)
 
 plt.figure()
 plt.title('Average weight trajectories')
@@ -809,9 +835,10 @@ plt.plot(np.linspace(0,65,32500),Wws,label='Optimal Design')
 plt.plot(np.linspace(0,65,32500),Cws,label='Constant 20hz')
 plt.plot(np.linspace(0,65,32500),Rws,label='Random frequency')
 plt.plot(np.linspace(0,65,32500),Bws,label='Baseline firing')
+plt.plot(np.linspace(0,65,32500),WDws,label='Dales Law')
 plt.legend()
 plt.show()
-'''
+
 ### NEW GRID [10hz-100hz]
 
 ### OPTIM ####
@@ -903,6 +930,8 @@ WHoptf18 = np.load('WHoptfrqsNewGrid_18.npy')
 WHoptf19 = np.load('WHoptfrqsNewGrid_19.npy')
 WHoptf20 = np.load('WHoptfrqsNewGrid_20.npy')
 
+
+
 opts = [WHoptf1,WHoptf2,WHoptf3,WHoptf5,WHoptf6,WHoptf8,WHoptf9,WHoptf10,WHoptf12,WHoptf13,WHoptf14,WHoptf15,WHoptf16,WHoptf17,WHoptf18\
         ,WHoptf19,WHoptf20]
 for j in range(12):
@@ -947,6 +976,7 @@ for i in range(len(opts[0])):
 
 freqcounts = np.asarray(freqcounts)
 freqcounts = freqcounts / 17
+
 # RANDOM#### 
 
 Restimates1 = np.load('RandEstimatesNewGrid_1.npy')
@@ -1032,25 +1062,25 @@ CHEstimates1 = np.load('Const100Estimates_1.npy')
 CHEstimates2 = np.load('Const100Estimates_2.npy')
 CHEstimates3 = np.load('Const100Estimates_3.npy')
 CHEstimates4= np.load('Const100Estimates_4.npy')
-#CHEstimates5= np.load('Const100Estimates_5.npy')
+CHEstimates5= np.load('Const100Estimates_5.npy')
 CHEstimates6= np.load('Const100Estimates_6.npy')
 CHEstimates7= np.load('Const100Estimates_7.npy')
 CHEstimates8= np.load('Const100Estimates_8.npy')
-CHEstimates9= np.load('Const100Estimates_9.npy')
-#CHEstimates10= np.load('Const100Estimates_10.npy')
+#CHEstimates9= np.load('Const100Estimates_9.npy')
+CHEstimates10= np.load('Const100Estimates_10.npy')
 CHEstimates11= np.load('Const100Estimates_11.npy')
 CHEstimates12= np.load('Const100Estimates_12.npy')
 CHEstimates13= np.load('Const100Estimates_13.npy')
-#CHEstimates14= np.load('Const100Estimates_14.npy')
-#CHEstimates15= np.load('Const100Estimates_15.npy')
+CHEstimates14= np.load('Const100Estimates_14.npy')
+CHEstimates15= np.load('Const100Estimates_15.npy')
 CHEstimates16= np.load('Const100Estimates_16.npy')
 CHEstimates17= np.load('Const100Estimates_17.npy')
 CHEstimates18= np.load('Const100Estimates_18.npy')
 CHEstimates19= np.load('Const100Estimates_19.npy')
-#CHEstimates20= np.load('Const100Estimates_20.npy')
+CHEstimates20= np.load('Const100Estimates_20.npy')
 
-CHests= [CHEstimates1,CHEstimates2,CHEstimates3,CHEstimates4,CHEstimates6,CHEstimates7,CHEstimates8,CHEstimates9,CHEstimates11,\
-        CHEstimates12,CHEstimates13,CHEstimates16,CHEstimates17,CHEstimates18,CHEstimates19]
+CHests= [CHEstimates1,CHEstimates2,CHEstimates3,CHEstimates4,CHEstimates5,CHEstimates6,CHEstimates7,CHEstimates8,CHEstimates10,CHEstimates11,\
+        CHEstimates12,CHEstimates13,CHEstimates14,CHEstimates15,CHEstimates16,CHEstimates17,CHEstimates18,CHEstimates19,CHEstimates20]
 CHmse_lr = []
 for i in range(len(CHests)):
     CHmse_lr_temp = []
@@ -1071,29 +1101,140 @@ for i in range(len(CHmse_lr)):
                 CHmse_temp = np.delete(np.asarray(CHmse_temp),nans)
                 summ = np.sum(CHmse_temp)
             CHmse_lr[i][j] = np.mean(CHmse_temp)
+#### DALWS LAW ###
+
+WDestimates1 = np.load('WHestmimatesDalesLaw_1.npy')
+#WDestimates2 = np.load('WHestmimatesDalesLaw_2.npy')
+WDestimates3 = np.load('WHestmimatesDalesLaw_3.npy')
+WDestimates4= np.load('WHestmimatesDalesLaw_4.npy')
+WDestimates5= np.load('WHestmimatesDalesLaw_5.npy')
+WDestimates6= np.load('WHestmimatesDalesLaw_6.npy')
+WDestimates7= np.load('WHestmimatesDalesLaw_7.npy')
+WDestimates8= np.load('WHestmimatesDalesLaw_8.npy')
+WDestimates9= np.load('WHestmimatesDalesLaw_9.npy')
+WDestimates10= np.load('WHestmimatesDalesLaw_10.npy')
+WDestimates11= np.load('WHestmimatesDalesLaw_11.npy')
+WDestimates12= np.load('WHestmimatesDalesLaw_12.npy')
+WDestimates13= np.load('WHestmimatesDalesLaw_13.npy')
+WDestimates14= np.load('WHestmimatesDalesLaw_14.npy')
+WDestimates15= np.load('WHestmimatesDalesLaw_15.npy')
+WDestimates16= np.load('WHestmimatesDalesLaw_16.npy')
+WDestimates17= np.load('WHestmimatesDalesLaw_17.npy')
+WDestimates18= np.load('WHestmimatesDalesLaw_18.npy')
+WDestimates19= np.load('WHestmimatesDalesLaw_19.npy')
+WDestimates20= np.load('WHestmimatesDalesLaw_20.npy')
+
+WDests= [WDestimates1,WDestimates3,WDestimates4,WDestimates5,WDestimates6,WDestimates7,WDestimates8,WDestimates9,WDestimates10,WDestimates11,WDestimates12,WDestimates13,WDestimates14,\
+        WDestimates15,WDestimates16,WDestimates17,WDestimates18,WDestimates19,WDestimates20]
+WDmse_lr = []
+WDmse = []
+WDmse_a = []
+WDmse_t = []
+
+for i in range(len(WDests)):
+    WDmse_lr_temp = []
+    WDmse_temp = []
+    WDmse_a_temp = []
+    WDmse_t_temp = []
+    for j in range(len(WDests[i])):
+        lrs1_temp = lr1(1,1,WDests[i][j][0],deltas,WDests[i][j][1])
+        lrs2_temp = lr2(1,1,WDests[i][j][0],deltas2,WDests[i][j][1]) 
+        lr_est = np.concatenate((lrs2_temp,lrs1_temp))
+        WDmse_lr_temp.append(rmse(lrref, lr_est))
+        WDmse_temp.append(rmse(truevalues,WDests[i][j]))
+        WDmse_a_temp.append(rmse_norm(truevalues[0],WDests[i][j][0]))
+        WDmse_t_temp.append(rmse_norm(truevalues[1],WDests[i][j][1]))
+    WDmse_lr.append(WDmse_lr_temp)
+    WDmse.append(WDmse_temp)
+    WDmse_a.append(WDmse_a_temp)
+    WDmse_t.append(WDmse_t_temp)
+        
+
+
+
+
+WDoptf1 = np.load('WHoptfrqsDalesLaw_1.npy')
+#WDoptf2 = np.load('WHoptfrqsDalesLaw_2.npy')
+WDoptf3 = np.load('WHoptfrqsDalesLaw_3.npy')
+WDoptf4 = np.load('WHoptfrqsDalesLaw_4.npy')
+WDoptf5 = np.load('WHoptfrqsDalesLaw_5.npy')
+WDoptf6 = np.load('WHoptfrqsDalesLaw_6.npy')
+WDoptf7 = np.load('WHoptfrqsDalesLaw_7.npy')
+WDoptf8 = np.load('WHoptfrqsDalesLaw_8.npy')
+WDoptf9 = np.load('WHoptfrqsDalesLaw_9.npy')
+WDoptf10 = np.load('WHoptfrqsDalesLaw_10.npy')
+WDoptf11 = np.load('WHoptfrqsDalesLaw_11.npy')
+WDoptf12 = np.load('WHoptfrqsDalesLaw_12.npy')
+WDoptf13 = np.load('WHoptfrqsDalesLaw_13.npy')
+WDoptf14 = np.load('WHoptfrqsDalesLaw_14.npy')
+WDoptf15 = np.load('WHoptfrqsDalesLaw_15.npy')
+WDoptf16 = np.load('WHoptfrqsDalesLaw_16.npy')
+WDoptf17 = np.load('WHoptfrqsDalesLaw_17.npy')
+WDoptf18 = np.load('WHoptfrqsDalesLaw_18.npy')
+WDoptf19 = np.load('WHoptfrqsDalesLaw_19.npy')
+WDoptf20 = np.load('WHoptfrqsDalesLaw_20.npy')
+
+Dopts = [WDoptf1,WDoptf3,WDoptf5,WDoptf4,WDoptf6,WDoptf8,WDoptf9,WDoptf10,WDoptf11,WDoptf12,WDoptf13,WDoptf14,WDoptf15,WDoptf16,WDoptf17,WDoptf18\
+        ,WDoptf19,WDoptf20]
+
+freqcountsD = []
+trialcountD = []
+freqlabelD = []
+
+for i in range(len(Dopts[0])):
+    chosen_temp = [0,0,0,0]
+    for j in range(len(Dopts)):
+        if Dopts[j][i] == 20:
+            chosen_temp[0] += 1
+        if Dopts[j][i] == 50:
+            chosen_temp[1] += 1
+        if Dopts[j][i] == 100:
+            chosen_temp[2] += 1
+        if Dopts[j][i] == 200:
+            chosen_temp[3] += 1
+    freqcountsD.append(chosen_temp[0])
+    freqlabelD.append(100)
+    freqcountsD.append(chosen_temp[1])
+    freqlabelD.append(50)
+    freqcountsD.append(chosen_temp[2])
+    freqlabelD.append(20)
+    freqcountsD.append(chosen_temp[3])
+    freqlabelD.append(10)
+    trialcountD.append(i+2)
+    trialcountD.append(i+2)
+    trialcountD.append(i+2)
+    trialcountD.append(i+2)
+
+freqcountsD = np.asarray(freqcountsD)
+freqcountsD = freqcountsD / 19
+
 
 Wmse_lr = np.asarray(Wmse_lr).flatten()
 Cmse_lr = np.asarray(Cmse_lr).flatten()
 Bmse_lr = np.asarray(Bmse_lr).flatten()
 Rmse_lr = np.asarray(Rmse_lr).flatten()
 CHmse_lr = np.asarray(CHmse_lr).flatten()
+WDmse_lr = np.asarray(WDmse_lr).flatten()
+
 
 
 labels = [] #### 0 = optimal , 1 = const 20hz, 2 = base, 3 = random, 4= CONST 100hz !!!!!!!!!!!!!
 
 for i in range(len(Wmse_lr)):
     labels.append(0)
-for i in range(len(Cmse_lr)):
-    labels.append(1)
-for i in range(len(Bmse_lr)):
-    labels.append(2)
-for i in range(len(Rmse_lr)):
-    labels.append(3)
+#for i in range(len(Cmse_lr)):
+#    labels.append(1)
+#for i in range(len(Bmse_lr)):
+#    labels.append(2)
+#for i in range(len(Rmse_lr)):
+#    labels.append(3)
 for i in range(len(CHmse_lr)):
     labels.append(4)
+for i in range(len(WDmse_lr)):
+    labels.append(5)
 labels = np.asarray(labels)
 
-mses = np.hstack((Wmse_lr,Cmse_lr,Bmse_lr,Rmse_lr,CHmse_lr))
+mses = np.hstack((Wmse_lr,CHmse_lr,WDmse_lr))
 trials = []
 count = 1
 for i in range(len(mses)):
@@ -1104,19 +1245,19 @@ for i in range(len(mses)):
 
 data = np.transpose(np.asarray([mses,trials,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Trial','Label'])
-ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','orange','gold','royalblue'])
-ax.legend(['Optimised Frequency', 'Constant additional 20Hz', 'Baseline','Randomised Frequency','Constant add 100 hz'])
+ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','royalblue','chartreuse'])#,'royalblue'])
+ax.legend(['[10-100Hz] Optimal','100Hz constant','Dales Law optimised'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
 ax.set_yscale('log')
-
 '''
 
-frqsdata = np.transpose(np.asarray([trialcount,freqlabel,freqcounts]))
+
+frqsdata = np.transpose(np.asarray([trialcountD,freqlabelD,freqcountsD]))
 df_freq = pd.DataFrame(frqsdata, columns =['Trial', 'Frequency','Count'])
 df_freq= df_freq.pivot('Frequency', 'Trial','Count')
 plt.figure()
 sns.heatmap(data=df_freq,cmap="Reds",linewidth=0.3)
 plt.xticks(np.arange(12) + .5, labels=['2','3','4','5','6','7','8','9','10','11','12','13'])
-plt.yticks(np.arange(4) + .5,labels=['100','50','20','10'])
+plt.yticks(np.arange(4) + .5,labels=['250','100','50','20'])
 plt.show()
-
 '''
+
