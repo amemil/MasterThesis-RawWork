@@ -11,8 +11,8 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import UtOld as ut
 
-pre = np.load('prenonstim.npy')
-post = np.load('postnonstim.npy')
+pre = np.load('PreNonStim20sec_cand1.npy')
+post = np.load('PostNonStim20sec_cand1.npy')
 
 inference = ut.ParameterInference(pre,post,len(pre),P = 100, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
                  , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=120\
@@ -21,5 +21,5 @@ inference.b1_estimation()
 inference.b2_w0_estimation()
 sample = inference.standardMH()
 
-np.save('NonstimCand1Sample',sample)
+np.save('SampleNonstim20sec_cand1',sample)
 

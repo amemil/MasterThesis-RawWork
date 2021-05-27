@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import math
 
 import sys, os
 import numpy as np
@@ -454,7 +455,7 @@ plt.show()
 
 '''
 ## 100hz
-'''
+
 Sim1_100hz = np.load('Samples1to4highfreq.npy')
 Sim2_100hz = np.load('Samples5to8highfreq.npy')
 Sim3_100hz =np.load('Samples9to12highfreq.npy')
@@ -485,6 +486,24 @@ for i in range(4):
         stdssA.append(sat)
         stdssT.append(stt)
 
+## REMOVE heavy outliers ### 
+meanssA[3][4] = float("NaN")
+meanssA[1][3] = float("NaN")
+meanssA[4][4] = float("NaN")
+meanssA[11][0] = float("NaN")
+meanssA[12][4] = float("NaN")
+meanssA[13][4] = float("NaN")
+for i in range(len(meanssA)):
+    for j in range(len(meanssA[i])):
+        if math.isnan(meanssA[i][j])==True:
+            meanssA_temp = np.delete(np.asarray(meanssA)[:,j],i)
+            summ = np.sum(meanssA_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(meanssA_temp))[0][0]
+                meanssA_temp = np.delete(np.asarray(meanssA_temp),nans)
+                summ = np.sum(meanssA_temp)
+            meanssA[i][j] = np.mean(meanssA_temp)
+'''
 meanssA.pop(1)
 meanssA.pop(2)
 meanssA.pop(2)
@@ -660,11 +679,13 @@ for i in range(len(rmsebase)):
     stimulusbase.append(0)
     
 stimulus = np.hstack((stimulus100,stimulus200,stimulusbase))
-
+matplotlib.rcParams.update({'font.size': 14})
+plt.rc('axes', labelsize=18)  
 data = np.transpose(np.asarray([rmses,datasizes,stimulus]))
 df = pd.DataFrame(data, columns =['RMSE', 'Datasize (sec)','Stimulus'])
 #df = df.pivot("Datasize (sec)", "Stimulus", "RMSE")
 
 ax = sns.lineplot(data=df, x="Datasize (sec)", y="RMSE",hue="Stimulus",palette=['orangered','chartreuse','royalblue'])
 ax.legend(['Baseline firing', '100Hz', '250Hz'])
+ax.set_yticks([0,0.001,0.002,0.003])
 

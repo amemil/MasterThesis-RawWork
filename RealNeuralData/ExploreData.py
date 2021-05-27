@@ -70,6 +70,54 @@ session 14 ind 18
 # stim periods: 275-1160, 1713-2019 (utenom 1837-1850)
 # non-stim : 0-275, 1160-1713
 
+startstim = 175
+stopstim = 195
+
+    
+
+pre = spiketrains[-1][(np.where((spiketrains[-1] > startstim) & (spiketrains[-1] < stopstim)))]
+
+
+post = spiketrains[32][(np.where((spiketrains[32] > startstim) & (spiketrains[32] < stopstim)))]
+srp = []
+srpre = []
+
+postint = post.astype(int)
+preint = pre.astype(int)
+for j in range(int(max(spiketrains[32]))):
+    srp.append(np.count_nonzero(postint==j))        
+for j in range(int(max(spiketrains[-1]))):
+    srpre.append(np.count_nonzero(preint==j))
+    
+    
+preint = pre*1000    
+postint = post*1000
+    
+postint = postint.astype(int)
+preint = preint.astype(int)
+
+
+start = min(preint[0],postint[0])
+end = max(preint[-1],postint[-1])
+binsize = 1
+bins = int((end-start)/binsize)
+timesteps = np.linspace(start,end-binsize,bins)
+s1,s2 = [],[]
+#s1,s2 = np.zeros(int(bins/2)),np.zeros(int(bins/2))
+for k in range(0,bins):
+    if (timesteps[k] in preint):#: or timesteps[i]+1 in st2pos):
+        s1.append(1)
+    else:
+        s1.append(0)
+    if (timesteps[k] in postint):# or timesteps[i]+1 in st5pos):
+        s2.append(1)
+    else:
+        s2.append(0)
+    
+#np.save('Pre20secLsStim_'+str(i+1),s1)
+#np.save('Post20secLsStim_'+str(i+1),s2)
+    
+'''
 for i in range(40):
     
 
@@ -120,7 +168,7 @@ for i in range(40):
     np.save('Pre20secLsStim_'+str(i+1),s1)
     np.save('Post20secLsStim_'+str(i+1),s2)
 
-
+'''
 '''
 maxlag = 10
 lags = np.linspace(-maxlag,maxlag,2*maxlag+1)

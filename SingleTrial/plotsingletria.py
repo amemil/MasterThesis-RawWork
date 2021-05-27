@@ -13,6 +13,7 @@ import math
 from scipy.ndimage.filters import gaussian_filter1d
 import seaborn as sns
 from scipy.stats import norm
+import matplotlib
 
 plt.style.use('default')
 
@@ -74,6 +75,11 @@ trueTau = 0.02
     
 def rmse(targets, predictions):
     return np.sqrt(((predictions - targets) ** 2).mean())
+
+def rmse_norm(targets, predictions):
+    rmse = np.sqrt(((predictions - targets) ** 2).mean())
+    norm = rmse / targets
+    return(norm)
 
 def lr1(s2,s1,Ap,delta,taup):
     return s2*s1*Ap*np.exp(-delta/taup)
@@ -1009,6 +1015,7 @@ for ax_row in axes:
 plt.tight_layout()
 plt.show()
 '''
+'''
 plt.figure()
 plt.title('Entropy versus RMSE (A estimation)')
 plt.xlabel('RMSE')
@@ -1060,31 +1067,61 @@ for i in range(len(absoluteErrorA10s)):
             plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bo',alpha=0.4)
 plt.legend()
 plt.show()
-
+matplotlib.rcParams.update({'font.size': 14})
+plt.rc('axes', labelsize=18)  
 plt.figure()
-plt.title('Entropy versus RMSE learning rule')
 plt.xlabel('RMSE')
 plt.ylabel('Entropy')
 plt.yticks(ticks=[-4,-6,-8],labels=['-4','-6','-8'])
 for i in range(len(rmselr1s)):
     if math.isnan(rmselr1s[i]) == False and entropy2d1s[i] > -10:
         if i == 0:
-            plt.plot(rmselr1s[i],entropy2d1s[i],'ro',label = '1s trials',alpha=0.4)
+            plt.scatter(rmselr1s[i],entropy2d1s[i],c='r',label = '1s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.plot(rmselr1s[i],entropy2d1s[i],'ro',alpha=0.4)
+            plt.scatter(rmselr1s[i],entropy2d1s[i],c='r',alpha=0.4,edgecolors='none')
 for i in range(len(rmselr5s)):
     if math.isnan(rmselr5s[i]) == False and entropy2d5s[i] > -10:
         if i == 0:
-            plt.plot(rmselr5s[i],entropy2d5s[i],'go',label = '5s trials',alpha=0.4)
+            plt.scatter(rmselr5s[i],entropy2d5s[i],c='g',label = '5s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.plot(rmselr5s[i],entropy2d5s[i],'go',alpha=0.4)
+            plt.scatter(rmselr5s[i],entropy2d5s[i],c='g',alpha=0.4,edgecolors='none')
 for i in range(len(rmselr10s)):
     if math.isnan(rmselr10s[i]) == False and entropy2d10s[i] > -10:
         if i == 2:
-            plt.plot(rmselr10s[i],entropy2d10s[i],'bo',label = '10s trials',alpha=0.4)
+            plt.scatter(rmselr10s[i],entropy2d10s[i],c='b',label = '10s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.plot(rmselr10s[i],entropy2d10s[i],'bo',alpha=0.4)
+            plt.scatter(rmselr10s[i],entropy2d10s[i],c='b',alpha=0.4,edgecolors='none')
 plt.legend()
 plt.show()
-            
+'''            
+
+### RMSE as function of weight trajectory
+# weight traj 100hz : w100f
+# a estimates 100hz 5s trials: fs100hz
+
+Armse=[]
+Wav=[]
+Wstart = []
+
+for i in range(24):
+    Armse.append(rmse_norm(trueA,np.mean(fs100hz[i][300:,0])))
+    Wav.append(np.mean(w100f[i*2500:(i+1)*2500]))
+    Wstart.append(w100f[i*2500])
+
+plt.figure()
+plt.title('Single trial A inference')
+plt.xlabel('Average trial weight')
+plt.ylabel('Normalised RMSE')
+plt.plot(Wav,Armse,'rx-')
+plt.show()
+
+plt.figure()
+plt.title('Single trial A inference')
+plt.xlabel('Initial trial weight')
+plt.ylabel('Normalised RMSE')
+plt.plot(Wstart,Armse,'rx-')
+plt.show()
     
+
+
+

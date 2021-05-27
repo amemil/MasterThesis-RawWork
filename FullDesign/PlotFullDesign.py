@@ -13,6 +13,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 import seaborn as sns
 from scipy.stats import norm
 import pandas as pd
+import matplotlib
 
 plt.style.use('default')
 
@@ -244,13 +245,31 @@ def lr2(s1,s2,Am,delta,taum):
 
 deltas = np.linspace(0,0.1,10000)
 deltas2 = np.linspace(-0.1,0,10000)   
-lrs1 = lr1(1,1,0.005,deltas,0.02)
-lrs2 = lr2(1,1,0.005,deltas2,0.02) 
+lrs1 = lr1(1,1,0.0075,deltas,0.02)
+lrs2 = lr2(1,1,0.0075,deltas2,0.02) 
 
+
+deltass = np.concatenate((deltas2,deltas))
 lrref = np.concatenate((lrs2,lrs1))
-
-
-
+'''
+lrs3 = lr1(1,1,0.005,deltas,0.04)
+lrs4 = lr2(1,1,0.005,deltas2,0.04) 
+lrref2 = np.concatenate((lrs4,lrs3))
+plt.rcParams.update(plt.rcParamsDefault)
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=15)  
+plt.figure()
+plt.title('Learning rules')
+plt.xlabel(r'$\Delta$ t')
+plt.ylabel(r'$\Delta$ w')
+plt.axhline(y=0,color = 'k',linestyle='--')
+plt.plot(deltass,lrref)#,label=r'$\Theta$ = [0.0075,0.0075,0.02,0.02]')
+plt.plot(deltass,lrref2)#,label=r'$\Theta$ = [0.005,0.005,0.04,0.04]')
+plt.yticks([-0.008,-0.004,0,0.004,0.008],labels=['-0.008','-0.004','0','0.004','0.008'])
+plt.xticks([-0.1,-0.05,0,0.05,0.1],labels=['-0.1','-0.05','0','0.05','0.1'])
+#plt.legend()
+plt.show()
+'''
 # optimal regime
 
 
@@ -304,30 +323,44 @@ for i in range(len(Wests)):
     Wmse_t.append(Wmse_t_temp)
         
 
-'''
 
-'''
+
+
 Wentropies1 = np.load('WHentropies_1.npy')
 Wentropies2 = np.load('WHentropies_2.npy')
 Wentropies3 = np.load('WHentropies_3.npy')
 Wentropies4= np.load('WHentropies_4.npy')
-#entropies5= np.load('WHentropies_5.npy')
+Wentropies5= np.load('WHentropies_5.npy')
 Wentropies6= np.load('WHentropies_6.npy')
 #entropies7= np.load('WHentropies_7.npy')
-#entropies8= np.load('WHentropies_8.npy')
-#entropies9= np.load('WHentropies_9.npy')
+Wentropies8= np.load('WHentropies_8.npy')
+Wentropies9= np.load('WHentropies_9.npy')
 #entropies10= np.load('WHentropies_10.npy')
-Wentropies11= np.load('WHentropies_12.npy')
+#Wentropies11= np.load('WHentropies_12.npy')
 Wentropies12= np.load('WHentropies_12.npy')
 Wentropies13= np.load('WHentropies_13.npy')
 Wentropies14= np.load('WHentropies_14.npy')
-#Wentropies15= np.load('WHentropies_15.npy')
+Wentropies15= np.load('WHentropies_15.npy')
 Wentropies16= np.load('WHentropies_16.npy')
 Wentropies17= np.load('WHentropies_17.npy')
 Wentropies18= np.load('WHentropies_18.npy')
 Wentropies19= np.load('WHentropies_19.npy')
-#Wentropies20= np.load('WHentropies_20.npy')
+Wentropies20= np.load('WHentropies_20.npy')
 
+Wentrs= [Wentropies1,Wentropies2,Wentropies3,Wentropies5,Wentropies6,Wentropies8,Wentropies9,Wentropies12,Wentropies13,Wentropies14,\
+        Wentropies15,Wentropies16,Wentropies17,Wentropies18,Wentropies19,Wentropies20]
+
+for i in range(len(Wentrs)):
+    for j in range(len(Wentrs[i])):
+        if math.isnan(Wentrs[i][j])==True:
+            Wentrs_temp = np.delete(np.asarray(Wentrs)[:,j],i)
+            summ = np.sum(Wentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(Wentrs_temp))[0][0]
+                Wentrs_temp = np.delete(np.asarray(Wentrs_temp),nans)
+                summ = np.sum(Wentrs_temp)
+            Wentrs[i][j] = np.mean(Wentrs_temp)
+'''
 WHoptf1 = np.load('WHoptfrqs_1.npy')
 WHoptf2 = np.load('WHoptfrqs_2.npy')
 WHoptf3 = np.load('WHoptfrqs_3.npy')
@@ -349,76 +382,101 @@ WHoptf18 = np.load('WHoptfrqs_18.npy')
 WHoptf19 = np.load('WHoptfrqs_19.npy')
 WHoptf20 = np.load('WHoptfrqs_20.npy')
 
-
 # random frequency [20-250hz] GRID
 
 Restimates1 = np.load('RandEstimates_1.npy')
 Restimates2 = np.load('RandEstimates_2.npy')
 Restimates3 = np.load('RandEstimates_3.npy')
 Restimates4= np.load('RandEstimates_4.npy')
-#Restimates5= np.load('RandEstimates_5.npy')
+Restimates5= np.load('RandEstimates_5.npy')
 Restimates6= np.load('RandEstimates_6.npy')
 Restimates7= np.load('RandEstimates_7.npy')
 Restimates8= np.load('RandEstimates_8.npy')
 Restimates9= np.load('RandEstimates_9.npy')
-#Restimates10= np.load('RandEstimates_10.npy')
+Restimates10= np.load('RandEstimates_10.npy')
 Restimates11= np.load('RandEstimates_11.npy')
 Restimates12= np.load('RandEstimates_12.npy')
 Restimates13= np.load('RandEstimates_13.npy')
 Restimates14= np.load('RandEstimates_14.npy')
-#Restimates15= np.load('RandEstimates_15.npy')
+Restimates15= np.load('RandEstimates_15.npy')
 Restimates16= np.load('RandEstimates_16.npy')
 Restimates17= np.load('RandEstimates_17.npy')
 Restimates18= np.load('RandEstimates_18.npy')
 Restimates19= np.load('RandEstimates_19.npy')
-#Restimates20= np.load('RandEstimates_20.npy')
+Restimates20= np.load('RandEstimates_20.npy')
 
-Rests= [Restimates1,Restimates2,Restimates3,Restimates4,Restimates6,Restimates7,Restimates8,Restimates9,Restimates11,\
-        Restimates12,Restimates13,Restimates14,Restimates16,Restimates17,Restimates18,Restimates19]
-Rmse_lr = []
-Rmse = []
-Rmse_a = []
-Rmse_t = []
-for i in range(len(Rests)):
-    Rmse_lr_temp = []
-    Rmse_temp = []
-    Rmse_a_temp = []
-    Rmse_t_temp = []
-    for j in range(len(Rests[i])):
-        lrs1_temp = lr1(1,1,Rests[i][j][0],deltas,Rests[i][j][1])
-        lrs2_temp = lr2(1,1,Rests[i][j][0],deltas2,Rests[i][j][1]) 
+
+RDests= [Restimates1,Restimates2,Restimates3,Restimates4,Restimates6,Restimates7,Restimates8,Restimates9,Restimates10,Restimates11,\
+        Restimates12,Restimates13,Restimates14,Restimates15,Restimates16,Restimates17,Restimates18,Restimates19,Restimates20]
+RDmse_lr = []
+RDmse = []
+RDmse_a = []
+RDmse_t = []
+for i in range(len(RDests)):
+    RDmse_lr_temp = []
+    RDmse_temp = []
+    RDmse_a_temp = []
+    RDmse_t_temp = []
+    for j in range(len(RDests[i])):
+        lrs1_temp = lr1(1,1,RDests[i][j][0],deltas,RDests[i][j][1])
+        lrs2_temp = lr2(1,1,RDests[i][j][0],deltas2,RDests[i][j][1]) 
         lr_est = np.concatenate((lrs2_temp,lrs1_temp))
-        Rmse_lr_temp.append(rmse(lrref, lr_est))
-        Rmse_temp.append(rmse(truevalues,Rests[i][j]))
-        Rmse_a_temp.append(rmse_norm(truevalues[0],Rests[i][j][0]))
-        Rmse_t_temp.append(rmse_norm(truevalues[1],Rests[i][j][1]))
-    Rmse_lr.append(Rmse_lr_temp)
-    Rmse.append(Rmse_temp)
-    Rmse_a.append(Rmse_a_temp)
-    Rmse_t.append(Rmse_t_temp)
+        RDmse_lr_temp.append(rmse(lrref, lr_est))
+        RDmse_temp.append(rmse(truevalues,RDests[i][j]))
+        RDmse_a_temp.append(rmse_norm(truevalues[0],RDests[i][j][0]))
+        RDmse_t_temp.append(rmse_norm(truevalues[1],RDests[i][j][1]))
+    RDmse_lr.append(RDmse_lr_temp)
+    RDmse.append(RDmse_temp)
+    RDmse_a.append(RDmse_a_temp)
+    RDmse_t.append(RDmse_t_temp)
     
-    
+for i in range(len(RDmse)):
+    for j in range(len(RDmse[i])):
+        if math.isnan(RDmse_lr[i][j])==True:
+            RDmse_temp = np.delete(np.asarray(RDmse_lr)[:,j],i)
+            summ = np.sum(RDmse_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(RDmse_temp))[0][0]
+                RDmse_temp = np.delete(np.asarray(RDmse_temp),nans)
+                summ = np.sum(RDmse_temp)
+            RDmse_lr[i][j] = np.mean(RDmse_temp)
+            
 Rentropies1 = np.load('RandEntropies_1.npy')
 Rentropies2 = np.load('RandEntropies_2.npy')
 Rentropies3 = np.load('RandEntropies_3.npy')
 Rentropies4= np.load('RandEntropies_4.npy')
-#Rentropies5= np.load('RandEntropies_5.npy')
+Rentropies5= np.load('RandEntropies_5.npy')
 Rentropies6= np.load('RandEntropies_6.npy')
 Rentropies7= np.load('RandEntropies_7.npy')
 Rentropies8= np.load('RandEntropies_8.npy')
 Rentropies9= np.load('RandEntropies_9.npy')
-#Rentropies10= np.load('RandEntropies_10.npy')
+Rentropies10= np.load('RandEntropies_10.npy')
 Rentropies11= np.load('RandEntropies_12.npy')
 Rentropies12= np.load('RandEntropies_12.npy')
 Rentropies13= np.load('RandEntropies_13.npy')
 Rentropies14= np.load('RandEntropies_14.npy')
-#Rentropies15= np.load('RandEntropies_15.npy')
+Rentropies15= np.load('RandEntropies_15.npy')
 Rentropies16= np.load('RandEntropies_16.npy')
 Rentropies17= np.load('RandEntropies_17.npy')
 Rentropies18= np.load('RandEntropies_18.npy')
 Rentropies19= np.load('RandEntropies_19.npy')
-#Rentropies20= np.load('RandEntropies_20.npy')
-'''
+Rentropies20= np.load('RandEntropies_20.npy')
+
+RDentrs= [Rentropies1,Rentropies2,Rentropies3,Rentropies4,Rentropies5,Rentropies6,Rentropies7,Rentropies8,Rentropies9,Rentropies10,Rentropies11,\
+        Rentropies12,Rentropies13,Rentropies14,Rentropies15,Rentropies16,Rentropies17,Rentropies18,Rentropies19,Rentropies20]
+    
+for i in range(len(RDentrs)):
+    for j in range(len(RDentrs[i])):
+        if math.isnan(RDentrs[i][j])==True:
+            RDentrs_temp = np.delete(np.asarray(RDentrs)[:,j],i)
+            summ = np.sum(RDentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(RDentrs_temp))[0][0]
+                RDentrs_temp = np.delete(np.asarray(RDentrs_temp),nans)
+                summ = np.sum(RDentrs_temp)
+            RDentrs[i][j] = np.mean(RDentrs_temp)
+
+
 # baseline firing
 
 Bestimates1 = np.load('BaseEstimates_1.npy')
@@ -487,6 +545,22 @@ Bentropies18= np.load('BaseEntropies_18.npy')
 Bentropies19= np.load('BaseEntropies_19.npy')
 Bentropies20= np.load('BaseEntropies_20.npy')
 
+Bentrs= [Bentropies1,Bentropies2,Bentropies3,Bentropies4,Bentropies5,Bentropies6,Bentropies7,Bentropies8,Bentropies9,Bentropies10,Bentropies11,\
+        Bentropies12,Bentropies13,Bentropies14,Bentropies15,Bentropies16,Bentropies17,Bentropies18,Bentropies19,Bentropies20]
+    
+for i in range(len(Bentrs)):
+    for j in range(len(Bentrs[i])):
+        if math.isnan(Bentrs[i][j])==True:
+            Bentrs_temp = np.delete(np.asarray(Bentrs)[:,j],i)
+            summ = np.sum(Bentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(Bentrs_temp))[0][0]
+                Bentrs_temp = np.delete(np.asarray(Bentrs_temp),nans)
+                summ = np.sum(Bentrs_temp)
+            Bentrs[i][j] = np.mean(Bentrs_temp)
+            
+            
+            
 Cestimates1 = np.load('ConstEstimates_1.npy')
 Cestimates2 = np.load('ConstEstimates_2.npy')
 Cestimates3 = np.load('ConstEstimates_3.npy')
@@ -570,6 +644,20 @@ Centropies17= np.load('ConstEntropies_17.npy')
 Centropies18= np.load('ConstEntropies_18.npy')
 Centropies19= np.load('ConstEntropies_19.npy')
 Centropies20= np.load('ConstEntropies_20.npy')
+
+Centrs= [Centropies1,Centropies2,Centropies3,Centropies4,Centropies5,Centropies6,Centropies7,Centropies8,Centropies9,Centropies10,Centropies11,\
+        Centropies12,Centropies13,Centropies14,Centropies15,Centropies16,Centropies17,Centropies18,Centropies19,Centropies20]
+    
+for i in range(len(Centrs)):
+    for j in range(len(Centrs[i])):
+        if math.isnan(Centrs[i][j])==True:
+            Centrs_temp = np.delete(np.asarray(Centrs)[:,j],i)
+            summ = np.sum(Centrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(Centrs_temp))[0][0]
+                Centrs_temp = np.delete(np.asarray(Centrs_temp),nans)
+                summ = np.sum(Centrs_temp)
+            Centrs[i][j] = np.mean(Centrs_temp)
 
 
 '''
@@ -697,69 +785,70 @@ for j in range(12):
     plt.bar(freqs,chosen_temp)
     plt.show()
         
-
+'''
 
 ### Weight trajectories
 '''
-        
-W_weight1 = np.load('WHw_1.npy')
-W_weight2 = np.load('WHw_2.npy')
-W_weight3 =np.load('WHw_3.npy')
-W_weight4 =np.load('WHw_4.npy')
-#W_weight5 = np.load('WHw_5.npy')
-W_weight6 = np.load('WHw_6.npy')
-#W_weight7 = np.load('WHw_7.npy')
-#W_weight8 = np.load('WHw_8.npy')
-#W_weight9 = np.load('WHw_9.npy')
-#W_weight10 =np.load('WHw_10.npy')
-W_weight11 = np.load('WHw_11.npy')
-W_weight12 = np.load('WHw_12.npy')
-W_weight13 = np.load('WHw_13.npy')
-W_weight14 = np.load('WHw_14.npy')
-W_weight15 = np.load('WHw_15.npy')
-W_weight16 = np.load('WHw_16.npy')
-W_weight17 = np.load('WHw_17.npy')
-W_weight18 = np.load('WHw_18.npy')
-W_weight19 = np.load('WHw_19.npy')
-W_weight20 = np.load('WHw_20.npy')
+### optimal [10-100hz]        
+W_weight1 = np.load('WHwNewGrid_1.npy')
+W_weight2 = np.load('WHwNewGrid_2.npy')
+W_weight3 =np.load('WHwNewGrid_3.npy')
+#W_weight4 =np.load('WHwNewGrid_4.npy')
+W_weight5 = np.load('WHwNewGrid_5.npy')
+W_weight6 = np.load('WHwNewGrid_6.npy')
+#W_weight7 = np.load('WHwNewGrid_7.npy')
+W_weight8 = np.load('WHwNewGrid_8.npy')
+W_weight9 = np.load('WHwNewGrid_9.npy')
+W_weight10 =np.load('WHwNewGrid_10.npy')
+#W_weight11 = np.load('WHwNewGrid_11.npy')
+W_weight12 = np.load('WHwNewGrid_12.npy')
+W_weight13 = np.load('WHwNewGrid_13.npy')
+W_weight14 = np.load('WHwNewGrid_14.npy')
+W_weight15 = np.load('WHwNewGrid_15.npy')
+W_weight16 = np.load('WHwNewGrid_16.npy')
+W_weight17 = np.load('WHwNewGrid_17.npy')
+W_weight18 = np.load('WHwNewGrid_18.npy')
+W_weight19 = np.load('WHwNewGrid_19.npy')
+W_weight20 = np.load('WHwNewGrid_20.npy')
 
-Wws = [W_weight1,W_weight2,W_weight3,W_weight4,W_weight6,W_weight11,W_weight12,W_weight13,W_weight14,W_weight15\
+Wws = [W_weight1,W_weight2,W_weight3,W_weight5,W_weight6,W_weight8,W_weight9,W_weight10,W_weight12,W_weight13,W_weight14,W_weight15\
        ,W_weight16,W_weight17,W_weight18,W_weight19,W_weight20]
 
 C_weight1 = np.load('ConstW_1.npy')
 C_weight2 = np.load('ConstW_2.npy')
 C_weight3 =np.load('ConstW_3.npy')
 C_weight4 =np.load('ConstW_4.npy')
-#C_weight5 = np.load('ConstW_5.npy')
+C_weight5 = np.load('ConstW_5.npy')
 C_weight6 = np.load('ConstW_6.npy')
 C_weight7 = np.load('ConstW_7.npy')
 C_weight8 = np.load('ConstW_8.npy')
 C_weight9 = np.load('ConstW_9.npy')
-#C_weight10 =np.load('ConstW_10.npy')
+C_weight10 =np.load('ConstW_10.npy')
 C_weight11 = np.load('ConstW_11.npy')
 C_weight12 = np.load('ConstW_12.npy')
 C_weight13 = np.load('ConstW_13.npy')
 C_weight14 = np.load('ConstW_14.npy')
-#C_weight15 = np.load('ConstW_15.npy')
+C_weight15 = np.load('ConstW_15.npy')
 C_weight16 = np.load('ConstW_16.npy')
 C_weight17 = np.load('ConstW_17.npy')
 C_weight18 = np.load('ConstW_18.npy')
 C_weight19 = np.load('ConstW_19.npy')
-#C_weight20 = np.load('ConstW_20.npy')
+C_weight20 = np.load('ConstW_20.npy')
 
-Cws = [C_weight1,C_weight2,C_weight3,C_weight4,C_weight6,C_weight7,C_weight8,C_weight9,C_weight11,C_weight12,C_weight13\
-       ,C_weight14,C_weight16,C_weight17,C_weight18,C_weight19]
+Cws = [C_weight1,C_weight2,C_weight3,C_weight4,C_weight5,C_weight6,C_weight7,C_weight8,C_weight9,C_weight10,C_weight11,C_weight12,C_weight13\
+       ,C_weight14,C_weight15,C_weight16,C_weight17,C_weight18,C_weight19,C_weight20]
 
+    ## random [20-250hz]
 R_weight1 = np.load('RandW_1.npy')
 R_weight2 = np.load('RandW_2.npy')
 R_weight3 =np.load('RandW_3.npy')
 R_weight4 =np.load('RandW_4.npy')
-#R_weight5 = np.load('RandW_5.npy')
+R_weight5 = np.load('RandW_5.npy')
 R_weight6 = np.load('RandW_6.npy')
 R_weight7 = np.load('RandW_7.npy')
 R_weight8 = np.load('RandW_8.npy')
 R_weight9 = np.load('RandW_9.npy')
-#R_weight10 =np.load('RandW_10.npy')
+R_weight10 =np.load('RandW_10.npy')
 R_weight11 = np.load('RandW_11.npy')
 R_weight12 = np.load('RandW_12.npy')
 R_weight13 = np.load('RandW_13.npy')
@@ -769,31 +858,31 @@ R_weight16 = np.load('RandW_16.npy')
 R_weight17 = np.load('RandW_17.npy')
 R_weight18 = np.load('RandW_18.npy')
 R_weight19 = np.load('RandW_19.npy')
-#R_weight20 = np.load('RandW_20.npy')
+R_weight20 = np.load('RandW_20.npy')
 
-Rws = [R_weight1,R_weight2,R_weight3,R_weight4,R_weight6,R_weight7,R_weight8,R_weight9,R_weight11,R_weight12,R_weight13\
-       ,R_weight14,R_weight16,R_weight17,R_weight18,R_weight19]
+RDws = [R_weight1,R_weight2,R_weight3,R_weight4,R_weight5,R_weight6,R_weight7,R_weight8,R_weight9,R_weight10,R_weight11,R_weight12,R_weight13\
+       ,R_weight14,R_weight16,R_weight17,R_weight18,R_weight19,R_weight20]
     
 B_weight1 = np.load('BaseW_1.npy')
 B_weight2 = np.load('BaseW_2.npy')
 B_weight3 =np.load('BaseW_3.npy')
 B_weight4 =np.load('BaseW_4.npy')
-#B_weight5 = np.load('BaseW_5.npy')
+B_weight5 = np.load('BaseW_5.npy')
 B_weight6 = np.load('BaseW_6.npy')
 B_weight7 = np.load('BaseW_7.npy')
 B_weight8 = np.load('BaseW_8.npy')
 B_weight9 = np.load('BaseW_9.npy')
-#B_weight10 =np.load('BaseW_10.npy')
+B_weight10 =np.load('BaseW_10.npy')
 B_weight11 = np.load('BaseW_11.npy')
 B_weight12 = np.load('BaseW_12.npy')
 B_weight13 = np.load('BaseW_13.npy')
 B_weight14 = np.load('BaseW_14.npy')
-#B_weight15 = np.load('BaseW_15.npy')
+B_weight15 = np.load('BaseW_15.npy')
 B_weight16 = np.load('BaseW_16.npy')
 B_weight17 = np.load('BaseW_17.npy')
 B_weight18 = np.load('BaseW_18.npy')
 B_weight19 = np.load('BaseW_19.npy')
-#B_weight20 = np.load('BaseW_20.npy')
+B_weight20 = np.load('BaseW_20.npy')
 
 ##dales law weights
 WD_weight1 = np.load('WHwDalesLaw_1.npy')
@@ -817,28 +906,127 @@ WD_weight18 = np.load('WHwDalesLaw_18.npy')
 WD_weight19 = np.load('WHwDalesLaw_19.npy')
 WD_weight20 = np.load('WHwDalesLaw_20.npy')
 
+## Random [10-100hz]
+
+RN_weight1 = np.load('RandWNewGrid_1.npy')
+RN_weight2 = np.load('RandWNewGrid_2.npy')
+RN_weight3 =np.load('RandWNewGrid_3.npy')
+RN_weight4 =np.load('RandWNewGrid_4.npy')
+RN_weight5 = np.load('RandWNewGrid_5.npy')
+RN_weight6 = np.load('RandWNewGrid_6.npy')
+RN_weight7 = np.load('RandWNewGrid_7.npy')
+RN_weight8 = np.load('RandWNewGrid_8.npy')
+RN_weight9 = np.load('RandWNewGrid_9.npy')
+RN_weight10 =np.load('RandWNewGrid_10.npy')
+RN_weight11 = np.load('RandWNewGrid_11.npy')
+RN_weight12 = np.load('RandWNewGrid_12.npy')
+RN_weight13 = np.load('RandWNewGrid_13.npy')
+RN_weight14 = np.load('RandWNewGrid_14.npy')
+RN_weight15 = np.load('RandWNewGrid_15.npy')
+RN_weight16 = np.load('RandWNewGrid_16.npy')
+RN_weight17 = np.load('RandWNewGrid_17.npy')
+RN_weight18 = np.load('RandWNewGrid_18.npy')
+RN_weight19 = np.load('RandWNewGrid_19.npy')
+RN_weight20 = np.load('RandWNewGrid_20.npy')
+
+Rws = [RN_weight1,RN_weight2,RN_weight3,RN_weight4,RN_weight5,RN_weight6,RN_weight7,RN_weight8,RN_weight9,RN_weight10,RN_weight11,RN_weight12,RN_weight13\
+       ,RN_weight14,RN_weight15,RN_weight16,RN_weight17,RN_weight18,RN_weight19,RN_weight20]
+
 WDws = [WD_weight1,WD_weight3,WD_weight4,WD_weight5,WD_weight6,WD_weight7,WD_weight8,WD_weight9,WD_weight10,WD_weight11,WD_weight12,WD_weight13,WD_weight14,WD_weight15\
        ,WD_weight16,WD_weight17,WD_weight18,WD_weight19,WD_weight20]
 
-Bws = [B_weight1,B_weight2,B_weight3,B_weight4,B_weight6,B_weight7,B_weight8,B_weight9,B_weight11,B_weight12,B_weight13\
-       ,B_weight14,B_weight16,B_weight17,B_weight18,B_weight19]
+Bws = [B_weight1,B_weight2,B_weight3,B_weight4,B_weight5,B_weight6,B_weight7,B_weight8,B_weight9,B_weight10,B_weight11,B_weight12,B_weight13\
+       ,B_weight14,B_weight15,B_weight16,B_weight17,B_weight18,B_weight19,B_weight20]
 
+plt.figure()
+plt.title('Random [10-100hz]')
+for i in range(len(Rws)):
+    #print(min(Rws[i]))
+    plt.plot(np.linspace(0,65,32500),Rws[i])
+    if i == len(Rws)-1:
+        plt.plot(np.linspace(0,65,32500),np.mean(Rws,axis=0),color='k',label='Average')
+plt.legend()
+plt.show()
+plt.figure()
+plt.title('Optimal [10-100hz]')
+for i in range(len(Wws)):
+    #print(min(Rws[i]))
+    plt.plot(np.linspace(0,65,32500),Wws[i])
+    if i == len(Wws)-1:
+        plt.plot(np.linspace(0,65,32500),np.mean(Wws,axis=0),color='k',label='Average')
+plt.legend()
+plt.show()
+'''
+'''
 Wws = np.mean(Wws,axis=0)
 Cws = np.mean(Cws,axis=0)
-Rws = np.mean(Rws,axis=0)
+RDws = np.mean(RDws,axis=0)
 Bws = np.mean(Bws,axis=0)
 WDws = np.mean(WDws,axis=0)
+Rws= np.mean(Rws,axis=0)
+
 
 plt.figure()
 plt.title('Average weight trajectories')
-plt.plot(np.linspace(0,65,32500),Wws,label='Optimal Design')
-plt.plot(np.linspace(0,65,32500),Cws,label='Constant 20hz')
-plt.plot(np.linspace(0,65,32500),Rws,label='Random frequency')
-plt.plot(np.linspace(0,65,32500),Bws,label='Baseline firing')
-plt.plot(np.linspace(0,65,32500),WDws,label='Dales Law')
+plt.plot(np.linspace(0,65,32500),Wws,label='Optimal Design',color='orangered')
+#plt.plot(np.linspace(0,65,32500),WDws,label='Optimal design',color='orangered')
+plt.plot(np.linspace(0,65,32500),Cws,label='Constant 20hz',color = 'chartreuse')
+plt.plot(np.linspace(0,65,32500),Bws,label='Baseline firing',color='royalblue')
+#plt.plot(np.linspace(0,65,32500),RDws,label='Random frequency',color='gold')
+plt.plot(np.linspace(0,65,32500),Rws,label='Random frequency',color='gold')
 plt.legend()
 plt.show()
+'''
 
+'''
+Wws = np.asarray(Wws).flatten()
+Cws = np.asarray(Cws).flatten()
+Bws = np.asarray(Bws).flatten()
+Rws = np.asarray(Rws).flatten()
+RDws = np.asarray(RDws).flatten()
+#CHmse_lr = np.asarray(CHmse_lr).flatten()
+WDws = np.asarray(WDws).flatten()
+
+labels = [] #### 0 = optimal , 1 = const 20hz, 2 = base, 3 = random, 4= CONST 100hz !!!!!!!!!!!!!
+
+for i in range(len(Wws)):
+    labels.append(0)
+#for i in range(len(WDws)):
+#    labels.append(1)
+for i in range(len(Cws)):
+    labels.append(2)
+for i in range(len(Bws)):
+    labels.append(3)
+for i in range(len(Rws)):
+    labels.append(4)
+#for i in range(len(RDws)):
+#    labels.append(5)
+#for i in range(len(CHmse_lr)):
+#    labels.append(6)
+labels = np.asarray(labels)
+
+wghts = np.hstack((Wws,Cws,Bws,Rws))
+sec = []
+count = 0
+for i in range(len(wghts)):
+    sec.append(0 + count*(1/500))
+    count += 1
+    if count == 32500:
+        count = 0
+#matplotlib.rcParams.update({'font.size': 13})
+#plt.rc('axes', labelsize=16)  
+
+plt.rcParams.update(plt.rcParamsDefault)
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=15)  
+
+
+data = np.transpose(np.asarray([wghts,sec,labels]))
+df = pd.DataFrame(data, columns =['Weight strength', 'Time (sec)','Label'])
+ax = sns.lineplot(data=df, x="Time (sec)", y="Weight strength",hue="Label",palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
+ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+#ax.set_yscale('log')
+'''
 ### NEW GRID [10hz-100hz]
 
 ### OPTIM ####
@@ -909,6 +1097,22 @@ Wentropies18= np.load('WHentropiesNewGrid_18.npy')
 Wentropies19= np.load('WHentropiesNewGrid_19.npy')
 Wentropies20= np.load('WHentropiesNewGrid_20.npy')
 
+Wentrs= [Wentropies1,Wentropies2,Wentropies3,Wentropies5,Wentropies6,Wentropies8,Wentropies9,Wentropies10,\
+        Wentropies12,Wentropies13,Wentropies14,Wentropies15,Wentropies16,Wentropies17,Wentropies18,Wentropies19,Wentropies20]
+    
+    
+for i in range(len(Wentrs)):
+    for j in range(len(Wentrs[i])):
+        if math.isnan(Wentrs[i][j])==True:
+            Wentrs_temp = np.delete(np.asarray(Wentrs)[:,j],i)
+            summ = np.sum(Wentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(Wentrs_temp))[0][0]
+                Wentrs_temp = np.delete(np.asarray(Wentrs_temp),nans)
+                summ = np.sum(Wentrs_temp)
+            Wentrs[i][j] = np.mean(Wentrs_temp)
+            
+'''           
 WHoptf1 = np.load('WHoptfrqsNewGrid_1.npy')
 WHoptf2 = np.load('WHoptfrqsNewGrid_2.npy')
 WHoptf3 = np.load('WHoptfrqsNewGrid_3.npy')
@@ -976,6 +1180,76 @@ for i in range(len(opts[0])):
 
 freqcounts = np.asarray(freqcounts)
 freqcounts = freqcounts / 17
+
+
+Rf1 = np.load('RandFreqsNewGrid_1.npy')
+Rf2 = np.load('RandFreqsNewGrid_2.npy')
+Rf3 = np.load('RandFreqsNewGrid_3.npy')
+Rf4 = np.load('RandFreqsNewGrid_4.npy')
+Rf5 = np.load('RandFreqsNewGrid_5.npy')
+Rf6 = np.load('RandFreqsNewGrid_6.npy')
+Rf7 = np.load('RandFreqsNewGrid_7.npy')
+Rf8 = np.load('RandFreqsNewGrid_8.npy')
+Rf9 = np.load('RandFreqsNewGrid_9.npy')
+Rf10 = np.load('RandFreqsNewGrid_10.npy')
+Rf11 = np.load('RandFreqsNewGrid_11.npy')
+Rf12 = np.load('RandFreqsNewGrid_12.npy')
+Rf13 = np.load('RandFreqsNewGrid_13.npy')
+Rf14 = np.load('RandFreqsNewGrid_14.npy')
+Rf15 = np.load('RandFreqsNewGrid_15.npy')
+Rf16 = np.load('RandFreqsNewGrid_16.npy')
+Rf17 = np.load('RandFreqsNewGrid_17.npy')
+Rf18 = np.load('RandFreqsNewGrid_18.npy')
+Rf19 = np.load('RandFreqsNewGrid_19.npy')
+Rf20 = np.load('RandFreqsNewGrid_20.npy')
+
+
+
+Rfs = [Rf1,Rf2,Rf3,Rf4,Rf5,Rf6,Rf7,Rf8,Rf9,Rf10,Rf11,Rf12,Rf13,Rf14,Rf15,Rf16,Rf17,Rf18\
+        ,Rf19,Rf20]
+for j in range(12):
+    chosen_temp = [0,0,0,0]
+    freqs = ['10','20','50','100']
+    for i in range(len(Rfs)):
+        if Rfs[i][j] == 10:
+            chosen_temp[0] += 1
+        if Rfs[i][j] == 20:
+            chosen_temp[1] += 1
+        if Rfs[i][j] == 50:
+            chosen_temp[2] += 1
+        if Rfs[i][j] == 100:
+            chosen_temp[3] += 1
+freqcounts = []
+trialcount = []
+freqlabel = []
+
+for i in range(len(Rfs[0])):
+    chosen_temp = [0,0,0,0]
+    for j in range(len(Rfs)):
+        if Rfs[j][i] == 10:
+            chosen_temp[0] += 1
+        if Rfs[j][i] == 20:
+            chosen_temp[1] += 1
+        if Rfs[j][i] == 50:
+            chosen_temp[2] += 1
+        if Rfs[j][i] == 100:
+            chosen_temp[3] += 1
+    freqcounts.append(chosen_temp[0])
+    freqlabel.append(100)
+    freqcounts.append(chosen_temp[1])
+    freqlabel.append(50)
+    freqcounts.append(chosen_temp[2])
+    freqlabel.append(20)
+    freqcounts.append(chosen_temp[3])
+    freqlabel.append(10)
+    trialcount.append(i+2)
+    trialcount.append(i+2)
+    trialcount.append(i+2)
+    trialcount.append(i+2)
+
+freqcounts = np.asarray(freqcounts)
+freqcounts = freqcounts / 20
+'''
 
 # RANDOM#### 
 
@@ -1056,6 +1330,20 @@ Rentropies18= np.load('RandEntropiesNewGrid_18.npy')
 Rentropies19= np.load('RandEntropiesNewGrid_19.npy')
 Rentropies20= np.load('RandEntropiesNewGrid_20.npy')
 
+Rentrs= [Rentropies1,Rentropies2,Rentropies3,Rentropies4,Rentropies5,Rentropies6,Rentropies7,Rentropies8,Rentropies9,Rentropies10,Rentropies11,\
+        Rentropies12,Rentropies13,Rentropies14,Rentropies15,Rentropies16,Rentropies17,Rentropies18,Rentropies19,Rentropies20]
+    
+for i in range(len(Rentrs)):
+    for j in range(len(Rentrs[i])):
+        if math.isnan(Rentrs[i][j])==True:
+            Rentrs_temp = np.delete(np.asarray(Rentrs)[:,j],i)
+            summ = np.sum(Rentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(Rentrs_temp))[0][0]
+                Rentrs_temp = np.delete(np.asarray(Rentrs_temp),nans)
+                summ = np.sum(Rentrs_temp)
+            Rentrs[i][j] = np.mean(Rentrs_temp)
+            
 
 #### Const100 HZ #####
 CHEstimates1 = np.load('Const100Estimates_1.npy')
@@ -1149,8 +1437,40 @@ for i in range(len(WDests)):
     WDmse_a.append(WDmse_a_temp)
     WDmse_t.append(WDmse_t_temp)
         
+WDentropies1 = np.load('WHentropiesDalesLaw_1.npy')
+#WDentropies2 = np.load('WHentropiesDalesLaw_2.npy')
+WDentropies3 = np.load('WHentropiesDalesLaw_3.npy')
+WDentropies4= np.load('WHentropiesDalesLaw_4.npy')
+WDentropies5= np.load('WHentropiesDalesLaw_5.npy')
+WDentropies6= np.load('WHentropiesDalesLaw_6.npy')
+WDentropies7= np.load('WHentropiesDalesLaw_7.npy')
+WDentropies8= np.load('WHentropiesDalesLaw_8.npy')
+WDentropies9= np.load('WHentropiesDalesLaw_9.npy')
+WDentropies10= np.load('WHentropiesDalesLaw_10.npy')
+WDentropies11= np.load('WHentropiesDalesLaw_11.npy')
+WDentropies12= np.load('WHentropiesDalesLaw_12.npy')
+WDentropies13= np.load('WHentropiesDalesLaw_13.npy')
+WDentropies14= np.load('WHentropiesDalesLaw_14.npy')
+WDentropies15= np.load('WHentropiesDalesLaw_15.npy')
+WDentropies16= np.load('WHentropiesDalesLaw_16.npy')
+WDentropies17= np.load('WHentropiesDalesLaw_17.npy')
+WDentropies18= np.load('WHentropiesDalesLaw_18.npy')
+WDentropies19= np.load('WHentropiesDalesLaw_19.npy')
+WDentropies20= np.load('WHentropiesDalesLaw_20.npy')
 
+WDentrs= [WDentropies1,WDentropies3,WDentropies4,WDentropies5,WDentropies6,WDentropies7,WDentropies8,WDentropies9,WDentropies10,WDentropies11,WDentropies12,WDentropies13,WDentropies14,\
+        WDentropies15,WDentropies16,WDentropies17,WDentropies18,WDentropies19,WDentropies20]
 
+for i in range(len(WDentrs)):
+    for j in range(len(WDentrs[i])):
+        if math.isnan(WDentrs[i][j])==True:
+            WDentrs_temp = np.delete(np.asarray(WDentrs)[:,j],i)
+            summ = np.sum(WDentrs_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(WDentrs_temp))[0][0]
+                WDentrs_temp = np.delete(np.asarray(WDentrs_temp),nans)
+                summ = np.sum(WDentrs_temp)
+            WDentrs[i][j] = np.mean(WDentrs_temp)
 
 
 WDoptf1 = np.load('WHoptfrqsDalesLaw_1.npy')
@@ -1213,28 +1533,41 @@ Wmse_lr = np.asarray(Wmse_lr).flatten()
 Cmse_lr = np.asarray(Cmse_lr).flatten()
 Bmse_lr = np.asarray(Bmse_lr).flatten()
 Rmse_lr = np.asarray(Rmse_lr).flatten()
+RDmse_lr = np.asarray(RDmse_lr).flatten()
 CHmse_lr = np.asarray(CHmse_lr).flatten()
 WDmse_lr = np.asarray(WDmse_lr).flatten()
 
+
+
+##entropies
+
+Centrs= np.asarray(Centrs).flatten()
+Bentrs = np.asarray(Bentrs).flatten()
+Rentrs = np.asarray(Rentrs).flatten()
+RDentrs = np.asarray(RDentrs).flatten()
+WDentrs = np.asarray(WDentrs).flatten()
+Wentrs = np.asarray(Wentrs).flatten()
 
 
 labels = [] #### 0 = optimal , 1 = const 20hz, 2 = base, 3 = random, 4= CONST 100hz !!!!!!!!!!!!!
 
 for i in range(len(Wmse_lr)):
     labels.append(0)
-#for i in range(len(Cmse_lr)):
+#for i in range(len(WDmse_lr)):
 #    labels.append(1)
-#for i in range(len(Bmse_lr)):
-#    labels.append(2)
-#for i in range(len(Rmse_lr)):
-#    labels.append(3)
-for i in range(len(CHmse_lr)):
+for i in range(len(Cmse_lr)):
+    labels.append(2)
+for i in range(len(Bmse_lr)):
+    labels.append(3)
+for i in range(len(Rmse_lr)):
     labels.append(4)
-for i in range(len(WDmse_lr)):
-    labels.append(5)
+#for i in range(len(RDmse_lr)):
+#    labels.append(5)
+#for i in range(len(CHmse_lr)):
+#    labels.append(6)
 labels = np.asarray(labels)
 
-mses = np.hstack((Wmse_lr,CHmse_lr,WDmse_lr))
+mses = np.hstack((Wmse_lr,Cmse_lr,Bmse_lr,Rmse_lr))
 trials = []
 count = 1
 for i in range(len(mses)):
@@ -1242,22 +1575,140 @@ for i in range(len(mses)):
     count += 1
     if count == 14:
         count = 1
+#matplotlib.rcParams.update({'font.size': 13})
+#plt.rc('axes', labelsize=16)  
+
+plt.rcParams.update(plt.rcParamsDefault)
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=15)  
+
 
 data = np.transpose(np.asarray([mses,trials,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Trial','Label'])
-ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','royalblue','chartreuse'])#,'royalblue'])
-ax.legend(['[10-100Hz] Optimal','100Hz constant','Dales Law optimised'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
+ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
 ax.set_yscale('log')
+
+
 '''
-
-
-frqsdata = np.transpose(np.asarray([trialcountD,freqlabelD,freqcountsD]))
+frqsdata = np.transpose(np.asarray([trialcount,freqlabel,freqcounts]))
 df_freq = pd.DataFrame(frqsdata, columns =['Trial', 'Frequency','Count'])
 df_freq= df_freq.pivot('Frequency', 'Trial','Count')
 plt.figure()
-sns.heatmap(data=df_freq,cmap="Reds",linewidth=0.3)
+sns.heatmap(data=df_freq,cmap="Reds",linewidth=0.3,vmin=0,vmax=1)
 plt.xticks(np.arange(12) + .5, labels=['2','3','4','5','6','7','8','9','10','11','12','13'])
-plt.yticks(np.arange(4) + .5,labels=['250','100','50','20'])
+plt.yticks(np.arange(4) + .5,labels=['100','50','20','10'])
+
 plt.show()
 '''
+'''
+### ENTROPIES PLOTTING ##
+'''
+'''
+labels2 = []
+for i in range(len(Wentrs)):
+    labels2.append(0)
+#for i in range(len(WDentrs)):
+#    labels2.append(1)
+for i in range(len(Centrs)):
+    labels2.append(2)
+for i in range(len(Bentrs)):
+    labels2.append(3)
+for i in range(len(Rentrs)):
+    labels2.append(4)
+#for i in range(len(RDentrs)):
+#    labels2.append(5)
+labels2 = np.asarray(labels2)
+'''
+'''
 
+entrss = np.hstack((Wentrs,Centrs,Bentrs,Rentrs))
+
+trials2 = []
+count = 1
+for i in range(len(entrss)):
+    trials2.append(count)
+    count += 1
+    if count == 14:
+        count = 1
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=15)  
+data = np.transpose(np.asarray([entrss,trials2,labels2]))
+df = pd.DataFrame(data, columns =['Entropy', 'Trial','Label'])
+ax = sns.lineplot(data=df, x="Trial", y="Entropy",hue="Label",palette=['orangered','chartreuse','royalblue','gold'],legend=False)#,'royalblue'])
+#ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax.set_yticks([-6,-10,-14])
+#ax.set_yscale('log')
+'''
+'''
+
+
+plt.figure()
+plt.title('Entropies - Const 20 Hz')
+for i in range(len(Centrs)):
+    plt.plot(np.linspace(1,13,13),Centrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Baseline')
+for i in range(len(Bentrs)):
+    plt.plot(np.linspace(1,13,13),Bentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Optimal [10-100hz]')
+for i in range(len(Wentrs)):
+    plt.plot(np.linspace(1,13,13),Wentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Random [10-100hz]')
+for i in range(len(Rentrs)):
+    plt.plot(np.linspace(1,13,13),Rentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Optimal dales law [20-250hz]')
+for i in range(len(WDentrs)):
+    plt.plot(np.linspace(1,13,13),WDentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Random dales law [20-250hz]')
+for i in range(len(RDentrs)):
+    plt.plot(np.linspace(1,13,13),RDentrs[i])
+plt.show()
+
+
+plt.figure()
+plt.title('Entropies - Const 20 Hz - No "outliers"')
+for i in range(len(Centrs)):
+    if min(Centrs[i])>-11:
+        plt.plot(np.linspace(1,13,13),Centrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Baseline - No "outliers"')
+for i in range(len(Bentrs)):
+    if min(Bentrs[i])>-11:
+        plt.plot(np.linspace(1,13,13),Bentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Optimal [10-100hz] - No "outliers"')
+for i in range(len(Wentrs)):
+    if min(Wentrs[i])>-11:
+        plt.plot(np.linspace(1,13,13),Wentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Random [10-100hz] - No "outliers"')
+for i in range(len(Rentrs)):
+    if min(Rentrs[i]>-11):
+        plt.plot(np.linspace(1,13,13),Rentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Optimal dales law [20-250hz] - No "outliers"')
+for i in range(len(WDentrs)):
+    if min(WDentrs[i]>-11):
+        plt.plot(np.linspace(1,13,13),WDentrs[i])
+plt.show()
+plt.figure()
+plt.title('Entropies - Random dales law [20-250hz] - No "outliers"')
+for i in range(len(RDentrs)):
+    if min(RDentrs[i]>-11):
+        plt.plot(np.linspace(1,13,13),RDentrs[i])
+plt.show()
+'''
