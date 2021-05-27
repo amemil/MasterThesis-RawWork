@@ -15,14 +15,14 @@ s1init = np.load('s1init_4.npy')
 s2init = np.load('s2init_4.npy')
 Winit = np.load('Winit_4.npy')
 
-design = ut.ExperimentDesign(freqs_init=np.array([20,50,100,200]),maxtime=60,trialsize=5\
+design = ut.ExperimentDesign(freqs_init=np.array([10,20,50,100]),maxtime=60,trialsize=5\
                  ,Ap=0.005, tau=0.02, genstd=0.0001,b1=-3.1, b2=-3.1, w0=1.0,binsize = 1/500.0,reals = 15,longinit = 60\
                      ,s1init = s1init,s2init = s2init,Winit = Winit)
 means,entrs,optms,mutinfs,W,posts = design.onlineDesign_wh(nofreq =False,constant = False, random = False, optimised = True)
 
-np.save('WHestmimatesDalesLaw_4',means)
-np.save('WHentropiesDalesLaw_4',entrs)
-np.save('WHoptfrqsDalesLaw_4',optms)
-np.save('WHmutinfsDalesLaw_4',mutinfs)
-np.save('WHwDalesLaw_4',W)
-np.save('WHpostsDalesLaw_4',posts)
+np.save('WHestmimatesNewGrid_4',means)
+np.save('WHentropiesNewGrid_4',entrs)
+np.save('WHoptfrqsNewGrid_4',optms)
+np.save('WHmutinfsNewGrid_4',mutinfs)
+np.save('WHwNewGrid_4',W)
+np.save('WHpostsNewGrid_4',posts)

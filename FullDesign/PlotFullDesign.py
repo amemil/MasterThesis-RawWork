@@ -240,7 +240,7 @@ def lr1(s2,s1,Ap,delta,taup):
     return s2*s1*Ap*np.exp(-delta/taup)
 
 def lr2(s1,s2,Am,delta,taum):
-    return -s1*s2*Am*np.exp(delta/taum)
+    return -s1*s2*Am*1.05*np.exp(delta/taum)
 
 
 deltas = np.linspace(0,0.1,10000)
@@ -787,176 +787,8 @@ for j in range(12):
         
 '''
 
-### Weight trajectories
-'''
-### optimal [10-100hz]        
-W_weight1 = np.load('WHwNewGrid_1.npy')
-W_weight2 = np.load('WHwNewGrid_2.npy')
-W_weight3 =np.load('WHwNewGrid_3.npy')
-#W_weight4 =np.load('WHwNewGrid_4.npy')
-W_weight5 = np.load('WHwNewGrid_5.npy')
-W_weight6 = np.load('WHwNewGrid_6.npy')
-#W_weight7 = np.load('WHwNewGrid_7.npy')
-W_weight8 = np.load('WHwNewGrid_8.npy')
-W_weight9 = np.load('WHwNewGrid_9.npy')
-W_weight10 =np.load('WHwNewGrid_10.npy')
-#W_weight11 = np.load('WHwNewGrid_11.npy')
-W_weight12 = np.load('WHwNewGrid_12.npy')
-W_weight13 = np.load('WHwNewGrid_13.npy')
-W_weight14 = np.load('WHwNewGrid_14.npy')
-W_weight15 = np.load('WHwNewGrid_15.npy')
-W_weight16 = np.load('WHwNewGrid_16.npy')
-W_weight17 = np.load('WHwNewGrid_17.npy')
-W_weight18 = np.load('WHwNewGrid_18.npy')
-W_weight19 = np.load('WHwNewGrid_19.npy')
-W_weight20 = np.load('WHwNewGrid_20.npy')
 
-Wws = [W_weight1,W_weight2,W_weight3,W_weight5,W_weight6,W_weight8,W_weight9,W_weight10,W_weight12,W_weight13,W_weight14,W_weight15\
-       ,W_weight16,W_weight17,W_weight18,W_weight19,W_weight20]
 
-C_weight1 = np.load('ConstW_1.npy')
-C_weight2 = np.load('ConstW_2.npy')
-C_weight3 =np.load('ConstW_3.npy')
-C_weight4 =np.load('ConstW_4.npy')
-C_weight5 = np.load('ConstW_5.npy')
-C_weight6 = np.load('ConstW_6.npy')
-C_weight7 = np.load('ConstW_7.npy')
-C_weight8 = np.load('ConstW_8.npy')
-C_weight9 = np.load('ConstW_9.npy')
-C_weight10 =np.load('ConstW_10.npy')
-C_weight11 = np.load('ConstW_11.npy')
-C_weight12 = np.load('ConstW_12.npy')
-C_weight13 = np.load('ConstW_13.npy')
-C_weight14 = np.load('ConstW_14.npy')
-C_weight15 = np.load('ConstW_15.npy')
-C_weight16 = np.load('ConstW_16.npy')
-C_weight17 = np.load('ConstW_17.npy')
-C_weight18 = np.load('ConstW_18.npy')
-C_weight19 = np.load('ConstW_19.npy')
-C_weight20 = np.load('ConstW_20.npy')
-
-Cws = [C_weight1,C_weight2,C_weight3,C_weight4,C_weight5,C_weight6,C_weight7,C_weight8,C_weight9,C_weight10,C_weight11,C_weight12,C_weight13\
-       ,C_weight14,C_weight15,C_weight16,C_weight17,C_weight18,C_weight19,C_weight20]
-
-    ## random [20-250hz]
-R_weight1 = np.load('RandW_1.npy')
-R_weight2 = np.load('RandW_2.npy')
-R_weight3 =np.load('RandW_3.npy')
-R_weight4 =np.load('RandW_4.npy')
-R_weight5 = np.load('RandW_5.npy')
-R_weight6 = np.load('RandW_6.npy')
-R_weight7 = np.load('RandW_7.npy')
-R_weight8 = np.load('RandW_8.npy')
-R_weight9 = np.load('RandW_9.npy')
-R_weight10 =np.load('RandW_10.npy')
-R_weight11 = np.load('RandW_11.npy')
-R_weight12 = np.load('RandW_12.npy')
-R_weight13 = np.load('RandW_13.npy')
-R_weight14 = np.load('RandW_14.npy')
-#R_weight15 = np.load('RandW_15.npy')
-R_weight16 = np.load('RandW_16.npy')
-R_weight17 = np.load('RandW_17.npy')
-R_weight18 = np.load('RandW_18.npy')
-R_weight19 = np.load('RandW_19.npy')
-R_weight20 = np.load('RandW_20.npy')
-
-RDws = [R_weight1,R_weight2,R_weight3,R_weight4,R_weight5,R_weight6,R_weight7,R_weight8,R_weight9,R_weight10,R_weight11,R_weight12,R_weight13\
-       ,R_weight14,R_weight16,R_weight17,R_weight18,R_weight19,R_weight20]
-    
-B_weight1 = np.load('BaseW_1.npy')
-B_weight2 = np.load('BaseW_2.npy')
-B_weight3 =np.load('BaseW_3.npy')
-B_weight4 =np.load('BaseW_4.npy')
-B_weight5 = np.load('BaseW_5.npy')
-B_weight6 = np.load('BaseW_6.npy')
-B_weight7 = np.load('BaseW_7.npy')
-B_weight8 = np.load('BaseW_8.npy')
-B_weight9 = np.load('BaseW_9.npy')
-B_weight10 =np.load('BaseW_10.npy')
-B_weight11 = np.load('BaseW_11.npy')
-B_weight12 = np.load('BaseW_12.npy')
-B_weight13 = np.load('BaseW_13.npy')
-B_weight14 = np.load('BaseW_14.npy')
-B_weight15 = np.load('BaseW_15.npy')
-B_weight16 = np.load('BaseW_16.npy')
-B_weight17 = np.load('BaseW_17.npy')
-B_weight18 = np.load('BaseW_18.npy')
-B_weight19 = np.load('BaseW_19.npy')
-B_weight20 = np.load('BaseW_20.npy')
-
-##dales law weights
-WD_weight1 = np.load('WHwDalesLaw_1.npy')
-#WD_weight2 = np.load('WHwDalesLaw_2.npy')
-WD_weight3 =np.load('WHwDalesLaw_3.npy')
-WD_weight4 =np.load('WHwDalesLaw_4.npy')
-WD_weight5 = np.load('WHwDalesLaw_5.npy')
-WD_weight6 = np.load('WHwDalesLaw_6.npy')
-WD_weight7 = np.load('WHwDalesLaw_7.npy')
-WD_weight8 = np.load('WHwDalesLaw_8.npy')
-WD_weight9 = np.load('WHwDalesLaw_9.npy')
-WD_weight10 =np.load('WHwDalesLaw_10.npy')
-WD_weight11 = np.load('WHwDalesLaw_11.npy')
-WD_weight12 = np.load('WHwDalesLaw_12.npy')
-WD_weight13 = np.load('WHwDalesLaw_13.npy')
-WD_weight14 = np.load('WHwDalesLaw_14.npy')
-WD_weight15 = np.load('WHwDalesLaw_15.npy')
-WD_weight16 = np.load('WHwDalesLaw_16.npy')
-WD_weight17 = np.load('WHwDalesLaw_17.npy')
-WD_weight18 = np.load('WHwDalesLaw_18.npy')
-WD_weight19 = np.load('WHwDalesLaw_19.npy')
-WD_weight20 = np.load('WHwDalesLaw_20.npy')
-
-## Random [10-100hz]
-
-RN_weight1 = np.load('RandWNewGrid_1.npy')
-RN_weight2 = np.load('RandWNewGrid_2.npy')
-RN_weight3 =np.load('RandWNewGrid_3.npy')
-RN_weight4 =np.load('RandWNewGrid_4.npy')
-RN_weight5 = np.load('RandWNewGrid_5.npy')
-RN_weight6 = np.load('RandWNewGrid_6.npy')
-RN_weight7 = np.load('RandWNewGrid_7.npy')
-RN_weight8 = np.load('RandWNewGrid_8.npy')
-RN_weight9 = np.load('RandWNewGrid_9.npy')
-RN_weight10 =np.load('RandWNewGrid_10.npy')
-RN_weight11 = np.load('RandWNewGrid_11.npy')
-RN_weight12 = np.load('RandWNewGrid_12.npy')
-RN_weight13 = np.load('RandWNewGrid_13.npy')
-RN_weight14 = np.load('RandWNewGrid_14.npy')
-RN_weight15 = np.load('RandWNewGrid_15.npy')
-RN_weight16 = np.load('RandWNewGrid_16.npy')
-RN_weight17 = np.load('RandWNewGrid_17.npy')
-RN_weight18 = np.load('RandWNewGrid_18.npy')
-RN_weight19 = np.load('RandWNewGrid_19.npy')
-RN_weight20 = np.load('RandWNewGrid_20.npy')
-
-Rws = [RN_weight1,RN_weight2,RN_weight3,RN_weight4,RN_weight5,RN_weight6,RN_weight7,RN_weight8,RN_weight9,RN_weight10,RN_weight11,RN_weight12,RN_weight13\
-       ,RN_weight14,RN_weight15,RN_weight16,RN_weight17,RN_weight18,RN_weight19,RN_weight20]
-
-WDws = [WD_weight1,WD_weight3,WD_weight4,WD_weight5,WD_weight6,WD_weight7,WD_weight8,WD_weight9,WD_weight10,WD_weight11,WD_weight12,WD_weight13,WD_weight14,WD_weight15\
-       ,WD_weight16,WD_weight17,WD_weight18,WD_weight19,WD_weight20]
-
-Bws = [B_weight1,B_weight2,B_weight3,B_weight4,B_weight5,B_weight6,B_weight7,B_weight8,B_weight9,B_weight10,B_weight11,B_weight12,B_weight13\
-       ,B_weight14,B_weight15,B_weight16,B_weight17,B_weight18,B_weight19,B_weight20]
-
-plt.figure()
-plt.title('Random [10-100hz]')
-for i in range(len(Rws)):
-    #print(min(Rws[i]))
-    plt.plot(np.linspace(0,65,32500),Rws[i])
-    if i == len(Rws)-1:
-        plt.plot(np.linspace(0,65,32500),np.mean(Rws,axis=0),color='k',label='Average')
-plt.legend()
-plt.show()
-plt.figure()
-plt.title('Optimal [10-100hz]')
-for i in range(len(Wws)):
-    #print(min(Rws[i]))
-    plt.plot(np.linspace(0,65,32500),Wws[i])
-    if i == len(Wws)-1:
-        plt.plot(np.linspace(0,65,32500),np.mean(Wws,axis=0),color='k',label='Average')
-plt.legend()
-plt.show()
-'''
 '''
 Wws = np.mean(Wws,axis=0)
 Cws = np.mean(Cws,axis=0)
@@ -1529,18 +1361,18 @@ freqcountsD = np.asarray(freqcountsD)
 freqcountsD = freqcountsD / 19
 
 
-Wmse_lr = np.asarray(Wmse_lr).flatten()
-Cmse_lr = np.asarray(Cmse_lr).flatten()
-Bmse_lr = np.asarray(Bmse_lr).flatten()
-Rmse_lr = np.asarray(Rmse_lr).flatten()
-RDmse_lr = np.asarray(RDmse_lr).flatten()
-CHmse_lr = np.asarray(CHmse_lr).flatten()
-WDmse_lr = np.asarray(WDmse_lr).flatten()
+#Wmse_lr = np.asarray(Wmse_lr).flatten()
+#Cmse_lr = np.asarray(Cmse_lr).flatten()
+#Bmse_lr = np.asarray(Bmse_lr).flatten()
+#Rmse_lr = np.asarray(Rmse_lr).flatten()
+#RDmse_lr = np.asarray(RDmse_lr).flatten()
+#CHmse_lr = np.asarray(CHmse_lr).flatten()
+#WDmse_lr = np.asarray(WDmse_lr).flatten()
 
 
 
 ##entropies
-
+'''
 Centrs= np.asarray(Centrs).flatten()
 Bentrs = np.asarray(Bentrs).flatten()
 Rentrs = np.asarray(Rentrs).flatten()
@@ -1581,14 +1413,15 @@ for i in range(len(mses)):
 plt.rcParams.update(plt.rcParamsDefault)
 matplotlib.rcParams.update({'font.size': 13})
 plt.rc('axes', labelsize=15)  
-
+'''
+'''
 
 data = np.transpose(np.asarray([mses,trials,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Trial','Label'])
 ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
 ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
 ax.set_yscale('log')
-
+'''
 
 '''
 frqsdata = np.transpose(np.asarray([trialcount,freqlabel,freqcounts]))
@@ -1601,6 +1434,193 @@ plt.yticks(np.arange(4) + .5,labels=['100','50','20','10'])
 
 plt.show()
 '''
+### Weight trajectories
+
+### optimal [10-100hz]        
+W_weight1 = np.load('WHwNewGrid_1.npy')
+W_weight2 = np.load('WHwNewGrid_2.npy')
+W_weight3 =np.load('WHwNewGrid_3.npy')
+#W_weight4 =np.load('WHwNewGrid_4.npy')
+W_weight5 = np.load('WHwNewGrid_5.npy')
+W_weight6 = np.load('WHwNewGrid_6.npy')
+#W_weight7 = np.load('WHwNewGrid_7.npy')
+W_weight8 = np.load('WHwNewGrid_8.npy')
+W_weight9 = np.load('WHwNewGrid_9.npy')
+W_weight10 =np.load('WHwNewGrid_10.npy')
+#W_weight11 = np.load('WHwNewGrid_11.npy')
+W_weight12 = np.load('WHwNewGrid_12.npy')
+W_weight13 = np.load('WHwNewGrid_13.npy')
+W_weight14 = np.load('WHwNewGrid_14.npy')
+W_weight15 = np.load('WHwNewGrid_15.npy')
+W_weight16 = np.load('WHwNewGrid_16.npy')
+W_weight17 = np.load('WHwNewGrid_17.npy')
+W_weight18 = np.load('WHwNewGrid_18.npy')
+W_weight19 = np.load('WHwNewGrid_19.npy')
+W_weight20 = np.load('WHwNewGrid_20.npy')
+
+Wws = [W_weight1,W_weight2,W_weight3,W_weight5,W_weight6,W_weight8,W_weight9,W_weight10,W_weight12,W_weight13,W_weight14,W_weight15\
+       ,W_weight16,W_weight17,W_weight18,W_weight19,W_weight20]
+
+C_weight1 = np.load('ConstW_1.npy')
+C_weight2 = np.load('ConstW_2.npy')
+C_weight3 =np.load('ConstW_3.npy')
+C_weight4 =np.load('ConstW_4.npy')
+C_weight5 = np.load('ConstW_5.npy')
+C_weight6 = np.load('ConstW_6.npy')
+C_weight7 = np.load('ConstW_7.npy')
+C_weight8 = np.load('ConstW_8.npy')
+C_weight9 = np.load('ConstW_9.npy')
+C_weight10 =np.load('ConstW_10.npy')
+C_weight11 = np.load('ConstW_11.npy')
+C_weight12 = np.load('ConstW_12.npy')
+C_weight13 = np.load('ConstW_13.npy')
+C_weight14 = np.load('ConstW_14.npy')
+C_weight15 = np.load('ConstW_15.npy')
+C_weight16 = np.load('ConstW_16.npy')
+C_weight17 = np.load('ConstW_17.npy')
+C_weight18 = np.load('ConstW_18.npy')
+C_weight19 = np.load('ConstW_19.npy')
+C_weight20 = np.load('ConstW_20.npy')
+
+Cws = [C_weight1,C_weight2,C_weight3,C_weight4,C_weight5,C_weight6,C_weight7,C_weight8,C_weight9,C_weight10,C_weight11,C_weight12,C_weight13\
+       ,C_weight14,C_weight15,C_weight16,C_weight17,C_weight18,C_weight19,C_weight20]
+
+    ## random [20-250hz]
+R_weight1 = np.load('RandW_1.npy')
+R_weight2 = np.load('RandW_2.npy')
+R_weight3 =np.load('RandW_3.npy')
+R_weight4 =np.load('RandW_4.npy')
+R_weight5 = np.load('RandW_5.npy')
+R_weight6 = np.load('RandW_6.npy')
+R_weight7 = np.load('RandW_7.npy')
+R_weight8 = np.load('RandW_8.npy')
+R_weight9 = np.load('RandW_9.npy')
+R_weight10 =np.load('RandW_10.npy')
+R_weight11 = np.load('RandW_11.npy')
+R_weight12 = np.load('RandW_12.npy')
+R_weight13 = np.load('RandW_13.npy')
+R_weight14 = np.load('RandW_14.npy')
+#R_weight15 = np.load('RandW_15.npy')
+R_weight16 = np.load('RandW_16.npy')
+R_weight17 = np.load('RandW_17.npy')
+R_weight18 = np.load('RandW_18.npy')
+R_weight19 = np.load('RandW_19.npy')
+R_weight20 = np.load('RandW_20.npy')
+
+RDws = [R_weight1,R_weight2,R_weight3,R_weight4,R_weight5,R_weight6,R_weight7,R_weight8,R_weight9,R_weight10,R_weight11,R_weight12,R_weight13\
+       ,R_weight14,R_weight16,R_weight17,R_weight18,R_weight19,R_weight20]
+    
+B_weight1 = np.load('BaseW_1.npy')
+B_weight2 = np.load('BaseW_2.npy')
+B_weight3 =np.load('BaseW_3.npy')
+B_weight4 =np.load('BaseW_4.npy')
+B_weight5 = np.load('BaseW_5.npy')
+B_weight6 = np.load('BaseW_6.npy')
+B_weight7 = np.load('BaseW_7.npy')
+B_weight8 = np.load('BaseW_8.npy')
+B_weight9 = np.load('BaseW_9.npy')
+B_weight10 =np.load('BaseW_10.npy')
+B_weight11 = np.load('BaseW_11.npy')
+B_weight12 = np.load('BaseW_12.npy')
+B_weight13 = np.load('BaseW_13.npy')
+B_weight14 = np.load('BaseW_14.npy')
+B_weight15 = np.load('BaseW_15.npy')
+B_weight16 = np.load('BaseW_16.npy')
+B_weight17 = np.load('BaseW_17.npy')
+B_weight18 = np.load('BaseW_18.npy')
+B_weight19 = np.load('BaseW_19.npy')
+B_weight20 = np.load('BaseW_20.npy')
+
+##dales law weights
+WD_weight1 = np.load('WHwDalesLaw_1.npy')
+#WD_weight2 = np.load('WHwDalesLaw_2.npy')
+WD_weight3 =np.load('WHwDalesLaw_3.npy')
+WD_weight4 =np.load('WHwDalesLaw_4.npy')
+WD_weight5 = np.load('WHwDalesLaw_5.npy')
+WD_weight6 = np.load('WHwDalesLaw_6.npy')
+WD_weight7 = np.load('WHwDalesLaw_7.npy')
+WD_weight8 = np.load('WHwDalesLaw_8.npy')
+WD_weight9 = np.load('WHwDalesLaw_9.npy')
+WD_weight10 =np.load('WHwDalesLaw_10.npy')
+WD_weight11 = np.load('WHwDalesLaw_11.npy')
+WD_weight12 = np.load('WHwDalesLaw_12.npy')
+WD_weight13 = np.load('WHwDalesLaw_13.npy')
+WD_weight14 = np.load('WHwDalesLaw_14.npy')
+WD_weight15 = np.load('WHwDalesLaw_15.npy')
+WD_weight16 = np.load('WHwDalesLaw_16.npy')
+WD_weight17 = np.load('WHwDalesLaw_17.npy')
+WD_weight18 = np.load('WHwDalesLaw_18.npy')
+WD_weight19 = np.load('WHwDalesLaw_19.npy')
+WD_weight20 = np.load('WHwDalesLaw_20.npy')
+
+## Random [10-100hz]
+
+RN_weight1 = np.load('RandWNewGrid_1.npy')
+RN_weight2 = np.load('RandWNewGrid_2.npy')
+RN_weight3 =np.load('RandWNewGrid_3.npy')
+RN_weight4 =np.load('RandWNewGrid_4.npy')
+RN_weight5 = np.load('RandWNewGrid_5.npy')
+RN_weight6 = np.load('RandWNewGrid_6.npy')
+RN_weight7 = np.load('RandWNewGrid_7.npy')
+RN_weight8 = np.load('RandWNewGrid_8.npy')
+RN_weight9 = np.load('RandWNewGrid_9.npy')
+RN_weight10 =np.load('RandWNewGrid_10.npy')
+RN_weight11 = np.load('RandWNewGrid_11.npy')
+RN_weight12 = np.load('RandWNewGrid_12.npy')
+RN_weight13 = np.load('RandWNewGrid_13.npy')
+RN_weight14 = np.load('RandWNewGrid_14.npy')
+RN_weight15 = np.load('RandWNewGrid_15.npy')
+RN_weight16 = np.load('RandWNewGrid_16.npy')
+RN_weight17 = np.load('RandWNewGrid_17.npy')
+RN_weight18 = np.load('RandWNewGrid_18.npy')
+RN_weight19 = np.load('RandWNewGrid_19.npy')
+RN_weight20 = np.load('RandWNewGrid_20.npy')
+
+Rws = [RN_weight1,RN_weight2,RN_weight3,RN_weight4,RN_weight5,RN_weight6,RN_weight7,RN_weight8,RN_weight9,RN_weight10,RN_weight11,RN_weight12,RN_weight13\
+       ,RN_weight14,RN_weight15,RN_weight16,RN_weight17,RN_weight18,RN_weight19,RN_weight20]
+
+WDws = [WD_weight1,WD_weight3,WD_weight4,WD_weight5,WD_weight6,WD_weight7,WD_weight8,WD_weight9,WD_weight10,WD_weight11,WD_weight12,WD_weight13,WD_weight14,WD_weight15\
+       ,WD_weight16,WD_weight17,WD_weight18,WD_weight19,WD_weight20]
+
+Bws = [B_weight1,B_weight2,B_weight3,B_weight4,B_weight5,B_weight6,B_weight7,B_weight8,B_weight9,B_weight10,B_weight11,B_weight12,B_weight13\
+       ,B_weight14,B_weight15,B_weight16,B_weight17,B_weight18,B_weight19,B_weight20]
+
+Wmse_lr_last = []
+WDmse_lr_last = []
+for i in range(len(Wmse_lr)):
+    Wmse_lr_last.append(Wmse_lr[i][-1])
+for i in range(len(WDmse_lr)):
+    WDmse_lr_last.append(WDmse_lr[i][-1])
+Wmse_lr_last = np.asarray(Wmse_lr_last)
+WDmse_lr_last = np.asarray(WDmse_lr_last)
+
+Wmse_lr_last = np.argsort(Wmse_lr_last)
+WDmse_lr_last = np.argsort(WDmse_lr_last) 
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=17)  
+transparicies1 = np.linspace(0.5,1,17)
+transparicies2 = np.linspace(0.5,1,19)
+plt.figure()
+plt.title('Weight trajectories')
+plt.xlabel('Trial')
+plt.ylabel('w')
+plt.xticks([5,15,25,35,45,55],labels=['2','4','6','8','10','12'])
+for i in range(len(Wws)):
+    #print(min(Rws[i]))
+    plt.plot(np.linspace(0,65,32500),Wws[Wmse_lr_last[i]],c='orangered',alpha=transparicies1[i])
+plt.show()
+
+plt.figure()
+plt.title('Weight trajectories')
+plt.xlabel('Trial')
+plt.ylabel('w')
+plt.xticks([5,15,25,35,45,55],labels=['2','4','6','8','10','12'])
+for i in range(len(WDws)):
+    #print(min(Rws[i]))
+    plt.plot(np.linspace(0,65,32500),WDws[WDmse_lr_last[i]],c='orangered',alpha=transparicies2[i])
+plt.show()
+
+
 '''
 ### ENTROPIES PLOTTING ##
 '''
