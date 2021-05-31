@@ -108,7 +108,7 @@ Sim3 =np.load('SimSamples9to12.npy')
 Sim4 =np.load('SimSamples13to16.npy')
 Sim5 =np.load('SimSamples17to20.npy')
 
-sims = [Sim1,Sim2,Sim3,Sim4,Sim5]
+sims = [Sim1,Sim3,Sim4,Sim5]
 
 meanssA = []
 meanssT = []
@@ -116,7 +116,7 @@ meanssT = []
 stdssA = []
 stdssT = []
 
-for i in range(5):
+for i in range(4):
     for j in range(4):
         mat = []
         mtt = []
@@ -132,10 +132,10 @@ for i in range(5):
         stdssA.append(sat)
         stdssT.append(stt)
         
-meanssA.pop(5)
-meanssT.pop(5)
-stdssA.pop(5)
-stdssT.pop(5)
+#meanssA.pop(5)
+#meanssT.pop(5)
+#stdssA.pop(5)
+#stdssT.pop(5)
 
 def rmse(targets, predictions):
     return np.sqrt(((predictions - targets) ** 2).mean())
@@ -145,7 +145,7 @@ def lr1(s2,s1,Ap,delta,taup):
     return s2*s1*Ap*np.exp(-delta/taup)
 
 def lr2(s1,s2,Am,delta,taum):
-    return -s1*s2*Am*np.exp(delta/taum)
+    return -s1*s2*Am*1.05*np.exp(delta/taum)
 
 deltas = np.linspace(0,0.1,10000)
 deltas2 = np.linspace(-0.1,0,10000)   
@@ -157,7 +157,7 @@ lrref = np.concatenate((lrs2,lrs1))
 
 rmselrbase = []
 datasizes3 = []
-for i in range(19):
+for i in range(len(meanssA)):
     for j in range(5):
         lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
         lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])

@@ -248,28 +248,29 @@ deltas2 = np.linspace(-0.1,0,10000)
 lrs1 = lr1(1,1,0.0075,deltas,0.02)
 lrs2 = lr2(1,1,0.0075,deltas2,0.02) 
 
-
+plt.rcParams["font.family"] = "Times New Roman"
 deltass = np.concatenate((deltas2,deltas))
 lrref = np.concatenate((lrs2,lrs1))
-'''
+
 lrs3 = lr1(1,1,0.005,deltas,0.04)
 lrs4 = lr2(1,1,0.005,deltas2,0.04) 
 lrref2 = np.concatenate((lrs4,lrs3))
-plt.rcParams.update(plt.rcParamsDefault)
-matplotlib.rcParams.update({'font.size': 13})
-plt.rc('axes', labelsize=15)  
+matplotlib.rcParams.update({'font.size': 18})
+
+plt.rc('axes', labelsize=24) 
+#plt.rc('figure',titlesize=30)
 plt.figure()
-plt.title('Learning rules')
-plt.xlabel(r'$\Delta$ t')
+#plt.title('Learning rules')
+plt.xlabel(r'$\Delta$ t [sec]')
 plt.ylabel(r'$\Delta$ w')
 plt.axhline(y=0,color = 'k',linestyle='--')
-plt.plot(deltass,lrref)#,label=r'$\Theta$ = [0.0075,0.0075,0.02,0.02]')
-plt.plot(deltass,lrref2)#,label=r'$\Theta$ = [0.005,0.005,0.04,0.04]')
+plt.plot(deltass,lrref,c='crimson',linewidth=3,label=r'$\Theta_1$')#,label=r'$\Theta$ = [0.0075,0.0075,0.02,0.02]')
+plt.plot(deltass,lrref2,c='darkcyan',linewidth=3,linestyle= '--',label=r'$\Theta_2$')#,label=r'$\Theta$ = [0.005,0.005,0.04,0.04]')
 plt.yticks([-0.008,-0.004,0,0.004,0.008],labels=['-0.008','-0.004','0','0.004','0.008'])
 plt.xticks([-0.1,-0.05,0,0.05,0.1],labels=['-0.1','-0.05','0','0.05','0.1'])
-#plt.legend()
+plt.legend()
 plt.show()
-'''
+
 # optimal regime
 
 
@@ -944,7 +945,7 @@ for i in range(len(Wentrs)):
                 summ = np.sum(Wentrs_temp)
             Wentrs[i][j] = np.mean(Wentrs_temp)
             
-'''           
+         
 WHoptf1 = np.load('WHoptfrqsNewGrid_1.npy')
 WHoptf2 = np.load('WHoptfrqsNewGrid_2.npy')
 WHoptf3 = np.load('WHoptfrqsNewGrid_3.npy')
@@ -1013,7 +1014,7 @@ for i in range(len(opts[0])):
 freqcounts = np.asarray(freqcounts)
 freqcounts = freqcounts / 17
 
-
+'''
 Rf1 = np.load('RandFreqsNewGrid_1.npy')
 Rf2 = np.load('RandFreqsNewGrid_2.npy')
 Rf3 = np.load('RandFreqsNewGrid_3.npy')
@@ -1379,8 +1380,8 @@ Rentrs = np.asarray(Rentrs).flatten()
 RDentrs = np.asarray(RDentrs).flatten()
 WDentrs = np.asarray(WDentrs).flatten()
 Wentrs = np.asarray(Wentrs).flatten()
-
-
+'''
+'''
 labels = [] #### 0 = optimal , 1 = const 20hz, 2 = base, 3 = random, 4= CONST 100hz !!!!!!!!!!!!!
 
 for i in range(len(Wmse_lr)):
@@ -1410,23 +1411,26 @@ for i in range(len(mses)):
 #matplotlib.rcParams.update({'font.size': 13})
 #plt.rc('axes', labelsize=16)  
 
-plt.rcParams.update(plt.rcParamsDefault)
-matplotlib.rcParams.update({'font.size': 13})
-plt.rc('axes', labelsize=15)  
-'''
-'''
+#plt.rcParams.update(plt.rcParamsDefault)
+matplotlib.rcParams.update({'font.size': 15})
+plt.rc('axes', labelsize=18)  
+
+
 
 data = np.transpose(np.asarray([mses,trials,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Trial','Label'])
 ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
-ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax.legend(['Optimal design','20Hz constant','No stimulation','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
 ax.set_yscale('log')
-'''
 
-'''
+
+plt.rcParams.update(plt.rcParamsDefault)
+matplotlib.rcParams.update({'font.size': 13.5})
+plt.rc('axes', labelsize=18)  
+plt.rcParams["font.family"] = "Times New Roman"
 frqsdata = np.transpose(np.asarray([trialcount,freqlabel,freqcounts]))
-df_freq = pd.DataFrame(frqsdata, columns =['Trial', 'Frequency','Count'])
-df_freq= df_freq.pivot('Frequency', 'Trial','Count')
+df_freq = pd.DataFrame(frqsdata, columns =['Trial', 'Frequency [Hz]','Count'])
+df_freq= df_freq.pivot('Frequency [Hz]', 'Trial','Count')
 plt.figure()
 sns.heatmap(data=df_freq,cmap="Reds",linewidth=0.3,vmin=0,vmax=1)
 plt.xticks(np.arange(12) + .5, labels=['2','3','4','5','6','7','8','9','10','11','12','13'])
@@ -1594,30 +1598,33 @@ for i in range(len(WDmse_lr)):
 Wmse_lr_last = np.asarray(Wmse_lr_last)
 WDmse_lr_last = np.asarray(WDmse_lr_last)
 
-Wmse_lr_last = np.argsort(Wmse_lr_last)
-WDmse_lr_last = np.argsort(WDmse_lr_last) 
-matplotlib.rcParams.update({'font.size': 13})
-plt.rc('axes', labelsize=17)  
-transparicies1 = np.linspace(0.5,1,17)
-transparicies2 = np.linspace(0.5,1,19)
+Wmse_lr_last = Wmse_lr_last/max(Wmse_lr_last)
+WDmse_lr_last = WDmse_lr_last/max(WDmse_lr_last)
+
+#Wmse_lr_last = np.argsort(Wmse_lr_last)
+#WDmse_lr_last = np.argsort(WDmse_lr_last) 
+matplotlib.rcParams.update({'font.size': 14})
+plt.rc('axes', labelsize=18)  
+#transparicies1 = np.linspace(0.5,1,17)
+#transparicies2 = np.linspace(0.5,1,19)
 plt.figure()
-plt.title('Weight trajectories')
+#plt.title('Weight trajectories')
 plt.xlabel('Trial')
 plt.ylabel('w')
 plt.xticks([5,15,25,35,45,55],labels=['2','4','6','8','10','12'])
 for i in range(len(Wws)):
     #print(min(Rws[i]))
-    plt.plot(np.linspace(0,65,32500),Wws[Wmse_lr_last[i]],c='orangered',alpha=transparicies1[i])
+    plt.plot(np.linspace(0,65,32500),Wws[i],c='orangered',alpha=Wmse_lr_last[i])
 plt.show()
 
 plt.figure()
-plt.title('Weight trajectories')
+#plt.title('Weight trajectories')
 plt.xlabel('Trial')
 plt.ylabel('w')
 plt.xticks([5,15,25,35,45,55],labels=['2','4','6','8','10','12'])
 for i in range(len(WDws)):
     #print(min(Rws[i]))
-    plt.plot(np.linspace(0,65,32500),WDws[WDmse_lr_last[i]],c='orangered',alpha=transparicies2[i])
+    plt.plot(np.linspace(0,65,32500),WDws[i],c='orangered',alpha=WDmse_lr_last[i])
 plt.show()
 
 
