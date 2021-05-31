@@ -1,0 +1,24 @@
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+Lmod has detected the following error: Unable to find: "load".
+
+
+
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:319: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/self.P)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: divide by zero encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_prior[i],a=self.shapes_prior[i],scale=1/self.rates_prior[i])
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: invalid value encountered in double_scalars
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1769: RuntimeWarning: overflow encountered in true_divide
+  place(output, cond, self._pdf(*goodargs) / scale)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:233: RuntimeWarning: invalid value encountered in double_scalars
+  gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:223: RuntimeWarning: invalid value encountered in double_scalars
+  proposal = np.array([(np.random.gamma(new_shapes[i],theta[-1][i]/new_shapes[i])) for i in range(self.N)])
