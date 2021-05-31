@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import math
+import matplotlib
 
 import sys, os
 import numpy as np
@@ -455,7 +456,7 @@ plt.show()
 
 '''
 ## 100hz
-
+'''
 Sim1_100hz = np.load('Samples1to4highfreq.npy')
 Sim2_100hz = np.load('Samples5to8highfreq.npy')
 Sim3_100hz =np.load('Samples9to12highfreq.npy')
@@ -503,6 +504,24 @@ for i in range(len(meanssA)):
                 meanssA_temp = np.delete(np.asarray(meanssA_temp),nans)
                 summ = np.sum(meanssA_temp)
             meanssA[i][j] = np.mean(meanssA_temp)
+meanssT[3][4] = float("NaN")
+meanssT[1][3] = float("NaN")
+meanssT[4][4] = float("NaN")
+meanssT[11][0] = float("NaN")
+meanssT[12][4] = float("NaN")
+meanssT[13][4] = float("NaN")
+for i in range(len(meanssT)):
+    for j in range(len(meanssT[i])):
+        if math.isnan(meanssT[i][j])==True:
+            meanssT_temp = np.delete(np.asarray(meanssT)[:,j],i)
+            summ = np.sum(meanssT_temp)
+            while math.isnan(summ) == True:
+                nans = np.where(np.isnan(meanssT_temp))[0][0]
+                meanssT_temp = np.delete(np.asarray(meanssT_temp),nans)
+                summ = np.sum(meanssT_temp)
+            meanssT[i][j] = np.mean(meanssT_temp)
+            
+'''
 '''
 meanssA.pop(1)
 meanssA.pop(2)
@@ -532,17 +551,18 @@ stdssT.pop(2)
 stdssT.pop(8)
 stdssT.pop(8)
 stdssT.pop(8)
-
+'''
+'''
 rmselr100 = []
 datasizes = []
-for i in range(10):
+for i in range(len(meanssA)):
     for j in range(5):
         lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
         lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])
         lr_est = np.concatenate((lrs2_temp,lrs1_temp))
         rmselr100.append(rmse(lrref, lr_est))
         datasizes.append((j+1)*60)
-'''     
+'''
 
 #meanssA = np.mean(meanssA,axis=0)
 #meanssT = np.mean(meanssT,axis=0)
@@ -578,14 +598,14 @@ plt.legend()
 plt.show()
 '''
 ### 200hz
-'''
+
 Sim1_200hz = np.load('Samples1to4megahighfreq.npy')
 Sim2_200hz = np.load('Samples5to8megahighfreq.npy')
 Sim3_200hz =np.load('Samples9to12megahighfreq.npy')
 Sim4_200hz =np.load('Samples13to16megahighfreq.npy')
 Sim5_200hz =np.load('Samples17to20megahighfreq.npy')
 
-sims = [Sim1_200hz,Sim2_200hz,Sim3_200hz,Sim4_200hz,Sim5_200hz]
+sims = [Sim1_200hz,Sim2_200hz,Sim3_200hz,Sim4_200hz]
 
 meanssA = []
 meanssT = []
@@ -593,7 +613,7 @@ meanssT = []
 stdssA = []
 stdssT = []
 
-for i in range(5):
+for i in range(4):
     for j in range(4):
         mat = []
         mtt = []
@@ -611,14 +631,14 @@ for i in range(5):
 
 rmselr200 = []
 datasizes2 = []
-for i in range(20):
+for i in range(len(meanssA)):
     for j in range(5):
         lrs1_temp = lr1(1,1,meanssA[i][j],deltas,meanssT[i][j])
         lrs2_temp = lr2(1,1,meanssA[i][j],deltas2,meanssT[i][j])
         lr_est = np.concatenate((lrs2_temp,lrs1_temp))
         rmselr200.append(rmse(lrref, lr_est))
         datasizes2.append((j+1)*60)
-'''
+
 
 
 
@@ -662,7 +682,7 @@ rmse200 = np.load('rmselr250hz.npy')
 rmsebase = np.load('rmselrbase.npy')
 
 datasizes100 = np.load('DatasizeLabels100hz.npy')
-datasizes200 = np.load('DatasizeLabels250hz.npy')
+datasizes200 = np.load('DatasizeLabels200hz.npy')
 datasizesbase = np.load('DatasizeLabelsBase.npy')
 
 rmses = np.hstack((rmse100,rmse200,rmsebase))
@@ -677,15 +697,15 @@ for i in range(len(rmse200)):
     stimulus200.append(200)
 for i in range(len(rmsebase)):
     stimulusbase.append(0)
-    
+   
 stimulus = np.hstack((stimulus100,stimulus200,stimulusbase))
-matplotlib.rcParams.update({'font.size': 14})
+plt.rcParams["font.family"] = "Times New Roman"
+matplotlib.rcParams.update({'font.size': 15})
 plt.rc('axes', labelsize=18)  
 data = np.transpose(np.asarray([rmses,datasizes,stimulus]))
-df = pd.DataFrame(data, columns =['RMSE', 'Datasize (sec)','Stimulus'])
+df = pd.DataFrame(data, columns =['RMSE', 'Datasize [sec]','Stimulus'])
 #df = df.pivot("Datasize (sec)", "Stimulus", "RMSE")
 
-ax = sns.lineplot(data=df, x="Datasize (sec)", y="RMSE",hue="Stimulus",palette=['orangered','chartreuse','royalblue'])
-ax.legend(['Baseline firing', '100Hz', '250Hz'])
+ax = sns.lineplot(data=df, x="Datasize [sec]", y="RMSE",hue="Stimulus",palette=['royalblue','limegreen','darkgreen'])
+ax.legend(['No stimulation', '100Hz', '250Hz'])
 ax.set_yticks([0,0.001,0.002,0.003])
-

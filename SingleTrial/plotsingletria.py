@@ -1067,60 +1067,138 @@ for i in range(len(absoluteErrorA10s)):
             plt.plot(absoluteErrorA10s[i][1],entropiesA10s[i][1],'bo',alpha=0.4)
 plt.legend()
 plt.show()
-matplotlib.rcParams.update({'font.size': 14})
+'''
+plt.rcParams["font.family"] = "Times New Roman"
+matplotlib.rcParams.update({'font.size': 15})
 plt.rc('axes', labelsize=18)  
 plt.figure()
 plt.xlabel('RMSE')
-plt.ylabel('Entropy')
+plt.ylabel('Entropy [nats]')
 plt.yticks(ticks=[-4,-6,-8],labels=['-4','-6','-8'])
 for i in range(len(rmselr1s)):
     if math.isnan(rmselr1s[i]) == False and entropy2d1s[i] > -10:
         if i == 0:
-            plt.scatter(rmselr1s[i],entropy2d1s[i],c='r',label = '1s trials',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr1s[i],entropy2d1s[i],c='darkcyan',label = '1s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.scatter(rmselr1s[i],entropy2d1s[i],c='r',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr1s[i],entropy2d1s[i],c='darkcyan',alpha=0.4,edgecolors='none')
 for i in range(len(rmselr5s)):
     if math.isnan(rmselr5s[i]) == False and entropy2d5s[i] > -10:
         if i == 0:
-            plt.scatter(rmselr5s[i],entropy2d5s[i],c='g',label = '5s trials',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr5s[i],entropy2d5s[i],c='darkviolet',label = '5s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.scatter(rmselr5s[i],entropy2d5s[i],c='g',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr5s[i],entropy2d5s[i],c='darkviolet',alpha=0.4,edgecolors='none')
 for i in range(len(rmselr10s)):
     if math.isnan(rmselr10s[i]) == False and entropy2d10s[i] > -10:
         if i == 2:
-            plt.scatter(rmselr10s[i],entropy2d10s[i],c='b',label = '10s trials',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr10s[i],entropy2d10s[i],c='darkgoldenrod',label = '10s trials',alpha=0.4,edgecolors='none')
         else:
-            plt.scatter(rmselr10s[i],entropy2d10s[i],c='b',alpha=0.4,edgecolors='none')
+            plt.scatter(rmselr10s[i],entropy2d10s[i],c='darkgoldenrod',alpha=0.4,edgecolors='none')
 plt.legend()
 plt.show()
-'''            
 
 ### RMSE as function of weight trajectory
 # weight traj 100hz : w100f
 # a estimates 100hz 5s trials: fs100hz
 
-Armse=[]
-Wav=[]
-Wstart = []
+Armse100=[]
+Wav100=[]
+Wstart100 = []
+
+ArmseB=[]
+WavB=[]
+WstartB = []
+
+Armse20=[]
+Wav20=[]
+Wstart20 = []
+
+Armse50=[]
+Wav50=[]
+Wstart50 = []
 
 for i in range(24):
-    Armse.append(rmse_norm(trueA,np.mean(fs100hz[i][300:,0])))
-    Wav.append(np.mean(w100f[i*2500:(i+1)*2500]))
-    Wstart.append(w100f[i*2500])
+    Armse100.append(rmse_norm(trueA,np.mean(fs100hz[i][300:,0])))
+    Wav100.append(np.mean(w100f[i*2500:(i+1)*2500]))
+    Wstart100.append(w100f[i*2500])
+    ArmseB.append(rmse_norm(trueA,np.mean(fmsb[i][300:,0])))
+    WavB.append(np.mean(wb[i*2500:(i+1)*2500]))
+    WstartB.append(wb[i*2500])
+    Armse20.append(rmse_norm(trueA,np.mean(fs20hz[i][300:,0])))
+    Wav20.append(np.mean(w20f[i*2500:(i+1)*2500]))
+    Wstart20.append(w20f[i*2500])
+    Armse50.append(rmse_norm(trueA,np.mean(fmsf[i][300:,0])))
+    Wav50.append(np.mean(wf[i*2500:(i+1)*2500]))
+    Wstart50.append(wf[i*2500])
+Armse50[-2]=(Armse50[-1]+Armse50[-3])/2
 
+K = 4
+for i in range(len(Armse100)):
+    if i < K-1:
+        Armse100[i]=np.mean(Armse100[:K+1])
+    elif i > len(Armse100)-K:
+        Armse100[i] = np.mean(Armse100[-(K+1):])
+    else:
+        Armse100[i] = np.mean(Armse100[i-(K-2):i+(K-1)])
+
+for i in range(len(Armse50)):
+    if i < (K-1):
+        Armse50[i]=np.mean(Armse50[:(K+1)])
+    elif i > len(Armse50)-K:
+        Armse50[i] = np.mean(Armse50[-(K+1):])
+    else:
+        Armse50[i] = np.mean(Armse50[i-(K-2):i+(K-1)])
+    
+'''
+K = 0
+
+for i in range(len(Armse20)):
+    if i < K-1:
+        Armse20[i]=np.mean(Armse20[:(K+1)])
+    elif i > len(Armse20)-K:
+        Armse20[i] = np.mean(Armse20[-(K-1):])
+    else:
+        Armse20[i] = np.mean(Armse20[i-(K-2):i+(K-1)])
+
+        
+for i in range(len(ArmseB)):
+    if i < (K-1):
+        ArmseB[i]=np.mean(ArmseB[:(K+1)])
+    elif i > len(ArmseB)-K:
+        ArmseB[i] = np.mean(ArmseB[-(K-1):])
+    else:
+        ArmseB[i] = np.mean(ArmseB[i-(K-2):i+(K-1)])
+   
+'''
+        
+'''
+x_new_b = np.linspace(0, max(WavB), 300)
+a_BSpline = make_interp_spline(WavB, ArmseB)
+y_new_b = a_BSpline(x_new_100)
+
+x_new_20 = np.linspace(0, max(Wav20), 300)
+a_BSpline = make_interp_spline(Wav20, Armse20)
+y_new_20 = a_BSpline(x_new_20)
+
+x_new_50 = np.linspace(0, max(Wav50), 300)
+a_BSpline = make_interp_spline(Wav50, Armse50)
+y_new_50 = a_BSpline(x_new_50)
+'''
+
+matplotlib.rcParams.update({'font.size': 13})
+plt.rc('axes', labelsize=15)  
 plt.figure()
 plt.title('Single trial A inference')
 plt.xlabel('Average trial weight')
 plt.ylabel('Normalised RMSE')
-plt.plot(Wav,Armse,'rx-')
+plt.plot(Wstart100,Armse100,'r-',label='100Hz')
+plt.plot(Wstart50,Armse50,'b-',label='50Hz')
+#plt.plot(Wstart20,Armse20,'g-',label='20Hz')
+#plt.plot(WstartB,ArmseB,'y-',label='No stimulation')
+plt.xlim(0.9,14)
+plt.legend()
+plt.yscale('log')
 plt.show()
 
-plt.figure()
-plt.title('Single trial A inference')
-plt.xlabel('Initial trial weight')
-plt.ylabel('Normalised RMSE')
-plt.plot(Wstart,Armse,'rx-')
-plt.show()
     
 
 
