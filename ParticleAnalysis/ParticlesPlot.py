@@ -11,13 +11,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-A1 = np.load('Aps3to4.npy')
-A2= np.load('Aps9to10.npy')
-A3=np.load('Aps11to12.npy')
-A4=np.load('Aps13to14.npy')
-A5=np.load('Aps19to20.npy')
+A1 = np.load('Aps1to2.npy')
+A2= np.load('Aps3to4.npy')
+A3=np.load('Aps5to6.npy')
+A4=np.load('Aps7to8.npy')
+A5=np.load('Aps9to10.npy')
+A6 = np.load('Aps11to12.npy')
+A7= np.load('Aps13to14.npy')
+A8=np.load('Aps15to16.npy')
+A9=np.load('Aps17to18.npy')
+A10=np.load('Aps19to20.npy')
 
-As = [A1,A2,A3,A4,A5]
+As = [A1,A2,A3,A4,A5,A6,A7,A8,A9,A10]
 means =[]
 stds = []
 for i in range(5):
@@ -36,12 +41,16 @@ means = np.asarray(means).mean(0)
 stds = np.asarray(stds).mean(0)
     
 ## Tau
-
-Tau1 = np.load('Taus3to4.npy')
-Tau2= np.load('Taus9to10.npy')
-Tau3=np.load('Taus11to12.npy')
-Tau4=np.load('Taus13to14.npy')
-Tau5=np.load('Taus19to20.npy')
+Tau1 = np.load('Taus1to2.npy')
+Tau2 = np.load('Taus3to4.npy')
+Tau3 = np.load('Taus5to6.npy')
+Tau4 = np.load('Taus7to8.npy')
+Tau5= np.load('Taus9to10.npy')
+Tau6=np.load('Taus11to12.npy')
+Tau7=np.load('Taus13to14.npy')
+Tau8=np.load('Taus15to16.npy')
+Tau9=np.load('Taus17to18.npy')
+Tau10=np.load('Taus19to20.npy')
 
 Taus = [Tau1,Tau2,Tau3,Tau4,Tau5]
 means2 =[]
@@ -72,7 +81,7 @@ plt.ylim([0,0.01])
 plt.xlim([0,8])
 plt.xticks(x,labels = ticksss)
 for i in range(7):
-    plt.errorbar(x[i], means[i], yerr = stds[i],marker = 'o')
+    plt.errorbar(x[i], means[i], yerr = meansvar[i],marker = 'o')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -85,7 +94,7 @@ plt.ylim([0,0.04])
 plt.xlim([0,8])
 plt.xticks(x,labels = ticksss)
 for i in range(7):
-    plt.errorbar(x[i], means2[i], yerr = stds2[i],marker = 'o')
+    plt.errorbar(x[i], means2[i], yerr = meansvar2[i],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
