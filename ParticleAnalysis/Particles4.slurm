@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=10-00:10:00
+#SBATCH --time=3-00:10:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --mem=12000
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=3000
 #SBATCH --job-name="p4"
 #SBATCH --output=p4.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
