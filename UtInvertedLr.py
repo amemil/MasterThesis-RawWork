@@ -21,7 +21,7 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize):
     i : current iteration/timebin for the numerical approximation
     '''
     l = i - np.int(np.ceil(10*taup / binsize))
-    return s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) - s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
+    return -s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) + s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
 
 def logit(x):
     return np.log(x/(1-x))
@@ -36,11 +36,11 @@ class SimulatedData():
     b1,b2 : background noise constants for neuron 1 and neuron 2, determnining their baseline firing rate
     w0 : start value for synapse strength between neuron 1 and 2. 
     '''
-    def __init__(self,Am=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0,sec = 120, binsize = 1/200.0,freq = 50):
+    def __init__(self,Ap=0.005, tau=0.02, std=0.001,b1=-2.0, b2=-2.0, w0=1.0,sec = 120, binsize = 1/200.0,freq = 50):
         self.tau = tau
         self.std = std
-        self.Am = Am
-        self.Ap = 1.05*self.Am
+        self.Ap = Ap
+        self.Am = 1.05*self.Ap
         self.b1 = b1
         self.b2 = b2
         self.w0 = w0

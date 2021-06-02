@@ -17,7 +17,7 @@ import matplotlib
 
 plt.style.use('default')
 
-truevalues = np.array([0.005,0.02])
+truevalues = np.array([0.005,0.005])
 
 def rmse(targets, predictions):
     return np.sqrt(((predictions - targets) ** 2).mean())
@@ -30,8 +30,8 @@ def lr2(s1,s2,Am,delta,taum):
 
 deltas = np.linspace(0,0.1,10000)
 deltas2 = np.linspace(-0.1,0,10000)   
-lrs1 = lr1(1,1,0.005,deltas,0.02)
-lrs2 = lr2(1,1,0.005,deltas2,0.02) 
+lrs1 = lr1(1,1,truevalues[0],deltas,truevalues[1])
+lrs2 = lr2(1,1,truevalues[0],deltas2,truevalues[1]) 
 
 plt.rcParams["font.family"] = "Times New Roman"
 deltass = np.concatenate((deltas2,deltas))
@@ -39,16 +39,16 @@ lrref = np.concatenate((lrs2,lrs1))
 
 #### 1sec trials!! #### 
 
-TenHz1 = np.load('Samples10sec10Hz1to10.npy')
-TenHz2 = np.load('Samples10sec10Hz11to20.npy')
-TwHz1 = np.load('Samples10sec20Hz1to10.npy')
-TwHz2 = np.load('Samples10sec20Hz11to20.npy')
-FiftHz1 = np.load('Samples10sec50Hz1to10.npy')
-FiftHz2 = np.load('Samples10sec50Hz11to20.npy')
-HunHz1 = np.load('Samples10sec100Hz1to10.npy')
-HunHz2 = np.load('Samples10sec100Hz11to20.npy')
-TfHz1 = np.load('Samples10sec250Hz1to10.npy')
-TfHz2 = np.load('Samples10sec250Hz11to20.npy')
+TenHz1 = np.load('Samples5sec10Hz1to10_Lr2.npy')
+TenHz2 = np.load('Samples5sec10Hz11to20_Lr2.npy')
+TwHz1 = np.load('Samples5sec20Hz1to10_Lr2.npy')
+TwHz2 = np.load('Samples5sec20Hz11to20_Lr2.npy')
+FiftHz1 = np.load('Samples5sec50Hz1to10_Lr2.npy')
+FiftHz2 = np.load('Samples5sec50Hz11to20_Lr2.npy')
+HunHz1 = np.load('Samples5sec100Hz1to10_Lr2.npy')
+HunHz2 = np.load('Samples5sec100Hz11to20_Lr2.npy')
+TfHz1 = np.load('Samples5sec250Hz1to10_Lr2.npy')
+TfHz2 = np.load('Samples5sec250Hz11to20_Lr2.npy')
 
 
 Tens = [TenHz1,TenHz2]
@@ -148,6 +148,9 @@ for i in range(len(Huns_rmse)):
         
 Crzs = [TfHz1,TfHz2]
 Crzs_rmse = []
+
+Aoutliers = []
+Tauoutliers = []
 for i in range(len(Crzs)):
     for j in range(len(Crzs[i])):
         rmse_temp = []
@@ -156,6 +159,11 @@ for i in range(len(Crzs)):
             lrs2_temp = lr2(1,1,np.mean(Crzs[i][j][k][300:,0]),deltas2,np.mean(Crzs[i][j][k][300:,1])) 
             lr_est = np.concatenate((lrs2_temp,lrs1_temp))
             rmse_temp.append(rmse(lrref, lr_est))
+            #if j > 1 and j < 5:
+             #   print('A:',np.mean(Crzs[i][j][k][300:,0]))
+              #  print('Tau: ',np.mean(Crzs[i][j][k][300:,1]))        
+               # Aoutliers.append(np.mean(Crzs[i][j][k][300:,0]))
+                #Tauoutliers.append(np.mean(Crzs[i][j][k][300:,1]))
         Crzs_rmse.append(rmse_temp)
 
 for i in range(len(Crzs_rmse)):
@@ -168,7 +176,15 @@ for i in range(len(Crzs_rmse)):
                 Crzs_rmse_temp = np.delete(np.asarray(Crzs_rmse_temp),nans)
                 summ = np.sum(Crzs_rmse_temp)
             Crzs_rmse[i][j] = np.mean(Crzs_rmse_temp)
-            
+'''
+plt.figure()
+plt.scatter(Aoutliers,Tauoutliers)
+plt.plot([0.005],[0.02],'ro',label='True value')
+plt.xlabel('A')
+plt.ylabel('Tau')
+plt.legend()
+plt.show()
+'''
 
 Tens_rmse = np.asarray(Tens_rmse).flatten()
 Tws_rmse = np.asarray(Tws_rmse).flatten()
@@ -186,12 +202,12 @@ for i in range(len(Fts_rmse)):
     labels.append(2)
 for i in range(len(Huns_rmse)):
     labels.append(3)
-#for i in range(len(Crzs_rmse)):
-#    labels.append(4)
+for i in range(len(Crzs_rmse)):
+    labels.append(4)
 
 labels = np.asarray(labels)
 
-mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse))
+mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse,Crzs_rmse))
 weights = []
 count = 0
 for i in range(len(mses)):
@@ -211,7 +227,6 @@ plt.rc('axes', labelsize=18)
 data = np.transpose(np.asarray([mses,weights,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Initial weight','Label'])
 ax = sns.lineplot(data=df, x="Initial weight", y="RMSE",hue="Label")#,palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
-ax.legend(['10Hz','20Hz','50Hz','100Hz'],loc='upper left')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
-ax.title.set_text('10s trial inference')
+ax.legend(['10Hz','20Hz','50Hz','100Hz','250Hz'],loc='upper left')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax.title.set_text('5s trial inference - New learning rule')
 ax.set_yscale('log')
-

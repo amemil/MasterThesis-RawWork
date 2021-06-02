@@ -362,6 +362,7 @@ for i in range(len(Wentrs)):
                 summ = np.sum(Wentrs_temp)
             Wentrs[i][j] = np.mean(Wentrs_temp)
 '''
+'''
 WHoptf1 = np.load('WHoptfrqs_1.npy')
 WHoptf2 = np.load('WHoptfrqs_2.npy')
 WHoptf3 = np.load('WHoptfrqs_3.npy')
@@ -659,7 +660,7 @@ for i in range(len(Centrs)):
                 Centrs_temp = np.delete(np.asarray(Centrs_temp),nans)
                 summ = np.sum(Centrs_temp)
             Centrs[i][j] = np.mean(Centrs_temp)
-
+'''
 
 '''
 ## Standard deviations
@@ -861,7 +862,7 @@ ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'
 #ax.set_yscale('log')
 '''
 ### NEW GRID [10hz-100hz]
-
+'''
 ### OPTIM ####
 Westimates1 = np.load('WHestmimatesNewGrid_1.npy')
 Westimates2 = np.load('WHestmimatesNewGrid_2.npy')
@@ -1013,7 +1014,7 @@ for i in range(len(opts[0])):
 
 freqcounts = np.asarray(freqcounts)
 freqcounts = freqcounts / 17
-
+'''
 '''
 Rf1 = np.load('RandFreqsNewGrid_1.npy')
 Rf2 = np.load('RandFreqsNewGrid_2.npy')
@@ -1085,7 +1086,7 @@ freqcounts = freqcounts / 20
 '''
 
 # RANDOM#### 
-
+'''
 Restimates1 = np.load('RandEstimatesNewGrid_1.npy')
 Restimates2 = np.load('RandEstimatesNewGrid_2.npy')
 Restimates3 = np.load('RandEstimatesNewGrid_3.npy')
@@ -1360,7 +1361,7 @@ for i in range(len(Dopts[0])):
 
 freqcountsD = np.asarray(freqcountsD)
 freqcountsD = freqcountsD / 19
-
+'''
 
 #Wmse_lr = np.asarray(Wmse_lr).flatten()
 #Cmse_lr = np.asarray(Cmse_lr).flatten()
@@ -1439,7 +1440,7 @@ plt.yticks(np.arange(4) + .5,labels=['100','50','20','10'])
 plt.show()
 '''
 ### Weight trajectories
-
+'''
 ### optimal [10-100hz]        
 W_weight1 = np.load('WHwNewGrid_1.npy')
 W_weight2 = np.load('WHwNewGrid_2.npy')
@@ -1627,7 +1628,7 @@ for i in range(len(WDws)):
     plt.plot(np.linspace(0,65,32500),WDws[i],c='orangered',alpha=WDmse_lr_last[i])
 plt.show()
 
-
+'''
 '''
 ### ENTROPIES PLOTTING ##
 '''

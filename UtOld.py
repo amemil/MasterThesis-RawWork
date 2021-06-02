@@ -18,7 +18,7 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize):
     i : current iteration/timebin for the numerical approximation
     '''
     l = i - np.int(np.ceil(10*taup / binsize))
-    return s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) - s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
+    return -s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) + s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
 def logit(x):
     return np.log(x/(1-x))
 def inverse_logit(x):
