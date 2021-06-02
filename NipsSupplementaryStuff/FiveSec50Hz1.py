@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 31 16:28:58 2021
+Created on Mon May 31 16:28:52 2021
 
 @author: emilam
 """
@@ -18,14 +18,14 @@ samples = []
 for i in range(10):
     samples_temp = []
     for j in range(len(w0s)):
-        data = ut.SimulatedData(Ap=0.005, tau=0.005, std=0.0001,b1=-3.1, b2=-3.1, w0=w0s[j],sec = 5, binsize = 1/500.0,freq = 50)
+        data = ut.SimulatedData(Ap=0.005, tau=0.06, std=0.0001,b1=-3.1, b2=-3.1, w0=w0s[j],sec = 10, binsize = 1/500.0,freq = 50)
         data.create_freq_data()
         s1,s2,_,W = data.get_data()
         infer= ut.ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
-                                     , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=5\
-                                         ,binsize = 1/500.0,taufix = 0.005,Afix = 0.005,b1est = -3.1,b2est = -3.1,w0est = w0s[j])
+                                     , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=10\
+                                         ,binsize = 1/500.0,taufix = 0.06,Afix = 0.005,b1est = -3.1,b2est = -3.1,w0est = w0s[j])
         sample = infer.standardMH()
         samples_temp.append(sample)
     samples.append(samples_temp)
     
-np.save('Samples5sec50Hz1to10_Lr2',samples)
+np.save('Samples10sec50Hz1to10_Lr3',samples)
