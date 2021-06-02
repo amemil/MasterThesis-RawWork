@@ -1,2 +1,24 @@
-/lustre1/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: overflow encountered in exp
-  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+Lmod has detected the following error: The following module(s) are unknown:
+"GCCcore/.9.3.0"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "GCCcore/.9.3.0"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+Lmod has detected the following error: The following module(s) are unknown:
+"Python/3.8.2"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "Python/3.8.2"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+

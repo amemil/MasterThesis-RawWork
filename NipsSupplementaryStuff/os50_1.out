@@ -10,3 +10,7 @@ Lmod has detected the following error: Unable to find: "load".
   log_posterior += np.log(np.sum(vp)/self.P)
 /cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: invalid value encountered in true_divide
   return vp/np.sum(vp)
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:185: RuntimeWarning: divide by zero encountered in log
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:185: RuntimeWarning: invalid value encountered in multiply
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
