@@ -15,6 +15,13 @@ from scipy.stats import norm
 import pandas as pd
 import matplotlib
 
+
+##### INFO ::::: #######
+### LR1 (NOT INCLUDED IN NPY FILES : ORIGINAL LR)
+### LR2 : A = 0.005, Tau = 0.005
+### LR 3 : A = 0.005, Tau = 0.06
+### LR 4: A = 0.02, Tau = 0.02
+###LR 5: A= 0.001, Tau = 0.02
 plt.style.use('default')
 
 truevalues = np.array([0.005,0.005])
@@ -39,16 +46,16 @@ lrref = np.concatenate((lrs2,lrs1))
 
 #### 1sec trials!! #### 
 
-TenHz1 = np.load('Samples5sec10Hz1to10_Lr2.npy')
-TenHz2 = np.load('Samples5sec10Hz11to20_Lr2.npy')
-TwHz1 = np.load('Samples5sec20Hz1to10_Lr2.npy')
-TwHz2 = np.load('Samples5sec20Hz11to20_Lr2.npy')
-FiftHz1 = np.load('Samples5sec50Hz1to10_Lr2.npy')
-FiftHz2 = np.load('Samples5sec50Hz11to20_Lr2.npy')
-HunHz1 = np.load('Samples5sec100Hz1to10_Lr2.npy')
-HunHz2 = np.load('Samples5sec100Hz11to20_Lr2.npy')
-TfHz1 = np.load('Samples5sec250Hz1to10_Lr2.npy')
-TfHz2 = np.load('Samples5sec250Hz11to20_Lr2.npy')
+TenHz1 = np.load('Samples10sec10Hz1to10_Lr2.npy')
+TenHz2 = np.load('Samples10sec10Hz11to20_Lr2.npy')
+TwHz1 = np.load('Samples10sec20Hz1to10_Lr2.npy')
+TwHz2 = np.load('Samples10sec20Hz11to20_Lr2.npy')
+FiftHz1 = np.load('Samples10sec50Hz1to10_Lr2.npy')
+FiftHz2 = np.load('Samples10sec50Hz11to20_Lr2.npy')
+HunHz1 = np.load('Samples10sec100Hz1to10_Lr2.npy')
+HunHz2 = np.load('Samples10sec100Hz11to20_Lr2.npy')
+TfHz1 = np.load('Samples10sec250Hz1to10_Lr2.npy')
+TfHz2 = np.load('Samples10sec250Hz11to20_Lr2.npy')
 
 
 Tens = [TenHz1,TenHz2]
@@ -202,12 +209,12 @@ for i in range(len(Fts_rmse)):
     labels.append(2)
 for i in range(len(Huns_rmse)):
     labels.append(3)
-for i in range(len(Crzs_rmse)):
-    labels.append(4)
+#for i in range(len(Crzs_rmse)):
+#    labels.append(4)
 
 labels = np.asarray(labels)
 
-mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse,Crzs_rmse))
+mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse))
 weights = []
 count = 0
 for i in range(len(mses)):
@@ -227,6 +234,6 @@ plt.rc('axes', labelsize=18)
 data = np.transpose(np.asarray([mses,weights,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Initial weight','Label'])
 ax = sns.lineplot(data=df, x="Initial weight", y="RMSE",hue="Label")#,palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
-ax.legend(['10Hz','20Hz','50Hz','100Hz','250Hz'],loc='upper left')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
-ax.title.set_text('5s trial inference - New learning rule')
+ax.legend(['10Hz','20Hz','50Hz','100Hz'],loc='upper left')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax.title.set_text('10s trial inference - New learning rule')
 ax.set_yscale('log')
