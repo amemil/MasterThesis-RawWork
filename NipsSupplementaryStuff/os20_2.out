@@ -6,19 +6,3 @@ Lmod has detected the following error: Unable to find: "load".
 
 
 
-/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:319: RuntimeWarning: divide by zero encountered in log
-  log_posterior += np.log(np.sum(vp)/self.P)
-/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:182: RuntimeWarning: invalid value encountered in true_divide
-  return vp/np.sum(vp)
-/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: overflow encountered in double_scalars
-  x = np.asarray((x - loc)/scale, dtype=dtyp)
-/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py:2821: RuntimeWarning: overflow encountered in exp
-  return np.exp(self._logpdf(x, a))
-/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: divide by zero encountered in double_scalars
-  gamma.pdf(theta_prior[i],a=self.shapes_prior[i],scale=1/self.rates_prior[i])
-/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: divide by zero encountered in double_scalars
-  x = np.asarray((x - loc)/scale, dtype=dtyp)
-/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:231: RuntimeWarning: invalid value encountered in double_scalars
-  gamma.pdf(theta_prior[i],a=self.shapes_prior[i],scale=1/self.rates_prior[i])
-/cluster/work/emilamy/dataci/lib/python3.6/site-packages/scipy/stats/_distn_infrastructure.py:1760: RuntimeWarning: invalid value encountered in double_scalars
-  x = np.asarray((x - loc)/scale, dtype=dtyp)
