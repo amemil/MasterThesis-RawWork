@@ -22,8 +22,8 @@ Here, clone into this github repo, by using
 
 Connecting to IDUN when you are at home and not at NTNU:
 
-1) `ssh emilamy@markov.math.ntnu.no`
-2) `ssh -l emilamy idun-login1.hpc.ntnu.no`
+1) `ssh <username>@markov.math.ntnu.no`
+2) `ssh -l <username> idun-login1.hpc.ntnu.no`
 
 
 ## Creating a virtual environment in IDUN
