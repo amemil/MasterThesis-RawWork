@@ -1,7 +1,7 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
 import math
-from tqdm import tqdm
+#from tqdm import tqdm
 from scipy.stats import gamma
 from scipy.stats import multivariate_normal
 from scipy.stats import norm
