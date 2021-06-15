@@ -362,7 +362,7 @@ for i in range(len(Wentrs)):
                 summ = np.sum(Wentrs_temp)
             Wentrs[i][j] = np.mean(Wentrs_temp)
 '''
-'''
+
 WHoptf1 = np.load('WHoptfrqs_1.npy')
 WHoptf2 = np.load('WHoptfrqs_2.npy')
 WHoptf3 = np.load('WHoptfrqs_3.npy')
@@ -660,7 +660,7 @@ for i in range(len(Centrs)):
                 Centrs_temp = np.delete(np.asarray(Centrs_temp),nans)
                 summ = np.sum(Centrs_temp)
             Centrs[i][j] = np.mean(Centrs_temp)
-'''
+
 
 '''
 ## Standard deviations
@@ -862,7 +862,7 @@ ax.legend(['Optimal design','20Hz constant','Baseline firing','Random frequency'
 #ax.set_yscale('log')
 '''
 ### NEW GRID [10hz-100hz]
-'''
+
 ### OPTIM ####
 Westimates1 = np.load('WHestmimatesNewGrid_1.npy')
 Westimates2 = np.load('WHestmimatesNewGrid_2.npy')
@@ -1015,7 +1015,7 @@ for i in range(len(opts[0])):
 freqcounts = np.asarray(freqcounts)
 freqcounts = freqcounts / 17
 '''
-'''
+
 Rf1 = np.load('RandFreqsNewGrid_1.npy')
 Rf2 = np.load('RandFreqsNewGrid_2.npy')
 Rf3 = np.load('RandFreqsNewGrid_3.npy')
@@ -1086,7 +1086,7 @@ freqcounts = freqcounts / 20
 '''
 
 # RANDOM#### 
-'''
+
 Restimates1 = np.load('RandEstimatesNewGrid_1.npy')
 Restimates2 = np.load('RandEstimatesNewGrid_2.npy')
 Restimates3 = np.load('RandEstimatesNewGrid_3.npy')
@@ -1270,7 +1270,7 @@ for i in range(len(WDests)):
     WDmse.append(WDmse_temp)
     WDmse_a.append(WDmse_a_temp)
     WDmse_t.append(WDmse_t_temp)
-        
+'''
 WDentropies1 = np.load('WHentropiesDalesLaw_1.npy')
 #WDentropies2 = np.load('WHentropiesDalesLaw_2.npy')
 WDentropies3 = np.load('WHentropiesDalesLaw_3.npy')
@@ -1363,13 +1363,13 @@ freqcountsD = np.asarray(freqcountsD)
 freqcountsD = freqcountsD / 19
 '''
 
-#Wmse_lr = np.asarray(Wmse_lr).flatten()
-#Cmse_lr = np.asarray(Cmse_lr).flatten()
-#Bmse_lr = np.asarray(Bmse_lr).flatten()
-#Rmse_lr = np.asarray(Rmse_lr).flatten()
-#RDmse_lr = np.asarray(RDmse_lr).flatten()
-#CHmse_lr = np.asarray(CHmse_lr).flatten()
-#WDmse_lr = np.asarray(WDmse_lr).flatten()
+Wmse_lr = np.asarray(Wmse_lr).flatten()
+Cmse_lr = np.asarray(Cmse_lr).flatten()
+Bmse_lr = np.asarray(Bmse_lr).flatten()
+Rmse_lr = np.asarray(Rmse_lr).flatten()
+RDmse_lr = np.asarray(RDmse_lr).flatten()
+CHmse_lr = np.asarray(CHmse_lr).flatten()
+WDmse_lr = np.asarray(WDmse_lr).flatten()
 
 
 
@@ -1381,7 +1381,6 @@ Rentrs = np.asarray(Rentrs).flatten()
 RDentrs = np.asarray(RDentrs).flatten()
 WDentrs = np.asarray(WDentrs).flatten()
 Wentrs = np.asarray(Wentrs).flatten()
-'''
 '''
 labels = [] #### 0 = optimal , 1 = const 20hz, 2 = base, 3 = random, 4= CONST 100hz !!!!!!!!!!!!!
 
@@ -1420,11 +1419,11 @@ plt.rc('axes', labelsize=18)
 
 data = np.transpose(np.asarray([mses,trials,labels]))
 df = pd.DataFrame(data, columns =['RMSE', 'Trial','Label'])
-ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
+ax = sns.lineplot(data=df, x="Trial", y="RMSE",hue="Label",palette=['orangered','chartreuse','royalblue','gold'],ci=95)#,'royalblue'])
 ax.legend(['Optimal design','20Hz constant','No stimulation','Random frequency'])#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
 ax.set_yscale('log')
 
-
+'''
 plt.rcParams.update(plt.rcParamsDefault)
 matplotlib.rcParams.update({'font.size': 13.5})
 plt.rc('axes', labelsize=18)  

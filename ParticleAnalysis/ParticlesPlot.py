@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import matplotlib as mpl
 
 A1 = np.load('Aps1to2.npy')
 A2= np.load('Aps3to4.npy')
@@ -70,22 +71,25 @@ means2 = np.asarray(means2).mean(0)
 
 stds2 = np.asarray(stds2).mean(0)
 
-
-x = [1,2,3,4,5,6,7]
+mpl.rcParams['xtick.major.size'] = 10
+mpl.rcParams['xtick.major.width'] = 2
+x = [50,100,200,500,1000,2000,5000]
 ticksss = ['50','100','200','500','1000','2000','5000']
 plt.figure()
-plt.title('Inference of $A_+$ - Means 20 datasets')
+#plt.title('Inference of $A_+$ - Means 20 datasets')
 plt.xlabel('Number of particles')
 plt.ylabel('$A_+$ estimation')
-plt.ylim([0,0.01])
-plt.xlim([0,8])
+plt.ylim([0.0045,0.0055])
+#plt.xlim([0,8])
 plt.xticks(x,labels = ticksss)
 for i in range(7):
-    plt.errorbar(x[i], means[i], yerr = meansvar[i],marker = 'o')
+    plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
-plt.legend()
+#plt.legend()
+plt.xscale('log')
+#plt.minorticks_off()
 plt.show()
-
+'''
 plt.figure()
 plt.title('Inference of $Tau$ - Means 20 datasets')
 plt.xlabel('Number of particles')
@@ -98,3 +102,4 @@ for i in range(7):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+'''

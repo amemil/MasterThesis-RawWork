@@ -12,6 +12,7 @@ import pandas as pd
 import math
 import matplotlib
 
+
 import sys, os
 import numpy as np
 
@@ -38,7 +39,7 @@ lrs2 = lr2(1,1,0.005,deltas2,0.02)
 lrref = np.concatenate((lrs2,lrs1))
 
 
-'''
+
 Tau1s = np.load('TauSamples1to4stim.npy')
 Tau2s = np.load('TauSamples5to8stim.npy')
 Tau3s= np.load('TauSamples9to12stim.npy')
@@ -64,23 +65,24 @@ meanss = np.asarray(meanss).mean(0)
 stdss = np.asarray(stdss).mean(0)
     
 
-
+plt.rcParams["font.family"] = "Times New Roman"
+matplotlib.rcParams.update({'font.size': 15}) 
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
-plt.title('Inference of $Tau$ - Medium stimuli')
+plt.title('Stimulation')
 plt.xlabel('Datasize')
-plt.ylabel('$Tau$ estimation')
+plt.ylabel('Tau estimation')
 plt.ylim([0,0.1])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], meanss[i], yerr = meansvars[i],marker = 'o',color='b')
+    plt.errorbar(x[i], meanss[i], yerr = meansvars[i],c=[0.4,0.3,0.9],marker = 'o')
     #plt.errorbar(x[i],meanss[i],yerr = stdss[i],marker='o',color='k')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 Tau1hs = np.load('TauSamples1to4highstim.npy')
 Tau2hs = np.load('TauSamples5to8highstim.npy')
 Tau3hs= np.load('TauSamples9to12highstim.npy')
@@ -676,7 +678,7 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
-
+'''
 rmse100 = np.load('rmselr100hz.npy')
 rmse200 = np.load('rmselr250hz.npy')
 rmsebase = np.load('rmselrbase.npy')
@@ -709,3 +711,4 @@ df = pd.DataFrame(data, columns =['RMSE', 'Datasize [sec]','Stimulus'])
 ax = sns.lineplot(data=df, x="Datasize [sec]", y="RMSE",hue="Stimulus",palette=['royalblue','limegreen','darkgreen'])
 ax.legend(['No stimulation', '100Hz', '250Hz'])
 ax.set_yticks([0,0.001,0.002,0.003])
+'''

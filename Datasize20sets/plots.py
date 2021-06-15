@@ -10,10 +10,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import matplotlib
 
-sns.set_style("darkgrid")
+plt.style.use('default')
 
-'''
+plt.rcParams["font.family"] = "Times New Roman"
+matplotlib.rcParams.update({'font.size': 15}) 
+
 Tau1 = np.load('TauSamples1to4.npy')
 Tau2 = np.load('TauSamples5to8.npy')
 Tau3 = np.load('TauSamples9to12.npy')
@@ -43,14 +46,14 @@ stds = np.asarray(stds).mean(0)
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
-plt.title('Inference of $Tau$ - Not stimulated')
+plt.title('No stimulation')
 plt.xlabel('Datasize')
-plt.ylabel('$Tau$ estimation')
+plt.ylabel('Tau estimation')
 plt.ylim([0,0.1])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], means[i], yerr = meansvar[i],marker = 'o')
+    plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -86,14 +89,15 @@ stdsa = np.asarray(stdsa).mean(0)
 x = [1,2,3,4,5]
 ticksss = ['60','120','180','240','300']
 plt.figure()
-plt.title('Inference of $A$ - Not stimulated')
+plt.title('No stimulation')
+plt.yticks(ticks=[0,0.005,0.01,0.015,0.02],labels=['0','0.005','0.01','0.015','0.02'])
 plt.xlabel('Datasize')
-plt.ylabel('$A$ estimation')
+plt.ylabel('$A_+$ estimation')
 plt.ylim([0,0.02])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], meansA[i], yerr = meansvarA[i],marker = 'o')
+    plt.errorbar(x[i], meansA[i], yerr = meansvarA[i],c=[0.4,0.3,0.9],marker = 'o')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -165,6 +169,7 @@ for i in range(len(meanssA)):
         rmselrbase.append(rmse(lrref, lr_est))
         datasizes3.append((j+1)*60)
       
+'''
 '''
 meanssA = np.mean(meanssA,axis=0)
 meanssT = np.mean(meanssT,axis=0)

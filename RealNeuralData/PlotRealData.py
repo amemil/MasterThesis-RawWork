@@ -64,8 +64,17 @@ plt.rcParams["font.family"] = "Times New Roman"
 matplotlib.rcParams.update({'font.size': 15}) 
 plt.rc('axes', labelsize=20) 
 plt.rc('figure',titlesize=20)
+def lr1(s2,s1,Ap,delta,taup):
+    return s2*s1*Ap*np.exp(-delta/taup)
+
+def lr2(s1,s2,Am,delta,taum):
+    return -s1*s2*Am*1.05*np.exp(delta/taum)
 
 
+
+
+
+'''
 plt.figure()
 sns.distplot(StimSample[300:,0],kde = True,color='g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
@@ -113,73 +122,142 @@ plt.axvline(piAnonstim[1],color='k',linestyle='--')
 plt.figure()
 sns.distplot(StimSample[300:,1],kde = True,color='g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
-plt.xlim([0.00,0.15])
+plt.xlim([0.00,0.16])
+plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+plt.yticks([0,10,20],labels=['0','10','20'])
+#plt.ylabel('')
 plt.xlabel(r'Tau')
 plt.axvline(meanTaustim,color='k',linestyle='-',label='Sample mean')
 plt.plot(x,priorT,color='#AAA662',alpha=0.9,label='Prior')
 #plt.axvline(medAstim,color='g',linestyle='--',label='Median: '+str(medAstim.round(3)))
 #plt.axvline(meanAstim,color='m',linestyle='--',label='Mean: '+str(meanAstim.round(3)))
 plt.axvline(piTaustim[0],color='k',linestyle='--',label='95% CI')
+plt.ylabel('')
 plt.axvline(piTaustim[1],color='k',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title(r'Stimulation')
+#plt.title(r'Stimulation')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
-plt.legend()
+#plt.legend()
 
 plt.figure()
-sns.distplot(NonStimSample[300:,1],kde = True,color='g')
+sns.distplot(NonStimSample[300:,1],kde = True,color = 'g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
-plt.xlim([0.00,0.15])
+plt.xlim([0.00,0.16])
+plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+plt.yticks([0,10,20,30],labels=['0','10','20','30'])
+plt.ylabel('')
 plt.xlabel(r'Tau')
-plt.axvline(meanTaunonstim,color='k',linestyle='-',label='Sample mean')
+#plt.xticks([0,0.05,0.1,0.15,0.2],labels=['0','0.05','0.1','0.15','0.2'])
+#plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+#plt.yticks([0,40,80,120],labels=['0','40','80','120'])
+plt.axvline(meanTaunonstim,color='k',linestyle='-',label='Sample mean')#+str(mapAnonstim[0].round(3)))
 plt.plot(x,priorT,color='#AAA662',alpha=0.9,label='Prior')
-#plt.axvline(medAstim,color='g',linestyle='--',label='Median: '+str(medAstim.round(3)))
-#plt.axvline(meanAstim,color='m',linestyle='--',label='Mean: '+str(meanAstim.round(3)))
+#plt.yticks([0,20,40,80,120],labels=['0','20','40','80','120'])
+#plt.axvline(medAnonstim,color='g',linestyle='--',label='Median: '+str(medAnonstim.round(3)))
+#plt.axvline(meanAnonstim,color='m',linestyle='--',label='Mean: '+str(meanAnonstim.round(3)))
 plt.axvline(piTaunonstim[0],color='k',linestyle='--',label='95% CI')
 plt.axvline(piTaunonstim[1],color='k',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title(r'No stimulation')
+#plt.title(r'No stimulation')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
-plt.legend(loc='upper center')
+#plt.legend()
+#plt.show
+
+#StimSample2 = np.load('SampleStim20sec_cand2.npy')
+#NonStimSample2 = np.load('SampleNonstim20sec_cand2.npy')
+StimSample2 = np.load('SampleStimCand2_2.npy')
+NonStimSample2 = np.load('SampleNonStimCand2_2.npy')
+
+piAstim2 = [np.sort(StimSample2[300:,0])[30],np.sort(StimSample2[300:,0])[-31]]
+piTaustim2 = [np.sort(StimSample2[300:,1])[30],np.sort(StimSample2[300:,1])[-31]]
+piTaunonstim2 = [np.sort(NonStimSample2[300:,1])[30],np.sort(NonStimSample2[300:,1])[-31]]
+piAnonstim2 = [np.sort(NonStimSample2[300:,0])[30],np.sort(NonStimSample2[300:,0])[-31]]
+
+medAstim = np.median(StimSample2[300:,0])
+medTaustim = np.median(StimSample2[300:,1])
+medAnonstim = np.median(NonStimSample2[300:,0])
+medTaunonstim = np.median(NonStimSample2[300:,1])
+
+meanAstim2 = np.mean(StimSample2[300:,0])
+meanTaustim2 = np.mean(StimSample2[300:,1])
+meanAnonstim2 = np.mean(NonStimSample2[300:,0])
+meanTaunonstim2 = np.mean(NonStimSample2[300:,1])
+
+mapAstim2= np.load('MapAStimCand3_2.npy')
+mapTaustim2 =  np.load('MapTauStimCand3_2.npy')
+mapAnonstim2 =  np.load('MapANonStimCand3_2.npy')
+mapTaunonstim2 =  np.load('MapTauNonStimCand3_2.npy')
+
+entAstim2 = norm.entropy(loc = meanAstim2,scale = np.sqrt(np.var(StimSample2[300:,0])))
+entAnonstim = norm.entropy(loc = meanAnonstim2,scale = np.sqrt(np.var(NonStimSample2[300:,0])))
+entTaustim = norm.entropy(loc = meanTaustim2,scale = np.sqrt(np.var(StimSample2[300:,1])))
+entTaunonstim = norm.entropy(loc = meanTaunonstim2,scale = np.sqrt(np.var(NonStimSample2[300:,1])))
+
+deltas = np.linspace(0,0.1,10000)
+deltas2 = np.linspace(-0.1,0,10000)   
+lrs1 = lr1(1,1,meanAstim,deltas,meanTaustim)
+lrs2 = lr2(1,1,meanAstim,deltas2,meanTaustim) 
 '''
-#StimSample = np.load('SampleStim20sec_cand2.npy')
-#NonStimSample = np.load('SampleNonstim20sec_cand2.npy')
-StimSample = np.load('SampleStimCand2_2.npy')
-NonStimSample = np.load('SampleNonStimCand2_2.npy')
+plt.rcParams["font.family"] = "Times New Roman"
+deltass = np.concatenate((deltas2,deltas))
+lrref = np.concatenate((lrs2,lrs1))
 
-piAstim = [np.sort(StimSample[300:,0])[30],np.sort(StimSample[300:,0])[-31]]
-piTaustim = [np.sort(StimSample[300:,1])[30],np.sort(StimSample[300:,1])[-31]]
-piTaunonstim = [np.sort(NonStimSample[300:,1])[30],np.sort(NonStimSample[300:,1])[-31]]
-piAnonstim = [np.sort(NonStimSample[300:,0])[30],np.sort(NonStimSample[300:,0])[-31]]
+lrs3 = lr1(1,1,meanAstim2,deltas,meanTaustim2)
+lrs4 = lr2(1,1,meanAstim2,deltas2,meanTaustim2) 
+lrref2 = np.concatenate((lrs4,lrs3))
+matplotlib.rcParams.update({'font.size': 18})
 
-medAstim = np.median(StimSample[300:,0])
-medTaustim = np.median(StimSample[300:,1])
-medAnonstim = np.median(NonStimSample[300:,0])
-medTaunonstim = np.median(NonStimSample[300:,1])
+plt.rc('axes', labelsize=24) 
+#plt.rc('figure',titlesize=30)
+plt.figure()
+#plt.title('Learning rules')
+plt.xlabel(r'$\Delta$ t [sec]')
+plt.ylabel(r'$\Delta$ w')
+plt.axhline(y=0,color = 'k',linestyle='--')
+plt.plot(deltass,lrref,c='rebeccapurple',linewidth=3)#,label=r'$\Theta_1$')#,label=r'$\Theta$ = [0.0075,0.0075,0.02,0.02]')
+plt.plot(deltass,lrref2,c='chocolate',linewidth=3,linestyle= '--')#,label=r'$\Theta_2$')#,label=r'$\Theta$ = [0.005,0.005,0.04,0.04]')
+#plt.yticks([-0.008,-0.004,0,0.004,0.008],labels=['-0.008','-0.004','0','0.004','0.008'])
+#plt.xticks([-0.1,-0.05,0,0.05,0.1],labels=['-0.1','-0.05','0','0.05','0.1'])
+plt.legend()
+plt.show()
 
-meanAstim = np.mean(StimSample[300:,0])
-meanTaustim = np.mean(StimSample[300:,1])
-meanAnonstim = np.mean(NonStimSample[300:,0])
-meanTaunonstim = np.mean(NonStimSample[300:,1])
+deltas = np.linspace(0,0.1,10000)
+deltas2 = np.linspace(-0.1,0,10000)   
+lrs1 = lr1(1,1,meanAnonstim,deltas,meanTaunonstim)
+lrs2 = lr2(1,1,meanAnonstim,deltas2,meanTaunonstim) 
 
-mapAstim = np.load('MapAStimCand3_2.npy')
-mapTaustim =  np.load('MapTauStimCand3_2.npy')
-mapAnonstim =  np.load('MapANonStimCand3_2.npy')
-mapTaunonstim =  np.load('MapTauNonStimCand3_2.npy')
+plt.rcParams["font.family"] = "Times New Roman"
+deltass = np.concatenate((deltas2,deltas))
+lrref = np.concatenate((lrs2,lrs1))
 
-entAstim = norm.entropy(loc = meanAstim,scale = np.sqrt(np.var(StimSample[300:,0])))
-entAnonstim = norm.entropy(loc = meanAnonstim,scale = np.sqrt(np.var(NonStimSample[300:,0])))
-entTaustim = norm.entropy(loc = meanTaustim,scale = np.sqrt(np.var(StimSample[300:,1])))
-entTaunonstim = norm.entropy(loc = meanTaunonstim,scale = np.sqrt(np.var(NonStimSample[300:,1])))
+lrs3 = lr1(1,1,meanAnonstim2,deltas,meanTaunonstim2)
+lrs4 = lr2(1,1,meanAnonstim2,deltas2,meanTaunonstim2) 
+lrref2 = np.concatenate((lrs4,lrs3))
+matplotlib.rcParams.update({'font.size': 18})
 
+plt.rc('axes', labelsize=24) 
+#plt.rc('figure',titlesize=30)
+plt.figure()
+#plt.title('Learning rules')
+plt.xlabel(r'$\Delta$ t [sec]')
+plt.ylabel(r'$\Delta$ w')
+plt.axhline(y=0,color = 'k',linestyle='--')
+plt.plot(deltass,lrref,c='rebeccapurple',linewidth=3)#,label=r'$\Theta_1$')#,label=r'$\Theta$ = [0.0075,0.0075,0.02,0.02]')
+plt.plot(deltass,lrref2,c='chocolate',linewidth=3,linestyle= '--')#,label=r'$\Theta_2$')#,label=r'$\Theta$ = [0.005,0.005,0.04,0.04]')
+#plt.yticks([-0.008,-0.004,0,0.004,0.008],labels=['-0.008','-0.004','0','0.004','0.008'])
+#plt.xticks([-0.1,-0.05,0,0.05,0.1],labels=['-0.1','-0.05','0','0.05','0.1'])
+plt.legend()
+plt.show()
+'''
+'''
 plt.figure()
 sns.distplot(StimSample[300:,0],kde = True,color='g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
 plt.xlim([0.00,0.2])
 plt.xlabel(r'$A_+$')
-plt.axvline(meanAstim,color='k',linestyle='-',label='Sample mean')
+plt.axvline(meanAstim2,color='k',linestyle='-',label='Sample mean')
 #plt.xticks([0,0.05,0.1,0.15,0.2],labels=['0','0.05','0.1','0.15','0.2'])
 plt.ylabel('')
 plt.yticks([0,100,200,300],labels=['0','100','200','300'])
@@ -204,7 +282,7 @@ plt.xlim([0.00,0.2])
 plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
 plt.xlabel(r'$A_+$')
 plt.ylabel('')
-plt.axvline(meanAnonstim,color='k',linestyle='-',label='Sample mean')#+str(mapAnonstim[0].round(3)))
+plt.axvline(meanAnonstim2,color='k',linestyle='-',label='Sample mean')#+str(mapAnonstim[0].round(3)))
 plt.plot(x,priorA,color='#AAA662',alpha=0.9,label='Prior')
 #plt.yticks([0,10,20,30,40],labels=['0','10','20','30','40'])
 #plt.axvline(medAnonstim,color='g',linestyle='--',label='Median: '+str(medAnonstim.round(3)))
@@ -216,42 +294,57 @@ plt.axvline(piAnonstim[1],color='k',linestyle='--')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 #plt.legend()
-
 '''
+
 plt.figure()
-sns.distplot(StimSample[300:,1],kde = True,color='g')
+sns.distplot(StimSample2[300:,1],kde = True,color='g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
-plt.xlim([0.00,0.15])
+plt.xlim([0.00,0.16])
+plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+plt.yticks([0,10,20,30],labels=['0','10','20','30'])
 plt.xlabel(r'Tau')
-plt.axvline(meanTaustim,color='k',linestyle='-',label='Sample mean')
+plt.axvline(meanTaustim2,color='k',linestyle='-',label='Sample mean')
+#plt.xticks([0,0.05,0.1,0.15,0.2],labels=['0','0.05','0.1','0.15','0.2'])
+plt.ylabel('')
+#plt.yticks([0,100,200,300],labels=['0','100','200','300'])
 plt.plot(x,priorT,color='#AAA662',alpha=0.9,label='Prior')
+#plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+#plt.yticks([0,100,200,300],labels=['0','100','200','300'])
 #plt.axvline(medAstim,color='g',linestyle='--',label='Median: '+str(medAstim.round(3)))
 #plt.axvline(meanAstim,color='m',linestyle='--',label='Mean: '+str(meanAstim.round(3)))
-plt.axvline(piTaustim[0],color='k',linestyle='--',label='95% CI')
-plt.axvline(piTaustim[1],color='k',linestyle='--')
+plt.axvline(piTaustim2[0],color='k',linestyle='--',label='95% CI')
+plt.axvline(piTaustim2[1],color='k',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title(r'Stimulation')
+#plt.title(r'Stimulation')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 
 plt.figure()
-sns.distplot(NonStimSample[300:,1],kde = True,color='g')
+sns.distplot(NonStimSample2[300:,1],kde = True,color = 'g')
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
-plt.xlim([0.00,0.15])
+plt.xlim([0.00,0.16])
+plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
+plt.yticks([0,20,40,60],labels=['0','20','40','60'])
+#plt.xticks([0,0.05,0.1,0.15,0.2],labels=['0','0.05','0.1','0.15','0.2'])
+#plt.xticks([0,0.05,0.1,0.15],labels=['0','0.05','0.1','0.15'])
 plt.xlabel(r'Tau')
-plt.axvline(meanTaunonstim,color='k',linestyle='-',label='Sample mean')
+plt.ylabel('')
+plt.axvline(meanTaunonstim2,color='k',linestyle='-',label='Sample mean')#+str(mapAnonstim[0].round(3)))
 plt.plot(x,priorT,color='#AAA662',alpha=0.9,label='Prior')
-#plt.axvline(medAstim,color='g',linestyle='--',label='Median: '+str(medAstim.round(3)))
-#plt.axvline(meanAstim,color='m',linestyle='--',label='Mean: '+str(meanAstim.round(3)))
-plt.axvline(piTaunonstim[0],color='k',linestyle='--',label='95% CI')
-plt.axvline(piTaunonstim[1],color='k',linestyle='--')
+#plt.yticks([0,10,20,30,40],labels=['0','10','20','30','40'])
+#plt.axvline(medAnonstim,color='g',linestyle='--',label='Median: '+str(medAnonstim.round(3)))
+#plt.axvline(meanAnonstim,color='m',linestyle='--',label='Mean: '+str(meanAnonstim.round(3)))
+plt.axvline(piTaunonstim2[0],color='k',linestyle='--',label='95% CI')
+plt.axvline(piTaunonstim2[1],color='k',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title(r'No stimulation')
+#plt.title(r'No stimulation')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
-plt.legend()
-'''
+#plt.legend()
+
+
+
 '''
 SubStim = np.load('SubsamplesStim1.npy')
 SubNonStim = np.load('SubsamplesNonstim1.npy')
@@ -292,34 +385,33 @@ plt.plot(datasizes,entropiesTauNonStim,'gx-',alpha = 0.7,label='Non-stimulated d
 plt.legend()
 plt.show()
 '''
-'''
 
 #LARGESCALE!
-
-Stim1 = np.load('LargeScaleStim_1.npy')
-Stim2 = np.load('LargeScaleStim_2.npy')
-Stim3 = np.load('LargeScaleStim_3.npy')
-Stim4 = np.load('LargeScaleStim_4.npy')
-Stim5 = np.load('LargeScaleStim_5.npy')
-Stim6 = np.load('LargeScaleStim_6.npy')
-Stim7 = np.load('LargeScaleStim_7.npy')
-Stim8 = np.load('LargeScaleStim_8.npy')
-Stim9 = np.load('LargeScaleStim_9.npy')
-Stim10 = np.load('LargeScaleStim_10.npy')
+'''
+Stim1 = np.load('LargeScaleInvStim_1.npy')
+Stim2 = np.load('LargeScaleInvStim_2.npy')
+Stim3 = np.load('LargeScaleInvStim_3.npy')
+Stim4 = np.load('LargeScaleInvStim_4.npy')
+Stim5 = np.load('LargeScaleInvStim_5.npy')
+Stim6 = np.load('LargeScaleInvStim_6.npy')
+Stim7 = np.load('LargeScaleInvStim_7.npy')
+Stim8 = np.load('LargeScaleInvStim_8.npy')
+Stim9 = np.load('LargeScaleInvStim_9.npy')
+Stim10 = np.load('LargeScaleInvStim_10.npy')
 
 Stims=[Stim1,Stim2,Stim3,Stim4,Stim5,Stim6,Stim7,Stim8,Stim9,Stim10]
 
 
-NonStim1 = np.load('LargeScaleNonStim_1.npy')
-NonStim2 = np.load('LargeScaleNonStim_2.npy')
-NonStim3 = np.load('LargeScaleNonStim_3.npy')
-NonStim4 = np.load('LargeScaleNonStim_4.npy')
-NonStim5 = np.load('LargeScaleNonStim_5.npy')
-NonStim6 = np.load('LargeScaleNonStim_6.npy')
-NonStim7 = np.load('LargeScaleNonStim_7.npy')
-NonStim8 = np.load('LargeScaleNonStim_8.npy')
-NonStim9 = np.load('LargeScaleNonStim_9.npy')
-NonStim10 = np.load('LargeScaleNonStim_10.npy')
+NonStim1 = np.load('LargeScaleInvNonStim_1.npy')
+NonStim2 = np.load('LargeScaleInvInvNonStim_2.npy')
+NonStim3 = np.load('LargeScaleInvNonStim_3.npy')
+NonStim4 = np.load('LargeScaleInvNonStim_4.npy')
+NonStim5 = np.load('LargeScaleInvNonStim_5.npy')
+NonStim6 = np.load('LargeScaleInvNonStim_6.npy')
+NonStim7 = np.load('LargeScaleInvNonStim_7.npy')
+NonStim8 = np.load('LargeScaleInvNonStim_8.npy')
+NonStim9 = np.load('LargeScaleInvNonStim_9.npy')
+NonStim10 = np.load('LargeScaleInvNonStim_10.npy')
 
 NonStims=[NonStim1,NonStim2,NonStim3,NonStim4,NonStim5,NonStim6,NonStim7,NonStim8,NonStim9,NonStim10]
 
@@ -327,26 +419,27 @@ NonStims=[NonStim1,NonStim2,NonStim3,NonStim4,NonStim5,NonStim6,NonStim7,NonStim
 def NormEntropy(sigma):
         return 0.5 * np.log(np.linalg.det(2*np.pi*np.exp(1)*sigma))
     
+#[10,20,30,40,50,60]
   
 Entropies = []
 Datasize = []
 Label = []
 for i in range(len(Stims)):
-    for j in range(4):
+    for j in range(6):
         entropy = NormEntropy(np.cov(np.transpose(Stims[i][j][300:,:])))
         if entropy> -15:
             Entropies.append(entropy)
-            Datasize.append(20+(20*j))
-            print('STIM - Datasize: '+str(20+(20*j))+', entropy: '+str(entropy))
+            Datasize.append(10+(10*j))
+            #print('STIM - Datasize: '+str(20+(20*j))+', entropy: '+str(entropy))
             Label.append(1)
     
 for i in range(len(NonStims)):
-    for j in range(4):
+    for j in range(6):
         entropy = NormEntropy(np.cov(np.transpose(NonStims[i][j][300:,:])))
         if entropy >-15:
             Entropies.append(entropy)
-            Datasize.append(20+(20*j))
-            print('NONSTIM - Datasize: '+str(20+(20*j))+', entropy: '+str(entropy))
+            Datasize.append(10+(10*j))
+            #print('NONSTIM - Datasize: '+str(20+(20*j))+', entropy: '+str(entropy))
             Label.append(2)
 
 data = np.transpose(np.asarray([Entropies,Datasize,Label]))
@@ -372,7 +465,8 @@ for i in range(len(Entropies)):
             plt.plot([Datasize[i]],Entropies[i],'bx')
 plt.legend()
 plt.show()
-
+'''
+'''
 
 plt.figure()
 plt.title('Single experiments stimulation')
@@ -681,7 +775,5 @@ plt.errorbar(datasizes,mediansANonStim,yerr=stdsNonStim,label='Non-stimulated')
 #plt.plot(datasizes,mediansANonStim,label='Non-stimulated')
 plt.legend()
 plt.plot()
-
-
 '''
 

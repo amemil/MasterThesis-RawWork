@@ -24,7 +24,7 @@ import matplotlib
 ###LR 5: A= 0.001, Tau = 0.02
 plt.style.use('default')
 
-truevalues = np.array([0.005,0.005])
+truevalues = np.array([0.005,0.02])
 
 def rmse(targets, predictions):
     return np.sqrt(((predictions - targets) ** 2).mean())
@@ -46,16 +46,24 @@ lrref = np.concatenate((lrs2,lrs1))
 
 #### 1sec trials!! #### 
 
-TenHz1 = np.load('Samples10sec10Hz1to10_Lr2.npy')
-TenHz2 = np.load('Samples10sec10Hz11to20_Lr2.npy')
-TwHz1 = np.load('Samples10sec20Hz1to10_Lr2.npy')
-TwHz2 = np.load('Samples10sec20Hz11to20_Lr2.npy')
-FiftHz1 = np.load('Samples10sec50Hz1to10_Lr2.npy')
-FiftHz2 = np.load('Samples10sec50Hz11to20_Lr2.npy')
-HunHz1 = np.load('Samples10sec100Hz1to10_Lr2.npy')
-HunHz2 = np.load('Samples10sec100Hz11to20_Lr2.npy')
-TfHz1 = np.load('Samples10sec250Hz1to10_Lr2.npy')
-TfHz2 = np.load('Samples10sec250Hz11to20_Lr2.npy')
+TenHz1 = np.load('Samples5sec10Hz1to10.npy')
+TenHz2 = np.load('Samples5sec10Hz11to20.npy')
+TwHz1 = np.load('Samples5sec20Hz1to10.npy')
+TwHz2 = np.load('Samples5sec20Hz11to20.npy')
+FiftHz1 = np.load('Samples5sec50Hz1to10.npy')
+FiftHz2 = np.load('Samples5sec50Hz11to20.npy')
+HunHz1 = np.load('Samples5sec100Hz1to10.npy')
+HunHz2 = np.load('Samples5sec100Hz11to20.npy')
+TfHz1 = np.load('Samples5sec250Hz1to10.npy')
+TfHz2 = np.load('Samples5sec250Hz11to20.npy')
+
+'''
+TenHz1=np.load('Samples5sec10Hz1to20_Lr3.npy')
+TwHz1=np.load('Samples5sec20Hz1to20_Lr3.npy')
+FiftHz1 = np.load('Samples5sec50Hz1to20_Lr3.npy')
+HunHz1 = np.load('Samples5sec100Hz1to20_Lr3.npy') 
+TfHz1 = np.load('Samples5sec250Hz1to20_Lr3.npy')
+'''
 
 
 Tens = [TenHz1,TenHz2]
@@ -152,7 +160,7 @@ for i in range(len(Huns_rmse)):
                 summ = np.sum(Huns_rmse_temp)
             Huns_rmse[i][j] = np.mean(Huns_rmse_temp)
             
-        
+
 Crzs = [TfHz1,TfHz2]
 Crzs_rmse = []
 
@@ -183,6 +191,7 @@ for i in range(len(Crzs_rmse)):
                 Crzs_rmse_temp = np.delete(np.asarray(Crzs_rmse_temp),nans)
                 summ = np.sum(Crzs_rmse_temp)
             Crzs_rmse[i][j] = np.mean(Crzs_rmse_temp)
+
 '''
 plt.figure()
 plt.scatter(Aoutliers,Tauoutliers)
@@ -209,12 +218,12 @@ for i in range(len(Fts_rmse)):
     labels.append(2)
 for i in range(len(Huns_rmse)):
     labels.append(3)
-#for i in range(len(Crzs_rmse)):
-#    labels.append(4)
+for i in range(len(Crzs_rmse)):
+    labels.append(4)
 
 labels = np.asarray(labels)
 
-mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse))
+mses = np.hstack((Tens_rmse,Tws_rmse,Fts_rmse,Huns_rmse,Crzs_rmse))
 weights = []
 count = 0
 for i in range(len(mses)):
@@ -225,15 +234,34 @@ for i in range(len(mses)):
 #matplotlib.rcParams.update({'font.size': 13})
 #plt.rc('axes', labelsize=16)  
 
-#plt.rcParams.update(plt.rcParamsDefault)
+plt.rcParams.update(plt.rcParamsDefault)
 matplotlib.rcParams.update({'font.size': 15})
 plt.rc('axes', labelsize=18)  
 
-
+# yscales :
+    # 5sec without 250hz : [0.001-0.04]
+    # 1 sec without 250 hz : [0.0075-0.045]
+    # 10 sec without 250 hz : [0.0003 - 0.04]
+    # 5sec with 250 hz : 
 
 data = np.transpose(np.asarray([mses,weights,labels]))
-df = pd.DataFrame(data, columns =['RMSE', 'Initial weight','Label'])
-ax = sns.lineplot(data=df, x="Initial weight", y="RMSE",hue="Label")#,palette=['orangered','chartreuse','royalblue','gold'])#,'royalblue'])
-ax.legend(['10Hz','20Hz','50Hz','100Hz'],loc='upper left')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
-ax.title.set_text('10s trial inference - New learning rule')
+df = pd.DataFrame(data, columns =['RMSE', 'Initial weight, $w^{t=1}$','Label'])
+ax = sns.lineplot(data=df, x="Initial weight, $w^{t=1}$", y="RMSE",hue="Label",palette=['burlywood','lightcoral','darkmagenta','darkcyan','dimgrey'],ci='sd')#,'royalblue'])
+#ax.legend(['10Hz','20Hz','50Hz','100Hz','250Hz'],loc='upper center')#,'Randomised Frequency','Optimal [10-100hz] grid','Dales Law'])
+ax.get_legend().remove()
+ax.set_ylim([0.001,0.050])
+#ax.title.set_text(r'$A_+$=0.005 , $\tau$=0.02')
 ax.set_yscale('log')
+
+'''
+def inpe(w):
+    return np.exp(w-3.1)/(1+np.exp(w-3.1))
+
+x = np.linspace(0,10,1000)
+y = inpe(x)
+plt.figure()
+plt.plot(x,y)
+plt.xlabel('w')
+plt.ylabel('Postsynaptic spiking probability')
+plt.show()
+'''

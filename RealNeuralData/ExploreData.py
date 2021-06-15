@@ -9,8 +9,9 @@ import numpy as np
 from mat4py import loadmat
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-plt.style.use('seaborn-darkgrid')
-
+import matplotlib
+#plt.style.use('seaborn-darkgrid')
+plt.style.use('default')
 
 #data18105 = loadmat('camkii10_180105.spikes.cellinfo.mat')
 #sessioninfo105 = loadmat('camkii10_180105.sessionInfo.mat')
@@ -21,7 +22,7 @@ plt.style.use('seaborn-darkgrid')
 #position = loadmat('position_info180105.mat')
 #ripmod  = loadmat('rip_mod180105.mat')
 #ledposition = loadmat('LED_position-01-180105.mat')
-
+matplotlib.rcParams.update({'font.size': 15})
 #jux = loadmat('JuxtaGroundTruth.mat')
 
 ses1spikes = jux['ses']['times'][5]
@@ -70,8 +71,8 @@ session 14 ind 18
 # stim periods: 275-1160, 1713-2019 (utenom 1837-1850)
 # non-stim : 0-275, 1160-1713
 
-startstim = 175
-stopstim = 195
+startstim = 0
+stopstim = 2000
 
     
 
@@ -169,7 +170,7 @@ for i in range(40):
     np.save('Post20secLsStim_'+str(i+1),s2)
 
 '''
-'''
+
 maxlag = 10
 lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
 #ccov = plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
@@ -177,8 +178,9 @@ lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
 ci = cicc(lags,0.99,len(s1))
 
 plt.figure()
-plt.title('Cross-correlation candidate neuron pair (Stimulated period)')#+str(interesting[i]))
-plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
+#plt.title('Cross-correlation candidate neuron pair (Stimulated period)')#+str(interesting[i]))
+plt.xticks([-10,-8,-6,-4,-2,0,2,4,6,8,10],labels=['-10','-8','-6','-4','-2','0','2','4','6','8','10'])
+plt.xcorr(np.asarray(s1) - np.asarray(s1).mean(), np.asarray(s2) - np.asarray(s2).mean(),maxlags=10,normed=True)
 plt.plot(lags,ci[1],'r--',label='99% CI under $H_0$')
 plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
 #plt.ylim((-0.035,0.035))
@@ -186,7 +188,7 @@ plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
 plt.xlabel('Timelag (ms)')
 plt.legend(loc=1)
 plt.show()
-'''
+
 '''
 plt.figure()
 plt.title('Observed firing rate presynaptic (stimulated) neuron')

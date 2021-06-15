@@ -1,7 +1,7 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
 import math
-#from tqdm import tqdm
+from tqdm import tqdm
 from scipy.stats import gamma
 from scipy.stats import multivariate_normal
 from scipy.stats import norm
@@ -272,8 +272,9 @@ class ParameterInference():
         Fisher scoring algorithm 
         Two in parallell, since w0 is estimated with a subset of the data
         '''
-        s1short,s2short = self.s1[:int(10/(self.binsize))],self.s2[:int(10/(self.binsize))]
+        s1short,s2short = self.s1[:int((self.sec/10)/(self.binsize))],self.s2[:int((self.sec/10)/(self.binsize))]
         beta,beta2 = np.array([0,0]),np.array([0,0])
+        #print(len(self.s1[:int((self.sec/10)/(self.binsize))]))
         x,x2 = np.array([np.ones(len(self.s1)-1),self.s1[:-1]]),np.array([np.ones(len(s1short)-1),s1short[:-1]])
         i = 0
         score,score2 = np.array([np.inf,np.inf]), np.array([np.inf,np.inf])
@@ -1116,10 +1117,26 @@ if __name__ == "__main__":
 
     #np.random.seed(5) 
     '''
-    data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-1.4, b2=-3.1, w0=1.0,sec = 20, binsize = 1/500.0,freq = 50)
-    data.create_data()
-    s1,s2,_,W=data.get_data()
-    #a = np.ones((2,2))
+    '''
+    w0s = []
+    b2s = []
+    ws= []
+    for i in tqdm(range(1000)):
+        data=SimulatedData(Ap=0.005, tau=0.02, std=0.0001,b1=-3.1, b2=-3.1, w0=3.0,sec = 5, binsize = 1/500.0,freq = 50)
+        data.create_freq_data()
+        s1,s2,_,W=data.get_data()
+        infer =ParameterInference(s1,s2,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 2\
+                                         , shapes_prior = np.array([4,5]), rates_prior = np.array([50,100]),sec=5\
+                                             ,binsize = 1/500.0,taufix = 0.02,Afix = 0.001)
+        b1est = infer.b1_estimation()
+        b2est, w0est = infer.b2_w0_estimation()
+        w0s.append(w0est)
+        b2s.append(b2est)
+        ws.append(W)
+    '''
+    
+    
+        #a = np.ones((2,2))
     #print(np.linalg.norm(a,axis=1))
     #for i in range(20):
     #    design = ExperimentDesign(freqs_init=np.array([20,50,100]),maxtime=60,trialsize=5\
