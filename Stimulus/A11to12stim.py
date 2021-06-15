@@ -34,7 +34,7 @@ for i in range(2):
     for j in range(len(datasizes)):
         s1_sub = s1[:int(len(s1)*(datasizes[j]/datasizes[-1]))]
         s2_sub = s2[:int(len(s2)*(datasizes[j]/datasizes[-1]))]
-        inference_sub = ut.ParameterInference(s1_sub,s2_sub,P = 50, Usim = 100, Ualt = 200,it = 1500, std=0.0001, N = 1\
+        inference_sub = ut.ParameterInference(s1_sub,s2_sub,P = 50, Usim = 100, Ualt = 200,it = 1500, infstd=0.0001, N = 1\
              , shapes_prior = np.array([4]), rates_prior = np.array([50]),sec=datasizes[j]\
                  ,binsize = 1/500.0,taufix = 0.02)
         b1est1_sub = inference_sub.b1_estimation()
