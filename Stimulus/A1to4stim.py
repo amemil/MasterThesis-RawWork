@@ -17,7 +17,7 @@ datasizes = [60,120,180,240,300] #seconds
 
 samples = []
 datasets = []
-for i in range(2):
+for i in range(1):
     w0est1 = -np.inf
     samples_temp = [] 
     while (w0est1 < 0.97 or w0est1 > 1.03):
@@ -44,6 +44,6 @@ for i in range(2):
     samples.append(samples_temp)
     
 
-np.save('ASamples1to2stim',samples)
+np.save('ASamples1stim',samples)
 #np.save('secondsss',datasizes)
 #np.save('data1to4stim',datasets)
