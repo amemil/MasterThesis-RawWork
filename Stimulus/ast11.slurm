@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=2500
-#SBATCH --job-name="ast10"
-#SBATCH --output=ast10.out
+#SBATCH --job-name="ast11"
+#SBATCH --output=ast11.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -15,4 +15,4 @@ module spider load Python/3.8.2
 
 source ../../dataci/bin/activate
 
-python3 A19to20stim.py
+python3 a11.py
