@@ -1,25 +1,10 @@
-Lmod has detected the following error: The following module(s) are unknown:
-"GCCcore/.9.3.0"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "GCCcore/.9.3.0"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-Lmod has detected the following error: The following module(s) are unknown:
-"Python/3.8.2"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "Python/3.8.2"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
+Lmod has detected the following error: Unable to find: "load".
 
 
 
-slurmstepd: error: *** JOB 328259 ON idun-02-25 CANCELLED AT 2021-06-21T06:44:10 DUE TO TIME LIMIT ***
+/cluster/work/emilamy/MasterThesisRaw/UtilitiesMaster.py:268: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
